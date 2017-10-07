@@ -1,0 +1,13 @@
+.git
+.gitignore
+.npmignore
+.jshintrc
+*.tgz
+*.zip
+tests
+node_modules
+*.log
+gulpfile.js
+.travis.yml
+src
+example
