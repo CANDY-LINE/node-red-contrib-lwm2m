@@ -1,0 +1,32 @@
+# Message Resources for English (fallback language)
+lwm2m:
+  label:
+    lwm2mClient: LwM2M Client
+    useString: Stringify payload
+    notification: Emit events
+    clientName: Endpoint Name
+    clientPort: UDP Port
+    serverHost: Server Host
+    serverPort: Server Port
+    useIPv4: Use IPv4 connection
+    lifetimeSec: Client Lifetime
+    requestBootstrap: Request Bootstrap
+    enableDTLS: Enable DTLS
+    pskIdentity: PSK Identitiy
+    presharedKey: Preshared Key
+  status:
+    connected: connected
+    disconnected: disconnected
+    error: error
+    timeout: timeout
+  placeholder:
+    clientName: Client Endpoint Name
+    clientPort: 56830
+    serverHost: ""
+    serverPort: 5683
+    lifetimeSec: (in seconds)
+    pskIdentity: (hex string)
+    presharedKey: (hex string)
+  error:
+    duplicateEntry: Duplicate LwM2M Server Configuration (Host:__host__, Port:__port__)
+    missingUri: Missing URI => __uri__
