@@ -91,6 +91,7 @@
       ],
       'sources': [
         '<(client_dir)/lwm2mclient.c',
+        '<(client_dir)/object_generic.c',
 
         '<(client_dir)/object_connectivity_moni.c',
         '<(client_dir)/object_connectivity_stat.c',

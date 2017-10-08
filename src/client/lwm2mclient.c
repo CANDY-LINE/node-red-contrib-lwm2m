@@ -136,66 +136,6 @@ void handle_sigint(int signum)
     g_quit = 1; // graceful shutdown
 }
 
-void handle_value_changed(lwm2m_context_t * lwm2mH,
-                          lwm2m_uri_t * uri,
-                          const char * value,
-                          size_t valueLength)
-{
-    lwm2m_object_t * object = (lwm2m_object_t *)LWM2M_LIST_FIND(lwm2mH->objectList, uri->objectId);
-
-    if (NULL != object)
-    {
-        if (object->writeFunc != NULL)
-        {
-            lwm2m_data_t * dataP;
-            int result;
-
-            dataP = lwm2m_data_new(1);
-            if (dataP == NULL)
-            {
-                fprintf(stderr, "Internal allocation failure !\n");
-                return;
-            }
-            dataP->id = uri->resourceId;
-            lwm2m_data_encode_nstring(value, valueLength, dataP);
-
-            result = object->writeFunc(uri->instanceId, 1, dataP, object);
-            if (COAP_405_METHOD_NOT_ALLOWED == result)
-            {
-                switch (uri->objectId)
-                {
-                case LWM2M_DEVICE_OBJECT_ID:
-                    result = device_change(dataP, object);
-                    break;
-                default:
-                    break;
-                }
-            }
-
-            if (COAP_204_CHANGED != result)
-            {
-                fprintf(stderr, "Failed to change value!\n");
-            }
-            else
-            {
-                fprintf(stderr, "value changed!\n");
-                lwm2m_resource_value_changed(lwm2mH, uri);
-            }
-            lwm2m_data_free(1, dataP);
-            return;
-        }
-        else
-        {
-            fprintf(stderr, "write not supported for specified resource!\n");
-        }
-        return;
-    }
-    else
-    {
-        fprintf(stderr, "Object not found !\n");
-    }
-}
-
 #ifdef WITH_TINYDTLS
 void * lwm2m_connect_server(uint16_t secObjInstID,
                             void * userData)
