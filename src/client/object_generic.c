@@ -33,6 +33,113 @@
 #include <errno.h>
 #include <signal.h>
 
+typedef struct
+{
+    uint8_t objectId;
+} parent_context_t;
+
+static parent_context_t * setup_parent_context(uint8_t objectId)
+{
+    parent_context_t * context = (parent_context_t *)lwm2m_malloc(sizeof(parent_context_t));
+    // TODO
+    context->objectId = objectId;
+    return context;
+}
+
+static uint8_t prv_generic_read(uint16_t instanceId,
+                                int * numDataP,
+                                lwm2m_data_t ** dataArrayP,
+                                lwm2m_object_t * objectP)
+{
+    uint8_t result = 0;
+    // TODO
+    return result;
+}
+
+static uint8_t prv_generic_discover(uint16_t instanceId,
+                                    int * numDataP,
+                                    lwm2m_data_t ** dataArrayP,
+                                    lwm2m_object_t * objectP)
+{
+    uint8_t result = 0;
+    // TODO
+    return result;
+}
+
+static uint8_t prv_generic_write(uint16_t instanceId,
+                                 int numData,
+                                 lwm2m_data_t * dataArray,
+                                 lwm2m_object_t * objectP)
+{
+    uint8_t result = 0;
+    // TODO
+    return result;
+}
+
+static uint8_t prv_generic_execute(uint16_t instanceId,
+                                   uint16_t resourceId,
+                                   uint8_t * buffer,
+                                   int length,
+                                   lwm2m_object_t * objectP)
+{
+    uint8_t result = 0;
+    // TODO
+    return result;
+}
+
+lwm2m_object_t * get_object(uint8_t objectId)
+{
+    lwm2m_object_t * genericObj = (lwm2m_object_t *)lwm2m_malloc(sizeof(lwm2m_object_t));
+    if (NULL == genericObj)
+    {
+        return NULL;
+    }
+    memset(genericObj, 0, sizeof(lwm2m_object_t));
+
+    parent_context_t * context = setup_parent_context(objectId);
+    if (NULL != context)
+    {
+        genericObj->userData = context;
+    }
+    else
+    {
+        free_object(genericObj);
+        return NULL;
+    }
+
+    // TODO Setup Instances
+    genericObj->instanceList = (lwm2m_list_t *)lwm2m_malloc(sizeof(lwm2m_list_t));
+    if (NULL != genericObj->instanceList)
+    {
+        memset(genericObj->instanceList, 0, sizeof(lwm2m_list_t));
+    }
+    else
+    {
+        free_object(genericObj);
+        return NULL;
+    }
+
+    genericObj->readFunc     = prv_generic_read;
+    genericObj->discoverFunc = prv_generic_discover;
+    genericObj->writeFunc    = prv_generic_write;
+    genericObj->executeFunc  = prv_generic_execute;
+
+    return genericObj;
+}
+
+void free_object(lwm2m_object_t * objectP)
+{
+    if (NULL != objectP) {
+        if (NULL != objectP->userData) {
+            lwm2m_free(objectP->userData);
+        }
+        if (NULL != objectP->instanceList) {
+            lwm2m_list_free(objectP->instanceList);
+        }
+        lwm2m_free(objectP);
+    }
+}
+
 void handle_value_changed(lwm2m_context_t * lwm2mH,
                           lwm2m_uri_t * uri,
                           const char * value,
