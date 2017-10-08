@@ -56,6 +56,23 @@
 
 */
 
+/**
+ * @license
+ * Copyright (c) 2017 CANDY LINE INC.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #include "lwm2mclient.h"
 #include "liblwm2m.h"
 #include "commandline.h"
@@ -116,7 +133,7 @@ static void prv_quit(char * buffer,
 
 void handle_sigint(int signum)
 {
-    g_quit = 2;
+    g_quit = 1; // graceful shutdown
 }
 
 void handle_value_changed(lwm2m_context_t * lwm2mH,
@@ -853,7 +870,7 @@ int main(int argc, char *argv[])
             {"add", "Add support of object 31024", NULL, prv_add, NULL},
             {"rm", "Remove support of object 31024", NULL, prv_remove, NULL},
             {"quit", "Quit the client gracefully.", NULL, prv_quit, NULL},
-            {"^C", "Quit the client abruptly (without sending a de-register message).", NULL, NULL, NULL},
+            {"^C", "Alias for quit command", NULL, NULL, NULL},
 
             COMMAND_END_LIST
     };
