@@ -14,6 +14,9 @@ build: ./node_modules
 debug:
 	./node_modules/.bin/node-pre-gyp rebuild --debug
 
+debugbuild:
+	./node_modules/.bin/node-pre-gyp build --debug
+
 verbose:
 	./node_modules/.bin/node-pre-gyp rebuild --loglevel=verbose
 
@@ -46,4 +49,4 @@ endif
 
 check: test
 
-.PHONY: test clean build configure
+.PHONY: test clean build configure debug debugbuild
