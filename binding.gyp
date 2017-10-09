@@ -7,7 +7,7 @@
     'client_dir': '<(src_dir)/client',
   },
   'includes': [
-    'deps/common-wakaama.gypi'
+    'deps/common.gypi'
   ],
   'targets': [
     {

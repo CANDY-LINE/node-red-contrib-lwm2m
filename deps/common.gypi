@@ -1,5 +1,6 @@
 {
   'variables': {
+    'base64_dir': '<(deps_dir)/base64',
     'wakaama_dtls_dir':
     '<(deps_dir)/wakaama/examples/shared/tinydtls',
     'wakaama_dtls_sources': [

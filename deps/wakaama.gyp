@@ -1,6 +1,6 @@
 {
   'includes': [
-    'common-wakaama.gypi'
+    'common.gypi'
   ],
   'variables': {
     'deps_dir': '.',
