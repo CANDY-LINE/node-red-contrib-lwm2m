@@ -42,7 +42,7 @@ static const unsigned char base64_table[65] =
  * This version of base64_encode() NEVER appends '\n' evrey 76 chars. The output
  * string is always a single line.
  */
-unsigned char * base64_encode(const unsigned char *src, size_t len,
+unsigned char * util_base64_encode(const unsigned char *src, size_t len,
 			      size_t *out_len)
 {
 	unsigned char *out, *pos;
@@ -99,7 +99,7 @@ unsigned char * base64_encode(const unsigned char *src, size_t len,
  *
  * Caller is responsible for freeing the returned buffer.
  */
-unsigned char * base64_decode(const unsigned char *src, size_t len,
+unsigned char * util_base64_decode(const unsigned char *src, size_t len,
 			      size_t *out_len)
 {
 	unsigned char dtable[256], *out, *pos, block[4], tmp;
