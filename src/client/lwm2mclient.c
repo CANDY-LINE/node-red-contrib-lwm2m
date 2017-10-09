@@ -270,75 +270,75 @@ static void prv_output_servers(char * buffer,
 
     if (lwm2mH->bootstrapServerList == NULL)
     {
-        fprintf(stdout, "No Bootstrap Server.\r\n");
+        fprintf(stderr, "No Bootstrap Server.\r\n");
     }
     else
     {
-        fprintf(stdout, "Bootstrap Servers:\r\n");
+        fprintf(stderr, "Bootstrap Servers:\r\n");
         for (targetP = lwm2mH->bootstrapServerList ; targetP != NULL ; targetP = targetP->next)
         {
-            fprintf(stdout, " - Security Object ID %d", targetP->secObjInstID);
-            fprintf(stdout, "\tHold Off Time: %lu s", (unsigned long)targetP->lifetime);
-            fprintf(stdout, "\tstatus: ");
+            fprintf(stderr, " - Security Object ID %d", targetP->secObjInstID);
+            fprintf(stderr, "\tHold Off Time: %lu s", (unsigned long)targetP->lifetime);
+            fprintf(stderr, "\tstatus: ");
             switch(targetP->status)
             {
             case STATE_DEREGISTERED:
-                fprintf(stdout, "DEREGISTERED\r\n");
+                fprintf(stderr, "DEREGISTERED\r\n");
                 break;
             case STATE_BS_HOLD_OFF:
-                fprintf(stdout, "CLIENT HOLD OFF\r\n");
+                fprintf(stderr, "CLIENT HOLD OFF\r\n");
                 break;
             case STATE_BS_INITIATED:
-                fprintf(stdout, "BOOTSTRAP INITIATED\r\n");
+                fprintf(stderr, "BOOTSTRAP INITIATED\r\n");
                 break;
             case STATE_BS_PENDING:
-                fprintf(stdout, "BOOTSTRAP PENDING\r\n");
+                fprintf(stderr, "BOOTSTRAP PENDING\r\n");
                 break;
             case STATE_BS_FINISHED:
-                fprintf(stdout, "BOOTSTRAP FINISHED\r\n");
+                fprintf(stderr, "BOOTSTRAP FINISHED\r\n");
                 break;
             case STATE_BS_FAILED:
-                fprintf(stdout, "BOOTSTRAP FAILED\r\n");
+                fprintf(stderr, "BOOTSTRAP FAILED\r\n");
                 break;
             default:
-                fprintf(stdout, "INVALID (%d)\r\n", (int)targetP->status);
+                fprintf(stderr, "INVALID (%d)\r\n", (int)targetP->status);
             }
         }
     }
 
     if (lwm2mH->serverList == NULL)
     {
-        fprintf(stdout, "No LWM2M Server.\r\n");
+        fprintf(stderr, "No LWM2M Server.\r\n");
     }
     else
     {
-        fprintf(stdout, "LWM2M Servers:\r\n");
+        fprintf(stderr, "LWM2M Servers:\r\n");
         for (targetP = lwm2mH->serverList ; targetP != NULL ; targetP = targetP->next)
         {
-            fprintf(stdout, " - Server ID %d", targetP->shortID);
-            fprintf(stdout, "\tstatus: ");
+            fprintf(stderr, " - Server ID %d", targetP->shortID);
+            fprintf(stderr, "\tstatus: ");
             switch(targetP->status)
             {
             case STATE_DEREGISTERED:
-                fprintf(stdout, "DEREGISTERED\r\n");
+                fprintf(stderr, "DEREGISTERED\r\n");
                 break;
             case STATE_REG_PENDING:
-                fprintf(stdout, "REGISTRATION PENDING\r\n");
+                fprintf(stderr, "REGISTRATION PENDING\r\n");
                 break;
             case STATE_REGISTERED:
-                fprintf(stdout, "REGISTERED\tlocation: \"%s\"\tLifetime: %lus\r\n", targetP->location, (unsigned long)targetP->lifetime);
+                fprintf(stderr, "REGISTERED\tlocation: \"%s\"\tLifetime: %lus\r\n", targetP->location, (unsigned long)targetP->lifetime);
                 break;
             case STATE_REG_UPDATE_PENDING:
-                fprintf(stdout, "REGISTRATION UPDATE PENDING\r\n");
+                fprintf(stderr, "REGISTRATION UPDATE PENDING\r\n");
                 break;
             case STATE_DEREG_PENDING:
-                fprintf(stdout, "DEREGISTRATION PENDING\r\n");
+                fprintf(stderr, "DEREGISTRATION PENDING\r\n");
                 break;
             case STATE_REG_FAILED:
-                fprintf(stdout, "REGISTRATION FAILED\r\n");
+                fprintf(stderr, "REGISTRATION FAILED\r\n");
                 break;
             default:
-                fprintf(stdout, "INVALID (%d)\r\n", (int)targetP->status);
+                fprintf(stderr, "INVALID (%d)\r\n", (int)targetP->status);
             }
         }
     }
@@ -372,7 +372,7 @@ static void prv_change(char * buffer,
     return;
 
 syntax_error:
-    fprintf(stdout, "Syntax error !\n");
+    fprintf(stderr, "Syntax error !\n");
 }
 
 static void prv_object_list(char * buffer,
@@ -385,7 +385,7 @@ static void prv_object_list(char * buffer,
     {
         if (objectP->instanceList == NULL)
         {
-            fprintf(stdout, "/%d ", objectP->objID);
+            fprintf(stderr, "/%d ", objectP->objID);
         }
         else
         {
@@ -393,10 +393,10 @@ static void prv_object_list(char * buffer,
 
             for (instanceP = objectP->instanceList; instanceP != NULL ; instanceP = instanceP->next)
             {
-                fprintf(stdout, "/%d/%d  ", objectP->objID, instanceP->id);
+                fprintf(stderr, "/%d/%d  ", objectP->objID, instanceP->id);
             }
         }
-        fprintf(stdout, "\r\n");
+        fprintf(stderr, "\r\n");
     }
 }
 
@@ -412,12 +412,12 @@ static void prv_instance_dump(lwm2m_object_t * objectP,
     if (res != COAP_205_CONTENT)
     {
         printf("Error ");
-        print_status(stdout, res);
+        print_status(stderr, res);
         printf("\r\n");
         return;
     }
 
-    dump_tlv(stdout, numData, dataArray, 0);
+    dump_tlv(stderr, numData, dataArray, 0);
 }
 
 
@@ -440,7 +440,7 @@ static void prv_object_dump(char * buffer,
     objectP = (lwm2m_object_t *)LWM2M_LIST_FIND(lwm2mH->objectList, uri.objectId);
     if (objectP == NULL)
     {
-        fprintf(stdout, "Object not found.\n");
+        fprintf(stderr, "Object not found.\n");
         return;
     }
 
@@ -454,16 +454,16 @@ static void prv_object_dump(char * buffer,
 
         for (instanceP = objectP->instanceList; instanceP != NULL ; instanceP = instanceP->next)
         {
-            fprintf(stdout, "Instance %d:\r\n", instanceP->id);
+            fprintf(stderr, "Instance %d:\r\n", instanceP->id);
             prv_instance_dump(objectP, instanceP->id);
-            fprintf(stdout, "\r\n");
+            fprintf(stderr, "\r\n");
         }
     }
 
     return;
 
 syntax_error:
-    fprintf(stdout, "Syntax error !\n");
+    fprintf(stderr, "Syntax error !\n");
 }
 
 static void prv_update(char * buffer,
@@ -476,14 +476,14 @@ static void prv_update(char * buffer,
     int res = lwm2m_update_registration(lwm2mH, serverId, false);
     if (res != 0)
     {
-        fprintf(stdout, "Registration update error: ");
-        print_status(stdout, res);
-        fprintf(stdout, "\r\n");
+        fprintf(stderr, "Registration update error: ");
+        print_status(stderr, res);
+        fprintf(stderr, "\r\n");
     }
     return;
 
 syntax_error:
-    fprintf(stdout, "Syntax error !\n");
+    fprintf(stderr, "Syntax error !\n");
 }
 
 static void update_battery_level(lwm2m_context_t * context)
@@ -524,19 +524,19 @@ static void prv_add(char * buffer,
     objectP = get_test_object();
     if (objectP == NULL)
     {
-        fprintf(stdout, "Creating object 31024 failed.\r\n");
+        fprintf(stderr, "Creating object 31024 failed.\r\n");
         return;
     }
     res = lwm2m_add_object(lwm2mH, objectP);
     if (res != 0)
     {
-        fprintf(stdout, "Adding object 31024 failed: ");
-        print_status(stdout, res);
-        fprintf(stdout, "\r\n");
+        fprintf(stderr, "Adding object 31024 failed: ");
+        print_status(stderr, res);
+        fprintf(stderr, "\r\n");
     }
     else
     {
-        fprintf(stdout, "Object 31024 added.\r\n");
+        fprintf(stderr, "Object 31024 added.\r\n");
     }
     return;
 }
@@ -550,13 +550,13 @@ static void prv_remove(char * buffer,
     res = lwm2m_remove_object(lwm2mH, 31024);
     if (res != 0)
     {
-        fprintf(stdout, "Removing object 31024 failed: ");
-        print_status(stdout, res);
-        fprintf(stdout, "\r\n");
+        fprintf(stderr, "Removing object 31024 failed: ");
+        print_status(stderr, res);
+        fprintf(stderr, "\r\n");
     }
     else
     {
-        fprintf(stdout, "Object 31024 removed.\r\n");
+        fprintf(stderr, "Object 31024 removed.\r\n");
     }
     return;
 }
@@ -691,7 +691,7 @@ static void prv_restore_objects(lwm2m_context_t * context)
     copy_server_object(targetP, backupObjectArray[1]);
 
     // restart the old servers
-    fprintf(stdout, "[BOOTSTRAP] ObjectList restored\r\n");
+    fprintf(stderr, "[BOOTSTRAP] ObjectList restored\r\n");
 }
 
 static void update_bootstrap_info(lwm2m_client_state_t * previousBootstrapState,
@@ -704,7 +704,7 @@ static void update_bootstrap_info(lwm2m_client_state_t * previousBootstrapState,
         {
             case STATE_BOOTSTRAPPING:
 #ifdef WITH_LOGS
-                fprintf(stdout, "[BOOTSTRAP] backup security and server objects\r\n");
+                fprintf(stderr, "[BOOTSTRAP] backup security and server objects\r\n");
 #endif
                 prv_backup_objects(context);
                 break;
@@ -739,22 +739,22 @@ static void close_backup_object()
 
 void print_usage(void)
 {
-    fprintf(stdout, "Usage: lwm2mclient [OPTION]\r\n");
-    fprintf(stdout, "Launch a LWM2M client.\r\n");
-    fprintf(stdout, "Options:\r\n");
-    fprintf(stdout, "  -n NAME\tSet the endpoint name of the Client. Default: testlwm2mclient\r\n");
-    fprintf(stdout, "  -l PORT\tSet the local UDP port of the Client. Default: 56830\r\n");
-    fprintf(stdout, "  -h HOST\tSet the hostname of the LWM2M Server to connect to. Default: localhost\r\n");
-    fprintf(stdout, "  -p PORT\tSet the port of the LWM2M Server to connect to. Default: "LWM2M_STANDARD_PORT_STR"\r\n");
-    fprintf(stdout, "  -4\t\tUse IPv4 connection. Default: IPv6 connection\r\n");
-    fprintf(stdout, "  -t TIME\tSet the lifetime of the Client. Default: 300\r\n");
-    fprintf(stdout, "  -b\t\tBootstrap requested.\r\n");
-    fprintf(stdout, "  -c\t\tChange battery level over time.\r\n");
+    fprintf(stderr, "Usage: lwm2mclient [OPTION]\r\n");
+    fprintf(stderr, "Launch a LWM2M client.\r\n");
+    fprintf(stderr, "Options:\r\n");
+    fprintf(stderr, "  -n NAME\tSet the endpoint name of the Client. Default: testlwm2mclient\r\n");
+    fprintf(stderr, "  -l PORT\tSet the local UDP port of the Client. Default: 56830\r\n");
+    fprintf(stderr, "  -h HOST\tSet the hostname of the LWM2M Server to connect to. Default: localhost\r\n");
+    fprintf(stderr, "  -p PORT\tSet the port of the LWM2M Server to connect to. Default: "LWM2M_STANDARD_PORT_STR"\r\n");
+    fprintf(stderr, "  -4\t\tUse IPv4 connection. Default: IPv6 connection\r\n");
+    fprintf(stderr, "  -t TIME\tSet the lifetime of the Client. Default: 300\r\n");
+    fprintf(stderr, "  -b\t\tBootstrap requested.\r\n");
+    fprintf(stderr, "  -c\t\tChange battery level over time.\r\n");
 #ifdef WITH_TINYDTLS
-    fprintf(stdout, "  -i STRING\tSet the device management or bootstrap server PSK identity. If not set use none secure mode\r\n");
-    fprintf(stdout, "  -s HEXSTRING\tSet the device management or bootstrap server Pre-Shared-Key. If not set use none secure mode\r\n");
+    fprintf(stderr, "  -i STRING\tSet the device management or bootstrap server PSK identity. If not set use none secure mode\r\n");
+    fprintf(stderr, "  -s HEXSTRING\tSet the device management or bootstrap server Pre-Shared-Key. If not set use none secure mode\r\n");
 #endif
-    fprintf(stdout, "\r\n");
+    fprintf(stderr, "\r\n");
 }
 
 int main(int argc, char *argv[])
@@ -994,7 +994,7 @@ int main(int argc, char *argv[])
     objArray[2] = get_object_device();
     if (NULL == objArray[2])
     {
-        fprintf(stderr, "Failed to create Device object\r\n");
+        fprintf(stderr, "Failed to create Generic Device object\r\n");
         return -1;
     }
 
@@ -1096,8 +1096,8 @@ int main(int argc, char *argv[])
     {
         commands[i].userData = (void *)lwm2mH;
     }
-    fprintf(stdout, "LWM2M Client \"%s\" started on port %s\r\n", name, localPort);
-    fprintf(stdout, "> "); fflush(stdout);
+    fprintf(stderr, "LWM2M Client \"%s\" started on port %s\r\n", name, localPort);
+    fprintf(stderr, "> "); fflush(stderr);
     /*
      * We now enter in a while loop that will handle the communications from the server
      */
@@ -1151,29 +1151,29 @@ int main(int argc, char *argv[])
          *    (eg. retransmission) and the time between the next operation
          */
         result = lwm2m_step(lwm2mH, &(tv.tv_sec));
-        fprintf(stdout, " -> State: ");
+        fprintf(stderr, " -> State: ");
         switch (lwm2mH->state)
         {
         case STATE_INITIAL:
-            fprintf(stdout, "STATE_INITIAL\r\n");
+            fprintf(stderr, "STATE_INITIAL\r\n");
             break;
         case STATE_BOOTSTRAP_REQUIRED:
-            fprintf(stdout, "STATE_BOOTSTRAP_REQUIRED\r\n");
+            fprintf(stderr, "STATE_BOOTSTRAP_REQUIRED\r\n");
             break;
         case STATE_BOOTSTRAPPING:
-            fprintf(stdout, "STATE_BOOTSTRAPPING\r\n");
+            fprintf(stderr, "STATE_BOOTSTRAPPING\r\n");
             break;
         case STATE_REGISTER_REQUIRED:
-            fprintf(stdout, "STATE_REGISTER_REQUIRED\r\n");
+            fprintf(stderr, "STATE_REGISTER_REQUIRED\r\n");
             break;
         case STATE_REGISTERING:
-            fprintf(stdout, "STATE_REGISTERING\r\n");
+            fprintf(stderr, "STATE_REGISTERING\r\n");
             break;
         case STATE_READY:
-            fprintf(stdout, "STATE_READY\r\n");
+            fprintf(stderr, "STATE_READY\r\n");
             break;
         default:
-            fprintf(stdout, "Unknown...\r\n");
+            fprintf(stderr, "Unknown...\r\n");
             break;
         }
         if (result != 0)
@@ -1182,7 +1182,7 @@ int main(int argc, char *argv[])
             if(previousState == STATE_BOOTSTRAPPING)
             {
 #ifdef WITH_LOGS
-                fprintf(stdout, "[BOOTSTRAP] restore security and server objects\r\n");
+                fprintf(stderr, "[BOOTSTRAP] restore security and server objects\r\n");
 #endif
                 prv_restore_objects(lwm2mH);
                 lwm2mH->state = STATE_INITIAL;
@@ -1299,12 +1299,12 @@ int main(int argc, char *argv[])
                 }
                 if (g_quit == 0)
                 {
-                    fprintf(stdout, "\r\n> ");
-                    fflush(stdout);
+                    fprintf(stderr, "\r\n> ");
+                    fflush(stderr);
                 }
                 else
                 {
-                    fprintf(stdout, "\r\n");
+                    fprintf(stderr, "\r\n");
                 }
             }
         }
