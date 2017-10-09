@@ -119,6 +119,7 @@ lwm2m_object_t * get_object(uint8_t objectId)
         return NULL;
     }
     memset(genericObj, 0, sizeof(lwm2m_object_t));
+    genericObj->objID = objectId;
 
     parent_context_t * context = setup_parent_context(objectId);
     if (NULL != context)
