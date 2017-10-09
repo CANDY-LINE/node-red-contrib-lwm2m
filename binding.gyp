@@ -80,8 +80,10 @@
         '<(deps_dir)',
         '<(client_dir)',
         '<(src_dir)',
+        '<(base64_dir)',
       ],
       'dependencies': [
+        '<(deps_dir)/wakaama.gyp:libbase64',
         '<(deps_dir)/wakaama.gyp:liblwm2mclient',
         '<(deps_dir)/wakaama.gyp:liblwm2mshared',
         '<(deps_dir)/wakaama.gyp:libtinydtls',

@@ -76,5 +76,24 @@
         '<@(wakaama_defines)',
       ],
     },
+    {
+      'target_name': 'libbase64',
+      'type': 'static_library',
+      'include_dirs': [
+        '<(base64_dir)',
+        '<(wakaama_core_dir)',
+      ],
+      'cflags': [
+      ],
+      'sources': [
+        '<(base64_dir)/base64.c',
+      ],
+      'cflags_cc': [
+          '-Wno-unused-value',
+      ],
+      'defines': [
+        '<@(wakaama_defines)',
+      ],
+    },
   ]
 }
