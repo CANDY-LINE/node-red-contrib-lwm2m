@@ -52,6 +52,7 @@ static uint8_t prv_generic_read(uint16_t instanceId,
                                 lwm2m_object_t * objectP)
 {
     uint8_t result = 0;
+    parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
     return result;
 }
@@ -62,6 +63,7 @@ static uint8_t prv_generic_discover(uint16_t instanceId,
                                     lwm2m_object_t * objectP)
 {
     uint8_t result = 0;
+    parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
     return result;
 }
@@ -72,6 +74,7 @@ static uint8_t prv_generic_write(uint16_t instanceId,
                                  lwm2m_object_t * objectP)
 {
     uint8_t result = 0;
+    parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
     return result;
 }
@@ -83,6 +86,27 @@ static uint8_t prv_generic_execute(uint16_t instanceId,
                                    lwm2m_object_t * objectP)
 {
     uint8_t result = 0;
+    parent_context_t * context = (parent_context_t *)objectP->userData;
+    // TODO
+    return result;
+}
+
+static uint8_t prv_generic_create(uint16_t instanceId,
+                                  int numData,
+                                  lwm2m_data_t * dataArray,
+                                  lwm2m_object_t * objectP)
+{
+    uint8_t result = 0;
+    parent_context_t * context = (parent_context_t *)objectP->userData;
+    // TODO
+    return result;
+}
+
+static uint8_t prv_generic_delete(uint16_t instanceId,
+                                  lwm2m_object_t * objectP)
+{
+    uint8_t result = 0;
+    parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
     return result;
 }
@@ -123,6 +147,8 @@ lwm2m_object_t * get_object(uint8_t objectId)
     genericObj->discoverFunc = prv_generic_discover;
     genericObj->writeFunc    = prv_generic_write;
     genericObj->executeFunc  = prv_generic_execute;
+    genericObj->createFunc   = prv_generic_create;
+    genericObj->deleteFunc   = prv_generic_delete;
 
     return genericObj;
 }
