@@ -34,6 +34,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <signal.h>
+#include <inttypes.h>
 
 #define MAX_MESSAGE_SIZE 65536
 
@@ -160,31 +161,32 @@ static void lwm2m_data_cp(lwm2m_data_t * dataP,
     char * buf;
     switch(dataP->type) {
         case LWM2M_TYPE_STRING:
+            lwm2m_data_encode_nstring((const char *)data, len, dataP);
+            break;
         case LWM2M_TYPE_OPAQUE:
-            dataP->value.asBuffer.buffer = lwm2m_malloc(len);
-            dataP->value.asBuffer.length = len;
-            memcpy(dataP->value.asBuffer.buffer, data, len);
+            lwm2m_data_encode_opaque(data, len, dataP);
             break;
         case LWM2M_TYPE_INTEGER:
             buf = lwm2m_malloc(len + 1);
             memcpy(buf, data, len);
             buf[len] = '\0';
-            dataP->value.asInteger = strtoll(buf, NULL, 10);
+            lwm2m_data_encode_int(strtoll(buf, NULL, 10), dataP);
             lwm2m_free(buf);
             break;
         case LWM2M_TYPE_FLOAT:
             buf = lwm2m_malloc(len + 1);
             memcpy(buf, data, len);
             buf[len] = '\0';
-            dataP->value.asFloat = strtod(buf, NULL);
+            lwm2m_data_encode_float(strtod(buf, NULL), dataP);
             lwm2m_free(buf);
             break;
         case LWM2M_TYPE_BOOLEAN:
-            dataP->value.asBoolean = (data[0] == 1);
+            lwm2m_data_encode_bool((data[0] == 1), dataP);
             break;
         case LWM2M_TYPE_OBJECT_LINK:
-            dataP->value.asObjLink.objectId = data[0] + (((uint16_t)data[1]) << 8);
-            dataP->value.asObjLink.objectInstanceId = data[2] + (((uint16_t)data[3]) << 8);
+            lwm2m_data_encode_objlink(data[0] + (((uint16_t)data[1]) << 8),
+                                      data[2] + (((uint16_t)data[3]) << 8),
+                                      dataP);
             break;
         default:
             break;
