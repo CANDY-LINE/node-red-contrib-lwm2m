@@ -1093,13 +1093,12 @@ int main(int argc, char *argv[])
         }
         else
         {
-            tv.tv_sec = 60;
+            tv.tv_sec = 0;
         }
         tv.tv_usec = 0;
 
         FD_ZERO(&readfds);
         FD_SET(data.sock, &readfds);
-        FD_SET(STDIN_FILENO, &readfds);
 
         /*
          * This function does two things:
@@ -1236,32 +1235,6 @@ int main(int argc, char *argv[])
                     {
                         fprintf(stderr, "received bytes ignored!\r\n");
                     }
-                }
-            }
-
-            /*
-             * If the event happened on the SDTIN
-             */
-            else if (FD_ISSET(STDIN_FILENO, &readfds))
-            {
-                numBytes = read(STDIN_FILENO, buffer, MAX_PACKET_SIZE - 1);
-
-                if (numBytes > 1)
-                {
-                    buffer[numBytes] = 0;
-                    /*
-                     * We call the corresponding callback of the typed command passing it the buffer for further arguments
-                     */
-                    handle_command(commands, (char*)buffer);
-                }
-                if (g_quit == 0)
-                {
-                    fprintf(stderr, "\r\n> ");
-                    fflush(stderr);
-                }
-                else
-                {
-                    fprintf(stderr, "\r\n");
                 }
             }
         }
