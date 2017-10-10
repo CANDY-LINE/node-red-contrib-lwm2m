@@ -188,6 +188,25 @@ static void lwm2m_data_cp(lwm2m_data_t * dataP,
                                       data[2] + (((uint16_t)data[3]) << 8),
                                       dataP);
             break;
+        case LWM2M_TYPE_MULTIPLE_RESOURCE:
+            {
+                uint16_t i = 0;
+                uint16_t idx = 2;
+                uint16_t childSize;
+                uint16_t count = data[0] + (((uint16_t)data[1]) << 8);
+                lwm2m_data_t * children = lwm2m_data_new(count);
+                for (; i < count; i++) {
+                    children[i].id = data[idx++];
+                    children[i].id += (((uint16_t)data[idx++]) << 8);
+                    children[i].type = data[idx++];
+                    childSize = data[idx++];
+                    childSize += (((uint16_t)data[idx++]) << 8);
+                    lwm2m_data_cp(&children[i], &data[idx], childSize);
+                    idx += childSize;
+                }
+                lwm2m_data_encode_instances(children, count, dataP);
+            }
+            break;
         default:
             break;
     }
