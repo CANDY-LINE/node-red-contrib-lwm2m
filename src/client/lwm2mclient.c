@@ -1093,7 +1093,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            tv.tv_sec = 0;
+            tv.tv_sec = 30;
         }
         tv.tv_usec = 0;
 
