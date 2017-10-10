@@ -486,34 +486,6 @@ syntax_error:
     fprintf(stderr, "Syntax error !\n");
 }
 
-static void update_battery_level(lwm2m_context_t * context)
-{
-    static time_t next_change_time = 0;
-    time_t tv_sec;
-
-    tv_sec = lwm2m_gettime();
-    if (tv_sec < 0) return;
-
-    if (next_change_time < tv_sec)
-    {
-        char value[15];
-        int valueLength;
-        lwm2m_uri_t uri;
-        int level = rand() % 100;
-
-        if (0 > level) level = -level;
-        if (lwm2m_stringToUri("/3/0/9", 6, &uri))
-        {
-            valueLength = sprintf(value, "%d", level);
-            fprintf(stderr, "New Battery Level: %d\n", level);
-            handle_value_changed(context, &uri, value, valueLength);
-        }
-        level = rand() % 20;
-        if (0 > level) level = -level;
-        next_change_time = tv_sec + level + 10;
-    }
-}
-
 static void prv_add(char * buffer,
                     void * user_data)
 {
@@ -749,7 +721,6 @@ void print_usage(void)
     fprintf(stderr, "  -4\t\tUse IPv4 connection. Default: IPv6 connection\r\n");
     fprintf(stderr, "  -t TIME\tSet the lifetime of the Client. Default: 300\r\n");
     fprintf(stderr, "  -b\t\tBootstrap requested.\r\n");
-    fprintf(stderr, "  -c\t\tChange battery level over time.\r\n");
 #ifdef WITH_TINYDTLS
     fprintf(stderr, "  -i STRING\tSet the device management or bootstrap server PSK identity. If not set use none secure mode\r\n");
     fprintf(stderr, "  -s HEXSTRING\tSet the device management or bootstrap server Pre-Shared-Key. If not set use none secure mode\r\n");
@@ -768,7 +739,6 @@ int main(int argc, char *argv[])
     const char * serverPort = LWM2M_STANDARD_PORT_STR;
     char * name = "testlwm2mclient";
     int lifetime = 300;
-    int batterylevelchanging = 0;
     time_t reboot_time = 0;
     int opt;
     bool bootstrapRequested = false;
@@ -833,9 +803,6 @@ int main(int argc, char *argv[])
         case 'b':
             bootstrapRequested = true;
             if (!serverPortChanged) serverPort = LWM2M_BSSERVER_PORT_STR;
-            break;
-        case 'c':
-            batterylevelchanging = 1;
             break;
         case 't':
             opt++;
@@ -1123,11 +1090,6 @@ int main(int argc, char *argv[])
             {
                 tv.tv_sec = reboot_time - tv_sec;
             }
-        }
-        else if (batterylevelchanging)
-        {
-            update_battery_level(lwm2mH);
-            tv.tv_sec = 5;
         }
         else
         {
