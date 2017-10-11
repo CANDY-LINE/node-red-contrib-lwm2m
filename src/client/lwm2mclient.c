@@ -125,12 +125,6 @@ typedef struct
     int addressFamily;
 } client_data_t;
 
-static void prv_quit(char * buffer,
-                     void * user_data)
-{
-    g_quit = 1;
-}
-
 void handle_sigint(int signum)
 {
     g_quit = 1; // graceful shutdown
@@ -260,89 +254,6 @@ void lwm2m_close_connection(void * sessionH,
     }
 }
 
-static void prv_output_servers(char * buffer,
-                               void * user_data)
-{
-    lwm2m_context_t * lwm2mH = (lwm2m_context_t *) user_data;
-    lwm2m_server_t * targetP;
-
-    targetP = lwm2mH->bootstrapServerList;
-
-    if (lwm2mH->bootstrapServerList == NULL)
-    {
-        fprintf(stderr, "No Bootstrap Server.\r\n");
-    }
-    else
-    {
-        fprintf(stderr, "Bootstrap Servers:\r\n");
-        for (targetP = lwm2mH->bootstrapServerList ; targetP != NULL ; targetP = targetP->next)
-        {
-            fprintf(stderr, " - Security Object ID %d", targetP->secObjInstID);
-            fprintf(stderr, "\tHold Off Time: %lu s", (unsigned long)targetP->lifetime);
-            fprintf(stderr, "\tstatus: ");
-            switch(targetP->status)
-            {
-            case STATE_DEREGISTERED:
-                fprintf(stderr, "DEREGISTERED\r\n");
-                break;
-            case STATE_BS_HOLD_OFF:
-                fprintf(stderr, "CLIENT HOLD OFF\r\n");
-                break;
-            case STATE_BS_INITIATED:
-                fprintf(stderr, "BOOTSTRAP INITIATED\r\n");
-                break;
-            case STATE_BS_PENDING:
-                fprintf(stderr, "BOOTSTRAP PENDING\r\n");
-                break;
-            case STATE_BS_FINISHED:
-                fprintf(stderr, "BOOTSTRAP FINISHED\r\n");
-                break;
-            case STATE_BS_FAILED:
-                fprintf(stderr, "BOOTSTRAP FAILED\r\n");
-                break;
-            default:
-                fprintf(stderr, "INVALID (%d)\r\n", (int)targetP->status);
-            }
-        }
-    }
-
-    if (lwm2mH->serverList == NULL)
-    {
-        fprintf(stderr, "No LWM2M Server.\r\n");
-    }
-    else
-    {
-        fprintf(stderr, "LWM2M Servers:\r\n");
-        for (targetP = lwm2mH->serverList ; targetP != NULL ; targetP = targetP->next)
-        {
-            fprintf(stderr, " - Server ID %d", targetP->shortID);
-            fprintf(stderr, "\tstatus: ");
-            switch(targetP->status)
-            {
-            case STATE_DEREGISTERED:
-                fprintf(stderr, "DEREGISTERED\r\n");
-                break;
-            case STATE_REG_PENDING:
-                fprintf(stderr, "REGISTRATION PENDING\r\n");
-                break;
-            case STATE_REGISTERED:
-                fprintf(stderr, "REGISTERED\tlocation: \"%s\"\tLifetime: %lus\r\n", targetP->location, (unsigned long)targetP->lifetime);
-                break;
-            case STATE_REG_UPDATE_PENDING:
-                fprintf(stderr, "REGISTRATION UPDATE PENDING\r\n");
-                break;
-            case STATE_DEREG_PENDING:
-                fprintf(stderr, "DEREGISTRATION PENDING\r\n");
-                break;
-            case STATE_REG_FAILED:
-                fprintf(stderr, "REGISTRATION FAILED\r\n");
-                break;
-            default:
-                fprintf(stderr, "INVALID (%d)\r\n", (int)targetP->status);
-            }
-        }
-    }
-}
 
 static void prv_change(char * buffer,
                        void * user_data)
@@ -369,97 +280,6 @@ static void prv_change(char * buffer,
     {
         handle_value_changed(lwm2mH, &uri, buffer, end - buffer);
     }
-    return;
-
-syntax_error:
-    fprintf(stderr, "Syntax error !\n");
-}
-
-static void prv_object_list(char * buffer,
-                            void * user_data)
-{
-    lwm2m_context_t * lwm2mH = (lwm2m_context_t *)user_data;
-    lwm2m_object_t * objectP;
-
-    for (objectP = lwm2mH->objectList; objectP != NULL; objectP = objectP->next)
-    {
-        if (objectP->instanceList == NULL)
-        {
-            fprintf(stderr, "/%d ", objectP->objID);
-        }
-        else
-        {
-            lwm2m_list_t * instanceP;
-
-            for (instanceP = objectP->instanceList; instanceP != NULL ; instanceP = instanceP->next)
-            {
-                fprintf(stderr, "/%d/%d  ", objectP->objID, instanceP->id);
-            }
-        }
-        fprintf(stderr, "\r\n");
-    }
-}
-
-static void prv_instance_dump(lwm2m_object_t * objectP,
-                              uint16_t id)
-{
-    int numData;
-    lwm2m_data_t * dataArray;
-    uint16_t res;
-
-    numData = 0;
-    res = objectP->readFunc(id, &numData, &dataArray, objectP);
-    if (res != COAP_205_CONTENT)
-    {
-        printf("Error ");
-        print_status(stderr, res);
-        printf("\r\n");
-        return;
-    }
-
-    dump_tlv(stderr, numData, dataArray, 0);
-}
-
-
-static void prv_object_dump(char * buffer,
-                            void * user_data)
-{
-    lwm2m_context_t * lwm2mH = (lwm2m_context_t *) user_data;
-    lwm2m_uri_t uri;
-    char * end = NULL;
-    int result;
-    lwm2m_object_t * objectP;
-
-    end = get_end_of_arg(buffer);
-    if (end[0] == 0) goto syntax_error;
-
-    result = lwm2m_stringToUri(buffer, end - buffer, &uri);
-    if (result == 0) goto syntax_error;
-    if (uri.flag & LWM2M_URI_FLAG_RESOURCE_ID) goto syntax_error;
-
-    objectP = (lwm2m_object_t *)LWM2M_LIST_FIND(lwm2mH->objectList, uri.objectId);
-    if (objectP == NULL)
-    {
-        fprintf(stderr, "Object not found.\n");
-        return;
-    }
-
-    if (uri.flag & LWM2M_URI_FLAG_INSTANCE_ID)
-    {
-        prv_instance_dump(objectP, uri.instanceId);
-    }
-    else
-    {
-        lwm2m_list_t * instanceP;
-
-        for (instanceP = objectP->instanceList; instanceP != NULL ; instanceP = instanceP->next)
-        {
-            fprintf(stderr, "Instance %d:\r\n", instanceP->id);
-            prv_instance_dump(objectP, instanceP->id);
-            fprintf(stderr, "\r\n");
-        }
-    }
-
     return;
 
 syntax_error:
@@ -549,67 +369,6 @@ static void prv_initiate_bootstrap(char * buffer,
         targetP->lifetime = 0;
         targetP = targetP->next;
     }
-}
-
-static void prv_display_objects(char * buffer,
-                                void * user_data)
-{
-    lwm2m_context_t * lwm2mH = (lwm2m_context_t *)user_data;
-    lwm2m_object_t * object;
-
-    for (object = lwm2mH->objectList; object != NULL; object = object->next){
-        if (NULL != object) {
-            switch (object->objID)
-            {
-            case LWM2M_SECURITY_OBJECT_ID:
-                display_security_object(object);
-                break;
-            case LWM2M_SERVER_OBJECT_ID:
-                display_server_object(object);
-                break;
-            case LWM2M_ACL_OBJECT_ID:
-                break;
-            case LWM2M_DEVICE_OBJECT_ID:
-                display_device_object(object);
-                break;
-            case LWM2M_CONN_MONITOR_OBJECT_ID:
-                break;
-            case LWM2M_FIRMWARE_UPDATE_OBJECT_ID:
-                display_firmware_object(object);
-                break;
-            case LWM2M_LOCATION_OBJECT_ID:
-                display_location_object(object);
-                break;
-            case LWM2M_CONN_STATS_OBJECT_ID:
-                break;
-            case TEST_OBJECT_ID:
-                display_test_object(object);
-                break;
-            }
-        }
-    }
-}
-
-static void prv_display_backup(char * buffer,
-        void * user_data)
-{
-   int i;
-   for (i = 0 ; i < BACKUP_OBJECT_COUNT ; i++) {
-       lwm2m_object_t * object = backupObjectArray[i];
-       if (NULL != object) {
-           switch (object->objID)
-           {
-           case LWM2M_SECURITY_OBJECT_ID:
-               display_security_object(object);
-               break;
-           case LWM2M_SERVER_OBJECT_ID:
-               display_server_object(object);
-               break;
-           default:
-               break;
-           }
-       }
-   }
 }
 
 static void prv_backup_objects(lwm2m_context_t * context)
