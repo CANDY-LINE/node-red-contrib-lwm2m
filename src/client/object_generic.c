@@ -297,17 +297,6 @@ static uint8_t prv_generic_read(uint16_t instanceId,
     return result;
 }
 
-static uint8_t prv_generic_discover(uint16_t instanceId,
-                                    int * numDataP,
-                                    lwm2m_data_t ** dataArrayP,
-                                    lwm2m_object_t * objectP)
-{
-    uint8_t result = 0;
-    parent_context_t * context = (parent_context_t *)objectP->userData;
-    // TODO
-    return result;
-}
-
 static uint8_t prv_generic_write(uint16_t instanceId,
                                  int numData,
                                  lwm2m_data_t * dataArray,
@@ -324,6 +313,17 @@ static uint8_t prv_generic_execute(uint16_t instanceId,
                                    uint8_t * buffer,
                                    int length,
                                    lwm2m_object_t * objectP)
+{
+    uint8_t result = 0;
+    parent_context_t * context = (parent_context_t *)objectP->userData;
+    // TODO
+    return result;
+}
+
+static uint8_t prv_generic_discover(uint16_t instanceId,
+                                    int * numDataP,
+                                    lwm2m_data_t ** dataArrayP,
+                                    lwm2m_object_t * objectP)
 {
     uint8_t result = 0;
     parent_context_t * context = (parent_context_t *)objectP->userData;
