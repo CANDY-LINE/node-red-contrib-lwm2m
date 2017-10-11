@@ -37,6 +37,7 @@
 #include <inttypes.h>
 
 #define MAX_MESSAGE_SIZE 65536
+#define MAX_RESOURCES 65536
 
 typedef struct
 {
@@ -217,7 +218,7 @@ static uint8_t prv_generic_read(uint16_t instanceId,
                                 lwm2m_data_t ** dataArrayP,
                                 lwm2m_object_t * objectP)
 {
-    if (*numDataP > 255) {
+    if (*numDataP > MAX_RESOURCES) {
         return COAP_400_BAD_REQUEST;
     }
 
