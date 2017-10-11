@@ -736,7 +736,7 @@ int main(int argc, char *argv[])
     const char * localPort = "56830";
     const char * server = NULL;
     const char * serverPort = LWM2M_STANDARD_PORT_STR;
-    char * name = "testlwm2mclient";
+    char * name = "node-red-contrib-lwm2m";
     int lifetime = 300;
     time_t reboot_time = 0;
     int opt;
