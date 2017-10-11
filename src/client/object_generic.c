@@ -303,7 +303,7 @@ static uint8_t prv_generic_write(uint16_t instanceId,
                                  lwm2m_data_t * dataArray,
                                  lwm2m_object_t * objectP)
 {
-    uint8_t result = 0;
+    uint8_t result = COAP_501_NOT_IMPLEMENTED;
     parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
     return result;
@@ -315,7 +315,7 @@ static uint8_t prv_generic_execute(uint16_t instanceId,
                                    int length,
                                    lwm2m_object_t * objectP)
 {
-    uint8_t result = 0;
+    uint8_t result = COAP_501_NOT_IMPLEMENTED;
     parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
     return result;
@@ -326,7 +326,7 @@ static uint8_t prv_generic_discover(uint16_t instanceId,
                                     lwm2m_data_t ** dataArrayP,
                                     lwm2m_object_t * objectP)
 {
-    uint8_t result = 0;
+    uint8_t result = COAP_501_NOT_IMPLEMENTED;
     parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
     return result;
@@ -337,7 +337,7 @@ static uint8_t prv_generic_create(uint16_t instanceId,
                                   lwm2m_data_t * dataArray,
                                   lwm2m_object_t * objectP)
 {
-    uint8_t result = 0;
+    uint8_t result = COAP_501_NOT_IMPLEMENTED;
     parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
     return result;
@@ -346,7 +346,7 @@ static uint8_t prv_generic_create(uint16_t instanceId,
 static uint8_t prv_generic_delete(uint16_t instanceId,
                                   lwm2m_object_t * objectP)
 {
-    uint8_t result = 0;
+    uint8_t result = COAP_501_NOT_IMPLEMENTED;
     parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
     return result;
