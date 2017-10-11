@@ -733,7 +733,6 @@ int main(int argc, char *argv[])
     client_data_t data;
     int result;
     lwm2m_context_t * lwm2mH = NULL;
-    int i;
     const char * localPort = "56830";
     const char * server = NULL;
     const char * serverPort = LWM2M_STANDARD_PORT_STR;
@@ -752,38 +751,6 @@ int main(int argc, char *argv[])
     char * psk = NULL;
     uint16_t pskLen = -1;
     char * pskBuffer = NULL;
-
-    /*
-     * The function start by setting up the command line interface (which may or not be useful depending on your project)
-     *
-     * This is an array of commands describes as { name, description, long description, callback, userdata }.
-     * The firsts tree are easy to understand, the callback is the function that will be called when this command is typed
-     * and in the last one will be stored the lwm2m context (allowing access to the server settings and the objects).
-     */
-    command_desc_t commands[] =
-    {
-            {"list", "List known servers.", NULL, prv_output_servers, NULL},
-            {"change", "Change the value of resource.", " change URI [DATA]\r\n"
-                                                        "   URI: uri of the resource such as /3/0, /3/0/2\r\n"
-                                                        "   DATA: (optional) new value\r\n", prv_change, NULL},
-            {"update", "Trigger a registration update", " update SERVER\r\n"
-                                                        "   SERVER: short server id such as 123\r\n", prv_update, NULL},
-#ifdef LWM2M_BOOTSTRAP
-            {"bootstrap", "Initiate a DI bootstrap process", NULL, prv_initiate_bootstrap, NULL},
-            {"dispb", "Display current backup of objects/instances/resources\r\n"
-                    "\t(only security and server objects are backupped)", NULL, prv_display_backup, NULL},
-#endif
-            {"ls", "List Objects and Instances", NULL, prv_object_list, NULL},
-            {"disp", "Display current objects/instances/resources", NULL, prv_display_objects, NULL},
-            {"dump", "Dump an Object", "dump URI"
-                                       "URI: uri of the Object or Instance such as /3/0, /1\r\n", prv_object_dump, NULL},
-            {"add", "Add support of object 31024", NULL, prv_add, NULL},
-            {"rm", "Remove support of object 31024", NULL, prv_remove, NULL},
-            {"quit", "Quit the client gracefully.", NULL, prv_quit, NULL},
-            {"^C", "Alias for quit command", NULL, NULL, NULL},
-
-            COMMAND_END_LIST
-    };
 
     memset(&data, 0, sizeof(client_data_t));
     data.addressFamily = AF_INET6;
@@ -1050,14 +1017,6 @@ int main(int argc, char *argv[])
      */
     init_value_change(lwm2mH);
 
-    /*
-     * As you now have your lwm2m context complete you can pass it as an argument to all the command line functions
-     * precedently viewed (first point)
-     */
-    for (i = 0 ; commands[i].name != NULL ; i++)
-    {
-        commands[i].userData = (void *)lwm2mH;
-    }
     fprintf(stderr, "LWM2M Client \"%s\" started on port %s\r\n", name, localPort);
     fprintf(stderr, "> "); fflush(stderr);
     /*
