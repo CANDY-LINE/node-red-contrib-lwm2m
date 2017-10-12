@@ -223,6 +223,7 @@ static uint8_t prv_generic_read(uint16_t instanceId,
     }
 
     uint16_t i = 0;
+    uint16_t j = 0;
     uint8_t messageId = 0x01;
     uint8_t result;
     parent_context_t * context = (parent_context_t *)objectP->userData;
@@ -236,8 +237,9 @@ static uint8_t prv_generic_read(uint16_t instanceId,
     payloadRaw[i++] = instanceId >> 8;          // InstanceId MSB
     payloadRaw[i++] = *numDataP & 0xff;         // # of required data LSB (0x0000=ALL)
     payloadRaw[i++] = *numDataP >> 8;           // # of required data MSB
-    for(; i < payloadRawLen;) {
-        uint16_t id = (*dataArrayP)[i - 8].id;
+    for(; i < payloadRawLen;)
+    {
+        uint16_t id = (*dataArrayP)[j++].id;
         payloadRaw[i++] = id & 0xff; // ResourceId LSB
         payloadRaw[i++] = id >> 8;   // ResourceId MSB
     }
@@ -284,7 +286,8 @@ static uint8_t prv_generic_read(uint16_t instanceId,
             fprintf(stderr, "prv_generic_read:(lwm2m_data_new):*numDataP=>%d\r\n",
                 *numDataP);
         }
-        for (i = 0; i < *numDataP; i++) {
+        for (i = 0; i < *numDataP; i++)
+        {
             (*dataArrayP)[i].id = response[idx++];
             (*dataArrayP)[i].id += (((uint16_t)response[idx++]) << 8);
             (*dataArrayP)[i].type = response[idx++];
@@ -295,7 +298,108 @@ static uint8_t prv_generic_read(uint16_t instanceId,
         }
     }
     response_free(context);
+    fprintf(stderr, "prv_generic_read:result=>%u\r\n", result);
     return result;
+}
+
+static uint16_t lwm2m_get_payload_size(int numData,
+                                       lwm2m_data_t * dataArray)
+{
+    uint16_t i = 0;
+    uint16_t len = 0;
+    for (i = 0; i < numData; i++)
+    {
+        len += 5; // ResourceId (16bit) + Resouce Data Type (8bit) + Length of resource data (16bit)
+        switch (dataArray[i].type) {
+            case LWM2M_TYPE_STRING:
+            case LWM2M_TYPE_OPAQUE:
+                len += dataArray[i].value.asBuffer.length;
+                break;
+            case LWM2M_TYPE_INTEGER:
+                len += snprintf(NULL, 0, "%" PRIu64, dataArray[i].value.asInteger);
+                break;
+            case LWM2M_TYPE_FLOAT:
+                len += snprintf(NULL, 0, "%f", dataArray[i].value.asFloat);
+                break;
+            case LWM2M_TYPE_BOOLEAN:
+                len += 1;
+                break;
+            case LWM2M_TYPE_OBJECT_LINK:
+                len += sizeof(uint16_t) * 2;
+                break;
+            case LWM2M_TYPE_MULTIPLE_RESOURCE:
+                ++len; // # of resources LSB
+                ++len; // # of resources MSB
+                len += lwm2m_get_payload_size(
+                    dataArray[i].value.asChildren.count,
+                    dataArray[i].value.asChildren.array);
+                break;
+            default:
+                break;
+        }
+    }
+    return len;
+}
+
+static size_t lwm2m_write_payload(uint16_t * i,
+                                  uint8_t * payloadRaw,
+                                  int numData,
+                                  lwm2m_data_t * dataArray)
+{
+    size_t len;
+    uint16_t j;
+
+    for (j = 0; j < numData; j++)
+    {
+        uint16_t id = dataArray[j].id;
+        uint16_t begin = *i;
+        payloadRaw[(*i)++] = id & 0xff;  // ResourceId LSB
+        payloadRaw[(*i)++] = id >> 8;    // ResourceId MSB
+        payloadRaw[(*i)++] = dataArray[j].type; // Resouce Data Type
+        payloadRaw[(*i)++] = 0x00;       // Length of resource data LSB
+        payloadRaw[(*i)++] = 0x00;       // Length of resource data MSB
+        len = 0;
+        switch (dataArray[j].type) {
+            case LWM2M_TYPE_STRING:
+            case LWM2M_TYPE_OPAQUE:
+                len += dataArray[j].value.asBuffer.length;
+                memcpy(
+                    &payloadRaw[*i],
+                    dataArray[j].value.asBuffer.buffer,
+                    dataArray[j].value.asBuffer.length);
+                break;
+            case LWM2M_TYPE_INTEGER:
+                len += sprintf((char *)&payloadRaw[*i], "%" PRIu64, dataArray[j].value.asInteger);
+                break;
+            case LWM2M_TYPE_FLOAT:
+                len += sprintf((char *)&payloadRaw[*i], "%f", dataArray[j].value.asFloat);
+                break;
+            case LWM2M_TYPE_BOOLEAN:
+                len += 1;
+                payloadRaw[*i] = dataArray[j].value.asBoolean;
+                break;
+            case LWM2M_TYPE_OBJECT_LINK:
+                len += sizeof(uint16_t) * 2;
+                payloadRaw[*i + 0] = dataArray[j].value.asObjLink.objectId & 0xff; // objectId LSB
+                payloadRaw[*i + 1] = dataArray[j].value.asObjLink.objectId >> 8;   // objectId MSB
+                payloadRaw[*i + 2] = dataArray[j].value.asObjLink.objectInstanceId & 0xff; // objectInstanceId LSB
+                payloadRaw[*i + 3] = dataArray[j].value.asObjLink.objectInstanceId >> 8;   // objectInstanceId MSB
+                break;
+            case LWM2M_TYPE_MULTIPLE_RESOURCE:
+                len += lwm2m_write_payload(
+                    i,
+                    &payloadRaw[*i],
+                    dataArray[j].value.asChildren.count,
+                    dataArray[j].value.asChildren.array);
+                break;
+            default:
+                break;
+        }
+        *i += len;
+        payloadRaw[begin + 3] = len & 0xff; // Length of resource data LSB
+        payloadRaw[begin + 4] = len >> 8;   // Length of resource data MSB
+    }
+    return len;
 }
 
 static uint8_t prv_generic_write(uint16_t instanceId,
@@ -303,9 +407,45 @@ static uint8_t prv_generic_write(uint16_t instanceId,
                                  lwm2m_data_t * dataArray,
                                  lwm2m_object_t * objectP)
 {
-    uint8_t result = COAP_501_NOT_IMPLEMENTED;
+    uint16_t i = 0;
+    uint8_t messageId = 0x01;
+    uint8_t result;
     parent_context_t * context = (parent_context_t *)objectP->userData;
-    // TODO
+    size_t payloadRawLen = 8 + lwm2m_get_payload_size(numData, dataArray);
+    uint8_t * payloadRaw = lwm2m_malloc(payloadRawLen);
+    payloadRaw[i++] = 0x01;                     // Data Type: 0x01 (Request), 0x02 (Response)
+    payloadRaw[i++] = messageId;                // Message Id associated with Data Type
+    payloadRaw[i++] = context->objectId & 0xff; // ObjectID LSB
+    payloadRaw[i++] = context->objectId >> 8;   // ObjectID MSB
+    payloadRaw[i++] = instanceId & 0xff;        // InstanceId LSB
+    payloadRaw[i++] = instanceId >> 8;          // InstanceId MSB
+    payloadRaw[i++] = numData & 0xff;           // # of required data LSB (0x0000=ALL)
+    payloadRaw[i++] = numData >> 8;             // # of required data MSB
+    lwm2m_write_payload(&i, payloadRaw, numData, dataArray);
+
+    fprintf(stderr, "prv_generic_write:objectId=>%hu, instanceId=>%hu, numData=>%d\r\n",
+      context->objectId, instanceId, numData);
+    result = request_command(context, "write", payloadRaw, payloadRawLen);
+    lwm2m_free(payloadRaw);
+
+    /*
+    * Response Data Format (result = COAP_NO_ERROR)
+    * 02 ... Data Type: 0x01 (Request), 0x02 (Response)
+    * 00 ... Message Id associated with Data Type
+    * 45 ... Result Status Code e.g. COAP_205_CONTENT
+    * 00 ... ObjectID LSB
+    * 00 ... ObjectID MSB
+    * 00 ... InstanceId LSB
+    * 00 ... InstanceId MSB
+    * 00 ... always 00
+    * 00 ... always 00
+    */
+    uint8_t * response = context->response;
+    if (COAP_NO_ERROR == result && response[0] == 0x02 && messageId == response[1]) {
+      result = response[2];
+    }
+    response_free(context);
+    fprintf(stderr, "prv_generic_write:result=>%u\r\n", result);
     return result;
 }
 
