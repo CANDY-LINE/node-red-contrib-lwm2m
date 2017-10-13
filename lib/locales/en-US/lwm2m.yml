@@ -29,5 +29,3 @@ lwm2m:
     presharedKey: (hex string)
   error:
     duplicateEntry: Duplicate LwM2M Server Configuration (Host:__host__, Port:__port__)
-    missingUri: Missing URI => __uri__
-    wrongParameters: Wrong Parameters
