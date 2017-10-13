@@ -296,6 +296,8 @@ static uint8_t prv_generic_read(uint16_t instanceId,
             lwm2m_data_cp(&(*dataArrayP)[i], &response[idx], len);
             idx += len;
         }
+    } else {
+        result = COAP_400_BAD_REQUEST;
     }
     response_free(context);
     fprintf(stderr, "prv_generic_read:result=>%u\r\n", result);
@@ -442,7 +444,9 @@ static uint8_t prv_generic_write(uint16_t instanceId,
     */
     uint8_t * response = context->response;
     if (COAP_NO_ERROR == result && response[0] == 0x02 && messageId == response[1]) {
-      result = response[2];
+        result = response[2];
+    } else {
+        result = COAP_400_BAD_REQUEST;
     }
     response_free(context);
     fprintf(stderr, "prv_generic_write:result=>%u\r\n", result);
