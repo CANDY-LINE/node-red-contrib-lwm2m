@@ -34,7 +34,7 @@
         '<(wakaama_dtls_dir)/ecc',
         '<(wakaama_dtls_dir)/sha2',
         '<(wakaama_dtls_dir)',
-        './tinydtls',
+        '<(tinydtls_dir)',
       ],
       'dependencies': [
         'liblwm2mclient',
@@ -57,7 +57,7 @@
       'include_dirs': [
         '<(wakaama_core_dir)',
         '<(wakaama_shared_dir)',
-        '<(deps_dir)/tinydtls',
+        '<(tinydtls_dir)',
         '<(deps_dir)',
       ],
       'dependencies': [
