@@ -15,6 +15,10 @@ lwm2m:
     pskIdentity: PSK Identitiy
     presharedKey: Preshared Key
   status:
+    bootstrapRequired: bootstrap required
+    bootstrapping: bootstrapping
+    registerRequired: register required
+    registering: registering
     connected: connected
     disconnected: disconnected
     error: error

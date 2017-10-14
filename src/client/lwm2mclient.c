@@ -824,32 +824,36 @@ int main(int argc, char *argv[])
          *  - Secondly it adjusts the timeout value (default 60s) depending on the state of the transaction
          *    (eg. retransmission) and the time between the next operation
          */
+        uint8_t prev = lwm2mH->state;
         result = lwm2m_step(lwm2mH, &(tv.tv_sec));
-        fprintf(stderr, " -> State: ");
-        switch (lwm2mH->state)
-        {
-        case STATE_INITIAL:
-            fprintf(stderr, "STATE_INITIAL\r\n");
-            break;
-        case STATE_BOOTSTRAP_REQUIRED:
-            fprintf(stderr, "STATE_BOOTSTRAP_REQUIRED\r\n");
-            break;
-        case STATE_BOOTSTRAPPING:
-            fprintf(stderr, "STATE_BOOTSTRAPPING\r\n");
-            break;
-        case STATE_REGISTER_REQUIRED:
-            fprintf(stderr, "STATE_REGISTER_REQUIRED\r\n");
-            break;
-        case STATE_REGISTERING:
-            fprintf(stderr, "STATE_REGISTERING\r\n");
-            break;
-        case STATE_READY:
-            fprintf(stderr, "STATE_READY\r\n");
-            break;
-        default:
-            fprintf(stderr, "Unknown...\r\n");
-            break;
+        if (prev != lwm2mH->state) {
+            // Issue a command to notify state change
+            switch (lwm2mH->state)
+            {
+            case STATE_INITIAL:
+                fprintf(stdout, "/notify:U1RBVEVfSU5JVElBTA==\r\n");
+                break;
+            case STATE_BOOTSTRAP_REQUIRED:
+                fprintf(stdout, "/notify:U1RBVEVfQk9PVFNUUkFQX1JFUVVJUkVE\r\n");
+                break;
+            case STATE_BOOTSTRAPPING:
+                fprintf(stdout, "/notify:U1RBVEVfQk9PVFNUUkFQUElORw==\r\n");
+                break;
+            case STATE_REGISTER_REQUIRED:
+                fprintf(stdout, "/notify:U1RBVEVfUkVHSVNURVJfUkVRVUlSRUQ=\r\n");
+                break;
+            case STATE_REGISTERING:
+                fprintf(stdout, "/notify:U1RBVEVfUkVHSVNURVJJTkc=\r\n");
+                break;
+            case STATE_READY:
+                fprintf(stdout, "/notify:U1RBVEVfUkVBRFk=\r\n");
+                break;
+            default:
+                break;
+            }
+            fflush(stdout);
         }
+        fprintf(stderr, "lwm2m_step() result => 0x%X\r\n", result);
         if (result != 0)
         {
             fprintf(stderr, "lwm2m_step() failed: 0x%X\r\n", result);
