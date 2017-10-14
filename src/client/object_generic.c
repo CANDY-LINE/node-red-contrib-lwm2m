@@ -36,9 +36,6 @@
 #include <signal.h>
 #include <inttypes.h>
 
-#define MAX_MESSAGE_SIZE 65536
-#define MAX_RESOURCES 65536
-
 typedef struct
 {
     uint16_t objectId;

@@ -47,6 +47,9 @@
 
 #include "liblwm2m.h"
 
+#define MAX_MESSAGE_SIZE 65536
+#define MAX_RESOURCES 65536
+
 extern int g_reboot;
 
 /*
