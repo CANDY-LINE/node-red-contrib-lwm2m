@@ -779,12 +779,13 @@ int main(int argc, char *argv[])
         }
         else
         {
-            tv.tv_sec = 30;
+            tv.tv_sec = 5;
         }
         tv.tv_usec = 0;
 
         FD_ZERO(&readfds);
         FD_SET(data.sock, &readfds);
+        FD_SET(STDIN_FILENO, &readfds);
 
         /*
          * This function does two things:
@@ -839,6 +840,11 @@ int main(int argc, char *argv[])
         }
         update_bootstrap_info(&previousState, lwm2mH);
 #endif
+
+        if ((lwm2mH->state == STATE_READY) && (lwm2mH->observedList != NULL)) {
+            fprintf(stdout, "/observe:\r\n");
+            fflush(stdout);
+        }
         /*
          * This part will set up an interruption until an event happen on SDTIN or the socket until "tv" timed out (set
          * with the precedent function)
@@ -927,6 +933,12 @@ int main(int argc, char *argv[])
                         fprintf(stderr, "received bytes ignored!\r\n");
                     }
                 }
+            }
+            // Handle only `inquireNotifs` response
+            else if (FD_ISSET(STDIN_FILENO, &readfds))
+            {
+                uint8_t err = handle_observe_response(lwm2mH);
+                fprintf(stderr, "lwm2mclient:err => %u\r\n", err);
             }
         }
     }

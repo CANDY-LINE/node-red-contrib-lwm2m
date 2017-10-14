@@ -595,3 +595,58 @@ void free_object(lwm2m_object_t * objectP)
         lwm2m_free(objectP);
     }
 }
+
+uint8_t handle_observe_response(lwm2m_context_t * lwm2mH)
+{
+    uint8_t err = COAP_NO_ERROR;
+    parent_context_t context;
+    err = handle_response(&context, "observe");
+    /*
+     * Response Data Format (result = COAP_NO_ERROR)
+     * 02 ... Data Type: 0x01 (Request), 0x02 (Response)
+     * 00 ... Message Id associated with Data Type (always 00)
+     * 45 ... Result Status Code e.g. COAP_205_CONTENT
+     * 00 ... URI size LSB
+     * 00 ... URI size MSB
+     * 00 ... URI length LSB <============= First ResourceId LSB (index:5)
+     * 00 ... URI length MSB
+     * 00 ... URI String Data
+     * ..
+     * 00 ... URI length LSB <============= First ResourceId LSB (index:5 + URI length)
+     * 00 ... URI length MSB
+     * 00 ... URI String Data
+     * ..
+     */
+    uint8_t * response = context.response;
+
+    if (COAP_NO_ERROR != err || response[0] != 0x02) {
+        return err;
+    }
+    uint16_t uriLen = response[3] + (((uint16_t)response[4]) << 8);
+
+    uint8_t * b = &response[5];
+    uint16_t i = 0;
+    uint16_t uriStrLen;
+    char uriStr[URI_STRING_MAX_LEN];
+    lwm2m_uri_t uri;
+
+    for (; i < uriLen; i++) {
+        uriStrLen = *b + (((uint16_t)*(b + 1)) << 8);
+        b += 2;
+        if (uriStrLen > URI_STRING_MAX_LEN) {
+            fprintf(stderr, "handle_observe_response:too long string => %hu\r\n", uriStrLen);
+            err = COAP_400_BAD_REQUEST;
+            break;
+        }
+        memcpy(uriStr, b, uriStrLen);
+        uriStr[uriStrLen] = '\0';
+        b += uriStrLen;
+        if (0 == lwm2m_stringToUri(uriStr, uriStrLen, &uri)) {
+            err = COAP_400_BAD_REQUEST;
+            fprintf(stderr, "handle_observe_response:lwm2m_stringToUri() failed\r\n");
+            break;
+        }
+        lwm2m_resource_value_changed(lwm2mH, &uri);
+    }
+    return err;
+}

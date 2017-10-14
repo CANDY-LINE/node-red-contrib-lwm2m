@@ -49,6 +49,7 @@
 
 #define MAX_MESSAGE_SIZE 65536
 #define MAX_RESOURCES 65536
+#define URI_STRING_MAX_LEN 1024
 
 extern int g_reboot;
 
@@ -57,6 +58,7 @@ extern int g_reboot;
  */
 lwm2m_object_t * get_object(uint8_t objectId);
 void free_object(lwm2m_object_t * objectP);
+uint8_t handle_observe_response(lwm2m_context_t * lwm2mH);
 
 /*
  * object_device.c
