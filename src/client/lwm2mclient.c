@@ -651,7 +651,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    objArray[2] = get_object_device();
+    objArray[2] = get_object(LWM2M_DEVICE_OBJECT_ID);
     if (NULL == objArray[2])
     {
         fprintf(stderr, "Failed to create Generic Device object\r\n");
@@ -941,7 +941,7 @@ int main(int argc, char *argv[])
     lwm2m_free(objArray[0]);
     clean_server_object(objArray[1]);
     lwm2m_free(objArray[1]);
-    free_object_device(objArray[2]);
+    free_object(objArray[2]);
     free_object_firmware(objArray[3]);
     free_object_location(objArray[4]);
     free_test_object(objArray[5]);
