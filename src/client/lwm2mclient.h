@@ -54,7 +54,6 @@ extern int g_reboot;
  */
 lwm2m_object_t * get_object(uint8_t objectId);
 void free_object(lwm2m_object_t * objectP);
-void handle_value_changed(lwm2m_context_t* lwm2mH, lwm2m_uri_t* uri, const char * value, size_t valueLength);
 
 /*
  * object_device.c

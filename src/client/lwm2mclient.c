@@ -254,38 +254,6 @@ void lwm2m_close_connection(void * sessionH,
     }
 }
 
-
-static void prv_change(char * buffer,
-                       void * user_data)
-{
-    lwm2m_context_t * lwm2mH = (lwm2m_context_t *) user_data;
-    lwm2m_uri_t uri;
-    char * end = NULL;
-    int result;
-
-    end = get_end_of_arg(buffer);
-    if (end[0] == 0) goto syntax_error;
-
-    result = lwm2m_stringToUri(buffer, end - buffer, &uri);
-    if (result == 0) goto syntax_error;
-
-    buffer = get_next_arg(end, &end);
-
-    if (buffer[0] == 0)
-    {
-        fprintf(stderr, "report change!\n");
-        lwm2m_resource_value_changed(lwm2mH, &uri);
-    }
-    else
-    {
-        handle_value_changed(lwm2mH, &uri, buffer, end - buffer);
-    }
-    return;
-
-syntax_error:
-    fprintf(stderr, "Syntax error !\n");
-}
-
 static void prv_update(char * buffer,
                        void * user_data)
 {
