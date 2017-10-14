@@ -465,7 +465,6 @@ int main(int argc, char *argv[])
     const char * serverPort = LWM2M_STANDARD_PORT_STR;
     char * name = "node-red-contrib-lwm2m";
     int lifetime = 300;
-    time_t reboot_time = 0;
     int opt;
     bool bootstrapRequested = false;
     bool serverPortChanged = false;
@@ -739,11 +738,6 @@ int main(int argc, char *argv[])
 
     signal(SIGINT, handle_sigint);
 
-    /**
-     * Initialize value changed callback.
-     */
-    init_value_change(lwm2mH);
-
     fprintf(stderr, "LWM2M Client \"%s\" started on port %s\r\n", name, localPort);
     fprintf(stderr, "> "); fflush(stderr);
     /*
@@ -759,23 +753,6 @@ int main(int argc, char *argv[])
             time_t tv_sec;
 
             tv_sec = lwm2m_gettime();
-
-            if (0 == reboot_time)
-            {
-                reboot_time = tv_sec + 5;
-            }
-            if (reboot_time < tv_sec)
-            {
-                /*
-                 * Message should normally be lost with reboot ...
-                 */
-                fprintf(stderr, "reboot time expired, rebooting ...");
-                system_reboot();
-            }
-            else
-            {
-                tv.tv_sec = reboot_time - tv_sec;
-            }
         }
         else
         {

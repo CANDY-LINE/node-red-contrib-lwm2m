@@ -120,12 +120,6 @@ bool  acc_ctrl_oi_add_ac_val(lwm2m_object_t* accCtrlObjP, uint16_t instId,
                  uint16_t aclResId, uint16_t acValue);
 
 /*
- * system_api.c
- */
-void init_value_change(lwm2m_context_t * lwm2m);
-void system_reboot(void);
-
-/*
  * object_security.c
  */
 lwm2m_object_t * get_security_object(int serverId, const char* serverUri, char * bsPskId, char * psk, uint16_t pskLen, bool isBootstrap);

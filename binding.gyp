@@ -100,7 +100,6 @@
         '<(client_dir)/object_device.c',
         '<(client_dir)/object_firmware.c',
         '<(client_dir)/object_location.c',
-        '<(client_dir)/system_api.c',
         '<(client_dir)/test_object.c',
       ],
       'cflags_cc': [
