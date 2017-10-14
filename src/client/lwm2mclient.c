@@ -798,22 +798,22 @@ int main(int argc, char *argv[])
             switch (lwm2mH->state)
             {
             case STATE_INITIAL:
-                fprintf(stdout, "/notify:U1RBVEVfSU5JVElBTA==\r\n");
+                fprintf(stdout, "/stateChanged:U1RBVEVfSU5JVElBTA==\r\n");
                 break;
             case STATE_BOOTSTRAP_REQUIRED:
-                fprintf(stdout, "/notify:U1RBVEVfQk9PVFNUUkFQX1JFUVVJUkVE\r\n");
+                fprintf(stdout, "/stateChanged:U1RBVEVfQk9PVFNUUkFQX1JFUVVJUkVE\r\n");
                 break;
             case STATE_BOOTSTRAPPING:
-                fprintf(stdout, "/notify:U1RBVEVfQk9PVFNUUkFQUElORw==\r\n");
+                fprintf(stdout, "/stateChanged:U1RBVEVfQk9PVFNUUkFQUElORw==\r\n");
                 break;
             case STATE_REGISTER_REQUIRED:
-                fprintf(stdout, "/notify:U1RBVEVfUkVHSVNURVJfUkVRVUlSRUQ=\r\n");
+                fprintf(stdout, "/stateChanged:U1RBVEVfUkVHSVNURVJfUkVRVUlSRUQ=\r\n");
                 break;
             case STATE_REGISTERING:
-                fprintf(stdout, "/notify:U1RBVEVfUkVHSVNURVJJTkc=\r\n");
+                fprintf(stdout, "/stateChanged:U1RBVEVfUkVHSVNURVJJTkc=\r\n");
                 break;
             case STATE_READY:
-                fprintf(stdout, "/notify:U1RBVEVfUkVBRFk=\r\n");
+                fprintf(stdout, "/stateChanged:U1RBVEVfUkVBRFk=\r\n");
                 break;
             default:
                 break;
