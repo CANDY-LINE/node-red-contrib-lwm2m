@@ -824,9 +824,8 @@ int main(int argc, char *argv[])
          *  - Secondly it adjusts the timeout value (default 60s) depending on the state of the transaction
          *    (eg. retransmission) and the time between the next operation
          */
-        uint8_t prev = lwm2mH->state;
         result = lwm2m_step(lwm2mH, &(tv.tv_sec));
-        if (prev != lwm2mH->state) {
+        if (previousState != lwm2mH->state) {
             // Issue a command to notify state change
             switch (lwm2mH->state)
             {
