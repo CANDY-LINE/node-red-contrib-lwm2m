@@ -852,7 +852,10 @@ int main(int argc, char *argv[])
             }
             fflush(stdout);
         }
+#ifdef WITH_LOGS
         fprintf(stderr, "lwm2m_step() result => 0x%X\r\n", result);
+#endif
+#ifdef LWM2M_BOOTSTRAP
         if (result != 0)
         {
             fprintf(stderr, "lwm2m_step() failed: 0x%X\r\n", result);
@@ -866,7 +869,6 @@ int main(int argc, char *argv[])
             }
             else return -1;
         }
-#ifdef LWM2M_BOOTSTRAP
         update_bootstrap_info(&previousState, lwm2mH);
 #endif
         /*
