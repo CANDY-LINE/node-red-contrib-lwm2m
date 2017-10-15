@@ -517,6 +517,7 @@ static uint8_t prv_generic_discover(uint16_t instanceId,
     uint8_t result = COAP_501_NOT_IMPLEMENTED;
     parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
+    fprintf(stderr, "prv_generic_discover:result=>%u\r\n", result);
     return result;
 }
 
@@ -528,6 +529,7 @@ static uint8_t prv_generic_create(uint16_t instanceId,
     uint8_t result = COAP_501_NOT_IMPLEMENTED;
     parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
+    fprintf(stderr, "prv_generic_create:result=>%u\r\n", result);
     return result;
 }
 
@@ -537,6 +539,7 @@ static uint8_t prv_generic_delete(uint16_t instanceId,
     uint8_t result = COAP_501_NOT_IMPLEMENTED;
     parent_context_t * context = (parent_context_t *)objectP->userData;
     // TODO
+    fprintf(stderr, "prv_generic_delete:result=>%u\r\n", result);
     return result;
 }
 
