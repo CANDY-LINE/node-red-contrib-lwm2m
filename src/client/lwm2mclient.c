@@ -651,65 +651,55 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    objArray[2] = get_object(LWM2M_DEVICE_OBJECT_ID);
+    objArray[2] = get_object(LWM2M_ACL_OBJECT_ID);
     if (NULL == objArray[2])
     {
-        fprintf(stderr, "Failed to create Generic Device object\r\n");
+        fprintf(stderr, "Failed to create Generic Device object for LWM2M_ACL_OBJECT\r\n");
         return -1;
     }
 
-    objArray[3] = get_object_firmware();
+    objArray[3] = get_object(LWM2M_DEVICE_OBJECT_ID);
     if (NULL == objArray[3])
+    {
+        fprintf(stderr, "Failed to create Generic Device object for LWM2M_DEVICE_OBJECT\r\n");
+        return -1;
+    }
+
+    objArray[4] = get_object_firmware();
+    if (NULL == objArray[4])
     {
         fprintf(stderr, "Failed to create Firmware object\r\n");
         return -1;
     }
 
-    objArray[4] = get_object_location();
-    if (NULL == objArray[4])
+    objArray[5] = get_object_location();
+    if (NULL == objArray[5])
     {
         fprintf(stderr, "Failed to create location object\r\n");
         return -1;
     }
 
-    objArray[5] = get_test_object();
-    if (NULL == objArray[5])
+    objArray[6] = get_test_object();
+    if (NULL == objArray[6])
     {
         fprintf(stderr, "Failed to create test object\r\n");
         return -1;
     }
 
-    objArray[6] = get_object_conn_m();
-    if (NULL == objArray[6])
+    objArray[7] = get_object_conn_m();
+    if (NULL == objArray[7])
     {
         fprintf(stderr, "Failed to create connectivity monitoring object\r\n");
         return -1;
     }
 
-    objArray[7] = get_object_conn_s();
-    if (NULL == objArray[7])
+    objArray[8] = get_object_conn_s();
+    if (NULL == objArray[8])
     {
         fprintf(stderr, "Failed to create connectivity statistics object\r\n");
         return -1;
     }
 
-    int instId = 0;
-    objArray[8] = acc_ctrl_create_object();
-    if (NULL == objArray[8])
-    {
-        fprintf(stderr, "Failed to create Access Control object\r\n");
-        return -1;
-    }
-    else if (acc_ctrl_obj_add_inst(objArray[8], instId, 3, 0, serverId)==false)
-    {
-        fprintf(stderr, "Failed to create Access Control object instance\r\n");
-        return -1;
-    }
-    else if (acc_ctrl_oi_add_ac_val(objArray[8], instId, 0, 0b000000000001111)==false)
-    {
-        fprintf(stderr, "Failed to create Access Control ACL default resource\r\n");
-        return -1;
-    }
     /*
      * The liblwm2m library is now initialized with the functions that will be in
      * charge of communication

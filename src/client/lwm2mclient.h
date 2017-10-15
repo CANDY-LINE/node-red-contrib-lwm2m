@@ -103,16 +103,6 @@ extern void conn_s_updateTxStatistic(lwm2m_object_t * objectP, uint16_t txDataBy
 extern void conn_s_updateRxStatistic(lwm2m_object_t * objectP, uint16_t rxDataByte, bool smsBased);
 
 /*
- * object_access_control.c
- */
-lwm2m_object_t* acc_ctrl_create_object(void);
-void acl_ctrl_free_object(lwm2m_object_t * objectP);
-bool  acc_ctrl_obj_add_inst (lwm2m_object_t* accCtrlObjP, uint16_t instId,
-                 uint16_t acObjectId, uint16_t acObjInstId, uint16_t acOwner);
-bool  acc_ctrl_oi_add_ac_val(lwm2m_object_t* accCtrlObjP, uint16_t instId,
-                 uint16_t aclResId, uint16_t acValue);
-
-/*
  * object_security.c
  */
 lwm2m_object_t * get_security_object(int serverId, const char* serverUri, char * bsPskId, char * psk, uint16_t pskLen, bool isBootstrap);
