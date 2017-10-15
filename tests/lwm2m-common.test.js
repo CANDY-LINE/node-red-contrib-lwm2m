@@ -23,7 +23,7 @@ import * as sinon from 'sinon';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import {
-  Resource
+  Resource, LwM2MClientProxy, RequestHandler
 } from './lwm2m-common';
 import {
   LWM2M_TYPE,
@@ -33,6 +33,34 @@ import {
 chai.should();
 chai.use(sinonChai);
 const expect = chai.expect;
+
+describe('RequestHandler', () => {
+  let sandbox;
+  let client;
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    client = sandbox.stub(new LwM2MClientProxy());
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  describe('Read', () => {
+    describe('#constructor', () => {
+      it('should have valid query URI resources', () => {
+        let r;
+        r = RequestHandler.build(client, 'read', Buffer.from('AQECAAAAAQAAAA==', 'base64'));
+        expect(r.uris).to.deep.equal(['/2/0/0']);
+        expect(r.resourceLen).to.equal(1);
+        r = RequestHandler.build(client, 'read', Buffer.from('AQECAAAAAAA=', 'base64'));
+        expect(r.resourceLen).to.equal(0);
+        expect(r.uris).to.deep.equal(['/2/0/*']);
+      });
+    });
+    // end of Read
+  });
+  // end of 'RequestHandler'
+});
 
 describe('Resource', () => {
   let sandbox;
