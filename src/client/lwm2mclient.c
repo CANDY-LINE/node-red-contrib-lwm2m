@@ -911,7 +911,7 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-            // Handle only `inquireNotifs` response
+            // Handle only `observe` response
             else if (FD_ISSET(STDIN_FILENO, &readfds))
             {
                 uint8_t err = handle_observe_response(lwm2mH);
