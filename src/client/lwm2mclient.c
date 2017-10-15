@@ -104,7 +104,7 @@
 int g_reboot = 0;
 static int g_quit = 0;
 
-#define OBJ_COUNT 9
+#define OBJ_COUNT 8
 lwm2m_object_t * objArray[OBJ_COUNT];
 
 // only backup security and server objects
@@ -272,53 +272,6 @@ static void prv_update(char * buffer,
 
 syntax_error:
     fprintf(stderr, "Syntax error !\n");
-}
-
-static void prv_add(char * buffer,
-                    void * user_data)
-{
-    lwm2m_context_t * lwm2mH = (lwm2m_context_t *)user_data;
-    lwm2m_object_t * objectP;
-    int res;
-
-    objectP = get_test_object();
-    if (objectP == NULL)
-    {
-        fprintf(stderr, "Creating object 31024 failed.\r\n");
-        return;
-    }
-    res = lwm2m_add_object(lwm2mH, objectP);
-    if (res != 0)
-    {
-        fprintf(stderr, "Adding object 31024 failed: ");
-        print_status(stderr, res);
-        fprintf(stderr, "\r\n");
-    }
-    else
-    {
-        fprintf(stderr, "Object 31024 added.\r\n");
-    }
-    return;
-}
-
-static void prv_remove(char * buffer,
-                       void * user_data)
-{
-    lwm2m_context_t * lwm2mH = (lwm2m_context_t *)user_data;
-    int res;
-
-    res = lwm2m_remove_object(lwm2mH, 31024);
-    if (res != 0)
-    {
-        fprintf(stderr, "Removing object 31024 failed: ");
-        print_status(stderr, res);
-        fprintf(stderr, "\r\n");
-    }
-    else
-    {
-        fprintf(stderr, "Object 31024 removed.\r\n");
-    }
-    return;
 }
 
 #ifdef LWM2M_BOOTSTRAP
@@ -693,22 +646,15 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    objArray[6] = get_test_object();
+    objArray[6] = get_object_conn_m();
     if (NULL == objArray[6])
-    {
-        fprintf(stderr, "Failed to create test object\r\n");
-        return -1;
-    }
-
-    objArray[7] = get_object_conn_m();
-    if (NULL == objArray[7])
     {
         fprintf(stderr, "Failed to create connectivity monitoring object\r\n");
         return -1;
     }
 
-    objArray[8] = get_object_conn_s();
-    if (NULL == objArray[8])
+    objArray[7] = get_object_conn_s();
+    if (NULL == objArray[7])
     {
         fprintf(stderr, "Failed to create connectivity statistics object\r\n");
         return -1;
@@ -946,12 +892,11 @@ int main(int argc, char *argv[])
     clean_server_object(objArray[1]);
     lwm2m_free(objArray[1]);
     free_object(objArray[2]);
-    free_object_firmware(objArray[3]);
-    free_object_location(objArray[4]);
-    free_test_object(objArray[5]);
+    free_object(objArray[3]);
+    free_object_firmware(objArray[4]);
+    free_object_location(objArray[5]);
     free_object_conn_m(objArray[6]);
     free_object_conn_s(objArray[7]);
-    acl_ctrl_free_object(objArray[8]);
 
 #ifdef MEMORY_TRACE
     if (g_quit == 1)

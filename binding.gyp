@@ -99,7 +99,6 @@
         '<(client_dir)/object_connectivity_stat.c',
         '<(client_dir)/object_firmware.c',
         '<(client_dir)/object_location.c',
-        '<(client_dir)/test_object.c',
       ],
       'cflags_cc': [
         '-Wno-unused-value',
