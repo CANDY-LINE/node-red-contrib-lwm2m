@@ -15,6 +15,7 @@ lwm2m:
     pskIdentity: PSK Identitiy
     presharedKey: Preshared Key
     hideSensitiveInfo: Hide Sensitive Device Info
+    objects: Objects
   status:
     bootstrapRequired: bootstrap required
     bootstrapping: bootstrapping

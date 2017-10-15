@@ -141,6 +141,13 @@
     <input type="checkbox" id="node-config-input-hideSensitiveInfo" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-config-input-hideSensitiveInfo" style="width: 70%;" data-i18n="lwm2m.label.hideSensitiveInfo"></label>
   </div>
+  <div class="form-row">
+    <label for='node-config-input-objects'>
+      <i class='fa fa-database'></i>
+      <span data-i18n='lwm2m.label.objects'></span>
+    </label>
+    <input type="text" id="node-config-input-objects" style="width:70%">
+  </div>
 </script>
 
 <script type="text/javascript">
@@ -157,6 +164,7 @@
       serverHost: { value: 'localhost', required: true },
       serverPort: { value: '5683', required: true },
       hideSensitiveInfo: { value: true, required: false },
+      objects: { value:'', required: false },
     },
     credentials: {
       pskIdentity: { type: 'text', validate: RED.validators.regex(/^[a-fA-F\-0-9]+/) },
@@ -179,6 +187,10 @@
         if (!disabled && serverPort.val() == '5683') {
           serverPort.val('5684');
         }
+      });
+      $("#node-config-input-objects").typedInput({
+        default: 'json',
+        types:['json']
       });
     }
   });
