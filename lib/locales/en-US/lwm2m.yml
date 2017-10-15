@@ -1,15 +1,15 @@
 # Message Resources for English (fallback language)
 lwm2m:
   label:
-    lwm2mClient: LwM2M Client
+    lwm2mClient: Client
     useString: Stringify payload
     notification: Emit events
-    clientName: Endpoint Name
+    clientName: Endpoint
     clientPort: UDP Port
     serverHost: Server Host
     serverPort: Server Port
     useIPv4: Use IPv4 connection
-    lifetimeSec: Client Lifetime
+    lifetimeSec: Lifetime
     requestBootstrap: Request Bootstrap
     enableDTLS: Enable DTLS
     pskIdentity: PSK Identitiy
