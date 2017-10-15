@@ -16,9 +16,11 @@
     "test": "gulp test",
     "clean": "gulp clean",
     "prepublish": "gulp build",
-    "install" : "node-pre-gyp install --fallback-to-build"
+    "install": "node-pre-gyp install --fallback-to-build"
   },
-  "os" : [ "!win32" ],
+  "os": [
+    "!win32"
+  ],
   "homepage": "https://github.com/CANDY-LINE/node-red-contrib-lwm2m#readme",
   "keywords": [
     "OMA",
