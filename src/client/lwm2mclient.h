@@ -61,13 +61,6 @@ void free_object(lwm2m_object_t * objectP);
 uint8_t handle_observe_response(lwm2m_context_t * lwm2mH);
 
 /*
- * object_device.c
- */
-lwm2m_object_t * get_object_device(void);
-void free_object_device(lwm2m_object_t * objectP);
-uint8_t device_change(lwm2m_data_t * dataArray, lwm2m_object_t * objectP);
-void display_device_object(lwm2m_object_t * objectP);
-/*
  * object_firmware.c
  */
 lwm2m_object_t * get_object_firmware(void);
