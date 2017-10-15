@@ -448,6 +448,7 @@ void print_usage(void)
     fprintf(stderr, "  -4\t\tUse IPv4 connection. Default: IPv6 connection\r\n");
     fprintf(stderr, "  -t TIME\tSet the lifetime of the Client. Default: 300\r\n");
     fprintf(stderr, "  -b\t\tBootstrap requested.\r\n");
+    fprintf(stderr, "  -r SERVERID\tSet the Server ID. Default: 99\r\n");
 #ifdef WITH_TINYDTLS
     fprintf(stderr, "  -i STRING\tSet the device management or bootstrap server PSK identity. If not set use none secure mode\r\n");
     fprintf(stderr, "  -s HEXSTRING\tSet the device management or bootstrap server Pre-Shared-Key. If not set use none secure mode\r\n");
@@ -468,6 +469,7 @@ int main(int argc, char *argv[])
     int opt;
     bool bootstrapRequested = false;
     bool serverPortChanged = false;
+    int serverId = 99;
 
 #ifdef LWM2M_BOOTSTRAP
     lwm2m_client_state_t previousState = STATE_INITIAL;
@@ -570,6 +572,19 @@ int main(int argc, char *argv[])
         case '4':
             data.addressFamily = AF_INET;
             break;
+        case 'r':
+            opt++;
+            if (opt >= argc)
+            {
+                print_usage();
+                return 0;
+            }
+            if (1 != sscanf(argv[opt], "%d", &serverId))
+            {
+                print_usage();
+                return 0;
+            }
+            break;
         default:
             print_usage();
             return 0;
@@ -630,7 +645,6 @@ int main(int argc, char *argv[])
 #endif
 
     char serverUri[50];
-    int serverId = 123;
     sprintf (serverUri, "coap://%s:%s", server, serverPort);
 #ifdef LWM2M_BOOTSTRAP
     objArray[0] = get_security_object(serverId, serverUri, pskId, pskBuffer, pskLen, bootstrapRequested);
