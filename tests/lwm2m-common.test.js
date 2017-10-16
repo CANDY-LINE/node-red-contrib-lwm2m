@@ -23,7 +23,7 @@ import * as sinon from 'sinon';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import {
-  Resource, LwM2MClientProxy, RequestHandler
+  Resource, LwM2MClientProxy, RequestHandler, ResourceRepositoryBuilder
 } from './lwm2m-common';
 import {
   LWM2M_TYPE,
@@ -33,6 +33,116 @@ import {
 chai.should();
 chai.use(sinonChai);
 const expect = chai.expect;
+
+describe('ResourceRepositoryBuilder', () => {
+  let sandbox;
+  let client;
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    client = sandbox.stub(new LwM2MClientProxy());
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  describe('#constructor', () => {
+    it('should have valid query URI resources', () => {
+      let b = new ResourceRepositoryBuilder([
+        {
+          '0': {
+            '0': {
+              '0': 'string', // /0/0/0
+              '3': 1234
+            }
+          }, // '0'
+          '1': {
+            '1': {
+              '3': 'saved /1/1/3',
+              '4': 'saved /1/1/4',
+            },
+            '2': {
+              '2': 'saved /1/2/2',
+            },
+          }, // '1'
+        },
+        {
+          '0': {
+            '0': {
+              '1': 'custom /0/0/1',
+              '2': 'custom /0/0/2',
+              '3': 'custom /0/0/3',
+            }
+          }, // '0'
+          '1': {
+            '0': {
+              '1': 'custom /1/0/1',
+              '2': 'custom /1/0/2',
+            },
+            '1': {
+              '3': 'custom /1/1/3',
+            }
+          }, // '1'
+        },
+        {
+          '0': {
+            '0': {
+              '0': 'default /0/0/0',
+              '1': 'default /0/0/1',
+              '2': 'default /0/0/2',
+              '3': 'default /0/0/3',
+            }
+          }, // '0'
+          '1': {
+            '0': {
+              '0': 'default /1/0/0',
+              '1': 'default /1/0/1',
+              '2': 'default /1/0/2',
+              '3': 'default /1/0/3'
+            },
+            '1': {
+              '0': 'default /1/1/0',
+              '1': 'default /1/1/1',
+              '2': 'default /1/1/2',
+              '3': 'default /1/1/3',
+              '4': 'default /1/1/4',
+            },
+          }, // '1'
+        },
+      ], false);
+      expect(b.json).to.deep.equal(
+        {
+          '0': {
+            '0': {
+              '0': 'string', // /0/0/0
+              '1': 'custom /0/0/1',
+              '2': 'custom /0/0/2',
+              '3': 1234,
+            }
+          }, // '0'
+          '1': {
+            '0': {
+              '0': 'default /1/0/0',
+              '1': 'custom /1/0/1',
+              '2': 'custom /1/0/2',
+              '3': 'default /1/0/3',
+            },
+            '1': {
+              '0': 'default /1/1/0',
+              '1': 'default /1/1/1',
+              '2': 'default /1/1/2',
+              '3': 'saved /1/1/3',
+              '4': 'saved /1/1/4',
+            },
+            '2': {
+              '2': 'saved /1/2/2',
+            }
+          }, // '1'
+        }
+      );
+    });
+  });
+  // end of 'ResourceRepositoryBuilder'
+});
 
 describe('RequestHandler', () => {
   let sandbox;
