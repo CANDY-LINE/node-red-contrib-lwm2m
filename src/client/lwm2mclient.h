@@ -61,39 +61,12 @@ void free_object(lwm2m_object_t * objectP);
 uint8_t handle_observe_response(lwm2m_context_t * lwm2mH);
 
 /*
- * object_firmware.c
- */
-lwm2m_object_t * get_object_firmware(void);
-void free_object_firmware(lwm2m_object_t * objectP);
-void display_firmware_object(lwm2m_object_t * objectP);
-/*
- * object_location.c
- */
-lwm2m_object_t * get_object_location(void);
-void free_object_location(lwm2m_object_t * object);
-void display_location_object(lwm2m_object_t * objectP);
-/*
  * object_server.c
  */
 lwm2m_object_t * get_server_object(int serverId, const char* binding, int lifetime, bool storing);
 void clean_server_object(lwm2m_object_t * object);
 void display_server_object(lwm2m_object_t * objectP);
 void copy_server_object(lwm2m_object_t * objectDest, lwm2m_object_t * objectSrc);
-
-/*
- * object_connectivity_moni.c
- */
-lwm2m_object_t * get_object_conn_m(void);
-void free_object_conn_m(lwm2m_object_t * objectP);
-uint8_t connectivity_moni_change(lwm2m_data_t * dataArray, lwm2m_object_t * objectP);
-
-/*
- * object_connectivity_stat.c
- */
-extern lwm2m_object_t * get_object_conn_s(void);
-void free_object_conn_s(lwm2m_object_t * objectP);
-extern void conn_s_updateTxStatistic(lwm2m_object_t * objectP, uint16_t txDataByte, bool smsBased);
-extern void conn_s_updateRxStatistic(lwm2m_object_t * objectP, uint16_t rxDataByte, bool smsBased);
 
 /*
  * object_security.c

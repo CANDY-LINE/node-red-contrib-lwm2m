@@ -104,8 +104,7 @@
 int g_reboot = 0;
 static int g_quit = 0;
 
-#define OBJ_COUNT 8
-lwm2m_object_t * objArray[OBJ_COUNT];
+lwm2m_object_t ** objArray = NULL;
 
 // only backup security and server objects
 # define BACKUP_OBJECT_COUNT 2
@@ -402,11 +401,76 @@ void print_usage(void)
     fprintf(stderr, "  -t TIME\tSet the lifetime of the Client. Default: 300\r\n");
     fprintf(stderr, "  -b\t\tBootstrap requested.\r\n");
     fprintf(stderr, "  -r SERVERID\tSet the Server ID. Default: 99\r\n");
+    fprintf(stderr, "  -o OBJECTIDCSV\tSet the Object ID CSV. Default: 0,1,2,3\r\n");
 #ifdef WITH_TINYDTLS
     fprintf(stderr, "  -i STRING\tSet the device management or bootstrap server PSK identity. If not set use none secure mode\r\n");
     fprintf(stderr, "  -s HEXSTRING\tSet the device management or bootstrap server Pre-Shared-Key. If not set use none secure mode\r\n");
 #endif
     fprintf(stderr, "\r\n");
+}
+
+static uint16_t * parse_object_id_csv(const char * objectIdCsv, uint16_t * objCount) {
+    uint16_t count = 0;
+    uint16_t buffIdx = 0;
+    uint16_t objectId = 0;
+    uint16_t objectIndex = 0;
+    uint16_t * objectIdArray;
+    char buff[12];
+    const char * c = objectIdCsv;
+    for (; *c != '\0'; c++) {
+        if (*c == ',') {
+            ++count;
+        }
+    }
+    c = objectIdCsv;
+    objectIdArray = lwm2m_malloc(sizeof(uint16_t) * count);
+    memset(objectIdArray, 0, sizeof(uint16_t) * count);
+    for (; *c != '\0'; c++) {
+        if (*c == ',') {
+            if (buffIdx > 11) {
+                fprintf(stderr, "Too long Object ID\r\n");
+                lwm2m_free(objectIdArray);
+                return NULL;
+            }
+            buff[buffIdx] = '\0';
+            objectId = strtol(buff, NULL, 10);
+            if (objectId > 3) {
+                objectIdArray[objectIndex++] = objectId;
+            } else {
+                fprintf(stderr, "Invalid Object ID\r\n");
+                lwm2m_free(objectIdArray);
+                return NULL;
+            }
+            buffIdx = 0;
+        } else {
+            buff[buffIdx++] = *c;
+        }
+    }
+    if (buffIdx > 11) {
+        fprintf(stderr, "Too long Object ID\r\n");
+        lwm2m_free(objectIdArray);
+        return NULL;
+    } else if (buffIdx > 0) {
+        buff[buffIdx] = '\0';
+        objectId = strtol(buff, NULL, 10);
+        if (objectId > 3) {
+            objectIdArray[objectIndex++] = objectId;
+        } else {
+            fprintf(stderr, "Invalid Object ID\r\n");
+            lwm2m_free(objectIdArray);
+            return NULL;
+        }
+    }
+    *objCount = objectIndex;
+#ifdef WITH_LOGS
+    uint16_t i = 0;
+    for (; i < objectIndex; i++) {
+      fprintf(stderr, ">>> %hu => ObjectID:[%hu] \r\n", i, objectIdArray[i]);
+    }
+    // 4 objects(/0,/1,/2,/3) are implicitly included
+    fprintf(stderr, ">>> %hu objects will be deployed as well as predfined 4 objects\r\n", *objCount);
+#endif
+    return objectIdArray;
 }
 
 int main(int argc, char *argv[])
@@ -423,6 +487,9 @@ int main(int argc, char *argv[])
     bool bootstrapRequested = false;
     bool serverPortChanged = false;
     int serverId = 99;
+    const char * objectIdCsv = NULL;
+    uint16_t * objectIdArray = NULL;
+    uint16_t objCount = 0;
 
 #ifdef LWM2M_BOOTSTRAP
     lwm2m_client_state_t previousState = STATE_INITIAL;
@@ -538,6 +605,21 @@ int main(int argc, char *argv[])
                 return 0;
             }
             break;
+        case 'o':
+            opt++;
+            if (opt >= argc)
+            {
+                print_usage();
+                return 0;
+            }
+            objectIdCsv = argv[opt];
+            objectIdArray = parse_object_id_csv(objectIdCsv, &objCount);
+            if (NULL == objectIdArray)
+            {
+                print_usage();
+                return 0;
+            }
+            break;
         default:
             print_usage();
             return 0;
@@ -599,6 +681,9 @@ int main(int argc, char *argv[])
 
     char serverUri[50];
     sprintf (serverUri, "coap://%s:%s", server, serverPort);
+    if (NULL == objArray) {
+        objArray = lwm2m_malloc(sizeof(lwm2m_object_t *) * (objCount + 4));
+    }
 #ifdef LWM2M_BOOTSTRAP
     objArray[0] = get_security_object(serverId, serverUri, pskId, pskBuffer, pskLen, bootstrapRequested);
 #else
@@ -632,32 +717,19 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    objArray[4] = get_object_firmware();
-    if (NULL == objArray[4])
-    {
-        fprintf(stderr, "Failed to create Firmware object\r\n");
-        return -1;
+    uint16_t i = 0; // next index to LWM2M_DEVICE_OBJECT_ID
+    for (; i < objCount; i++) {
+        uint16_t objectId = objectIdArray[i];
+        objArray[i + 4] = get_object(objectId);
+        if (NULL == objArray[i + 4])
+        {
+            fprintf(stderr, "Failed to create Generic Device object for ObjectID:%hu\r\n", objectId);
+            return -1;
+        }
     }
-
-    objArray[5] = get_object_location();
-    if (NULL == objArray[5])
-    {
-        fprintf(stderr, "Failed to create location object\r\n");
-        return -1;
-    }
-
-    objArray[6] = get_object_conn_m();
-    if (NULL == objArray[6])
-    {
-        fprintf(stderr, "Failed to create connectivity monitoring object\r\n");
-        return -1;
-    }
-
-    objArray[7] = get_object_conn_s();
-    if (NULL == objArray[7])
-    {
-        fprintf(stderr, "Failed to create connectivity statistics object\r\n");
-        return -1;
+    if (NULL != objectIdArray) {
+        lwm2m_free(objectIdArray);
+        objectIdArray = NULL;
     }
 
     /*
@@ -679,7 +751,7 @@ int main(int argc, char *argv[])
      * We configure the liblwm2m library with the name of the client - which shall be unique for each client -
      * the number of objects we will be passing through and the objects array
      */
-    result = lwm2m_configure(lwm2mH, name, NULL, NULL, OBJ_COUNT, objArray);
+    result = lwm2m_configure(lwm2mH, name, NULL, NULL, objCount + 4, objArray);
     if (result != 0)
     {
         fprintf(stderr, "lwm2m_configure() failed: 0x%X\r\n", result);
@@ -853,7 +925,6 @@ int main(int argc, char *argv[])
 #else
                         lwm2m_handle_packet(lwm2mH, buffer, numBytes, connP);
 #endif
-                        conn_s_updateRxStatistic(objArray[7], numBytes, false);
                     }
                     else
                     {
@@ -893,10 +964,10 @@ int main(int argc, char *argv[])
     lwm2m_free(objArray[1]);
     free_object(objArray[2]);
     free_object(objArray[3]);
-    free_object_firmware(objArray[4]);
-    free_object_location(objArray[5]);
-    free_object_conn_m(objArray[6]);
-    free_object_conn_s(objArray[7]);
+    for (i = 0; i < objCount; i++) {
+        free_object(objArray[i + 4]);
+    }
+    lwm2m_free(objArray);
 
 #ifdef MEMORY_TRACE
     if (g_quit == 1)

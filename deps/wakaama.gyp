@@ -77,6 +77,34 @@
       ],
     },
     {
+      'target_name': 'lwm2mclientcoreobj',
+      'type': 'static_library',
+      'include_dirs': [
+        '<(wakaama_core_dir)',
+        '<(wakaama_shared_dir)',
+        '<(wakaama_client_dir)',
+        '<(tinydtls_dir)',
+        '<(deps_dir)',
+      ],
+      'dependencies': [
+        'liblwm2mclient',
+        'liblwm2mshared',
+        'libtinydtls',
+      ],
+      'cflags': [
+      ],
+      'sources': [
+        '<@(wakaama_clientcoreobj_sources)',
+      ],
+      'cflags_cc': [
+        '-Wno-unused-value',
+      ],
+      'defines': [
+        '<@(wakaama_defines)',
+        'LWM2M_CLIENT_MODE',
+      ],
+    },
+    {
       'target_name': 'libbase64',
       'type': 'static_library',
       'include_dirs': [
