@@ -142,7 +142,7 @@ static uint8_t request_command(parent_context_t * context,
     return err;
 }
 
-static parent_context_t * setup_parent_context(uint8_t objectId)
+static parent_context_t * setup_parent_context(uint16_t objectId)
 {
     parent_context_t * context = (parent_context_t *)lwm2m_malloc(sizeof(parent_context_t));
     // TODO
@@ -543,7 +543,7 @@ static uint8_t prv_generic_delete(uint16_t instanceId,
     return result;
 }
 
-lwm2m_object_t * get_object(uint8_t objectId)
+lwm2m_object_t * get_object(uint16_t objectId)
 {
     lwm2m_object_t * genericObj = (lwm2m_object_t *)lwm2m_malloc(sizeof(lwm2m_object_t));
     if (NULL == genericObj)

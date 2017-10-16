@@ -56,7 +56,7 @@ extern int g_reboot;
 /*
  * object_generic.c
  */
-lwm2m_object_t * get_object(uint8_t objectId);
+lwm2m_object_t * get_object(uint16_t objectId);
 void free_object(lwm2m_object_t * objectP);
 uint8_t handle_observe_response(lwm2m_context_t * lwm2mH);
 
