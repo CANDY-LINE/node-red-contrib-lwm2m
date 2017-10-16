@@ -167,8 +167,8 @@
       objects: { value:'', required: false },
     },
     credentials: {
-      pskIdentity: { type: 'text', validate: RED.validators.regex(/^[a-fA-F\-0-9]+/) },
-      presharedKey: { type: 'text', validate: RED.validators.regex(/^[a-fA-F\-0-9]+/) },
+      pskIdentity: { type: 'text', validate: RED.validators.regex(/^[a-fA-F0-9]*$/) },
+      presharedKey: { type: 'text', validate: RED.validators.regex(/^[a-fA-F0-9]*$/) },
     },
     label: function() {
       return this.clientName;
