@@ -138,6 +138,11 @@
   </div>
   <div class="form-row">
     <label>&nbsp;</label>
+    <input type="checkbox" id="node-config-input-redirectLwm2mClientLog" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-config-input-redirectLwm2mClientLog" style="width: 70%;" data-i18n="lwm2m.label.redirectLwm2mClientLog"></label>
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
     <input type="checkbox" id="node-config-input-hideSensitiveInfo" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-config-input-hideSensitiveInfo" style="width: 70%;" data-i18n="lwm2m.label.hideSensitiveInfo"></label>
   </div>
@@ -163,6 +168,7 @@
       useIPv4: { value: true, required: false },
       serverHost: { value: 'localhost', required: true },
       serverPort: { value: '5683', required: true },
+      redirectLwm2mClientLog: { value: false, required: false },
       hideSensitiveInfo: { value: true, required: false },
       objects: { value:'', required: false },
     },
