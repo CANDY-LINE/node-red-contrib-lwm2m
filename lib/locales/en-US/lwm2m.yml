@@ -5,7 +5,7 @@ lwm2m:
     useString: Stringify payload
     notification: Emit events
     clientName: Endpoint
-    clientPort: UDP Port
+    clientPort: Listen Port
     serverHost: Server Host
     serverPort: Server Port
     useIPv4: Use IPv4 connection
@@ -13,7 +13,7 @@ lwm2m:
     requestBootstrap: Request Bootstrap
     enableDTLS: Enable DTLS
     pskIdentity: PSK Identitiy
-    presharedKey: Preshared Key
+    presharedKey: PSK
     hideSensitiveInfo: Hide Sensitive Device Info
     objects: Objects
   status:
