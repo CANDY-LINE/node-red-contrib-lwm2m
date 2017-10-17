@@ -1,20 +1,126 @@
 <script type="text/x-red" data-help-name="lwm2m client in">
 <p>
+This node allows you to retrieve the management objects associated with the LwM2M client.
+</p>
+<h3>Inputs</h3>
+<p>
+Provide the URI to the object resource, e.g. <code>/3/0/0</code> in <code>msg.topic</code> property, to retrieve the data.
+The result is emitted via the output port (see below).
+The topic can be a regular expression text like <code>/3/.*</code>, which allows you to get all Device Object resources.
 </p>
 <h3>Outputs</h3>
+<h4>Inquiry Result</h4>
 <p>
+The inquiry result is set in <code>msg.payload</code> property.
+The payload property has a Key-Value object.
+Each key in the object is the resource URI.
+Each value in the object is a Resource object having <code>type</code>, <code>acl</code> and <code>value</code> proerpties.
+<pre>
+{
+  "payload": {
+    "/3/0/0": {
+      "type": "STRING",
+      "acl": "R",
+      "value": "Manufacturer"
+    }
+  }
+}
+</pre>
+</p>
+<h4>Object Events</h4>
+<p>
+This node shall emit object events. The supported events are as follows.
+<dl>
+<dt><code>executed</code></dt>
+<dd>Fired when a resource is executed by a LwM2M Server or a node in the running flow</dd>
+<dt><code>updated</code></dt>
+<dd>Fired when a resource is updated by a LwM2M Server or a node in the running flow</dd>
+</dl>
+The payload property is an event object having the following structure.
+<pre>
+{
+  "payload": {
+    "serverId": "99",
+    "remote": true,
+    "uri": "/3/0/12",
+    "value": null,
+    "eventType": "executed",
+    "ts": 1234567890
+  }
+}
+</pre>
+<dl>
+<dd>
+<code>serverId</code> is available only when <code>remote</code> is true.
+The value is currently not editable, always <code>99</code>.
+</dd>
+<dd>
+<code>remote</code> is true when the event is triggered by a remote server.
+</dd>
+<dd>
+<code>uri</code> is the URI to the resource associated with the event.
+</dd>
+<dd>
+<code>eventType</code> is either <code>executed</code> or <code>udpated</code>.
+</dd>
+<dd>
+<code>ts</code> is the event timestamp in milliseconds.
+</dd>
+</dl>
+</p>
+<p>
+<b>*</b> All errors will be propagated to <code>catch</code> node.
 </p>
 </script>
 
 <script type="text/x-red" data-help-name="lwm2m client out">
 <p>
+This node allows you to update or execute a resource in the management objects associated with the LwM2M client.
 </p>
 <h3>Inputs</h3>
 <p>
+Provide a data with the associated URI to update or execute.
+You can set the data to <code>msg.payload</code> property,
+and the URI to update to <code>msg.topic</code> property.
+</p>
+<p>
+Append <code>/execute</code> suffix to the URI to execute the resource.
+</p>
+<p>
+<b>*</b> All errors will be propagated to <code>catch</code> node.
 </p>
 </script>
 
 <script type="text/x-red" data-help-name="lwm2m client">
 <p>
+LwM2M client configuration node. Populate parameters used for starting a new LwM2M client process.
 </p>
+<dl>
+<dt>Endpoint</dt>
+<dd>Enter Client Endpoint Name</dd>
+<dt>Server Host</dt>
+<dd>Enter LwM2M Server Host Address</dd>
+<dt>Server Port</dt>
+<dd>Enter LwM2M Server Port Number. By default, set 5683 for plain CoAP/UDP or 5684 for CoAP/DTLS.</dd>
+<dt>Enable DTLS</dt>
+<dd>Check if DTLS is required. Only PSK is supported. RPK and X.509 aren't supported</dd>
+<dt>PSK Identity</dt>
+<dd>Enter Pre-shared Key Identity. Required for DTLS communication</dd>
+<dt>PSK</dt>
+<dd>Enter Pre-shared Key. Required for DTLS communication</dd>
+<dt>Listen Port</dt>
+<dd>Enter LwM2M Client Listen Port. 56830 is used by default.</dd>
+<dt>Lifetime</dt>
+<dd>Enter LwM2M Client Life time in seconds. 300 sec. by default.</dd>
+<dt>Request Bootstrap</dt>
+<dd>Check if bootstrapping is required on starting LwM2M Client process</dd>
+<dt>Use IPv4 connection</dt>
+<dd>Check if IPv4 is used for interacting with LwM2M Server</dd>
+<dt>Output LwM2M client logs</dt>
+<dd>Check if you'd like to redirect LwM2M Client stderr logs to console (not the Debug tab). Disabled by default.</dd>
+<dt>Hide Sensitive Device Info</dt>
+<dd>Uncheck if you'd like to send everything to LwM2M Server including sensitive resources like Serial Number. Enabled by default.</dd>
+<dt>Objects</dt>
+<dd>Define custom management objects</dd>
+</dl>
 </script>
