@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+// TODO Future Use
+
 #include "node_lwm2m.hpp"
 
 #ifdef LWM2M_WITH_LOGS
