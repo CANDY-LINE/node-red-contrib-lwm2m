@@ -14,26 +14,6 @@
   </div>
 </script>
 
-<script type="text/javascript">
-  RED.nodes.registerType('lwm2m client in', {
-    category: 'input',
-    color: '#00e6ac',
-    defaults: {
-      name: { value: '' },
-      lwm2mClient: { type: 'lwm2m client', required: true },
-    },
-    inputs: 1,
-    outputs: 1,
-    icon: 'bridge-dash.png',
-    label: function() {
-      return this.name || 'lwm2m client';
-    },
-    labelStyle: function() {
-      return this.name ? 'node_label_italic' : '';
-    }
-  });
-</script>
-
 <script type="text/x-red" data-template-name="lwm2m client out">
   <div class='form-row'>
     <label for='node-input-name'>
@@ -48,27 +28,6 @@
       <span data-i18n="lwm2m.label.lwm2mClient"></span></label>
     <input type="text" id="node-input-lwm2mClient">
   </div>
-</script>
-
-<script type="text/javascript">
-  RED.nodes.registerType('lwm2m client out', {
-    category: 'output',
-    color: '#00e6ac',
-    defaults: {
-      name: { value: '' },
-      lwm2mClient: { type: 'lwm2m client', required: true }
-    },
-    inputs: 1,
-    outputs: 0,
-    icon: 'bridge-dash.png',
-    align: 'right',
-    label: function() {
-      return this.name || 'lwm2m client';
-    },
-    labelStyle: function() {
-      return this.name ? 'node_label_italic' : '';
-    }
-  });
 </script>
 
 <script type="text/x-red" data-template-name="lwm2m client">
@@ -156,7 +115,58 @@
 </script>
 
 <script type="text/javascript">
-  'use strict';
+'use strict';
+
+  function toLabel(node, defaultLabel) {
+    if (node.name) {
+      return node.name;
+    }
+    var label = defaultLabel;
+    RED.nodes.eachConfig(function(c) {
+      if((c.type === 'lwm2m client') && (c.id === node.lwm2mClient)) {
+        label = c.clientName;
+      }
+    });
+    return label;
+  }
+
+  RED.nodes.registerType('lwm2m client in', {
+    category: 'input',
+    color: '#00e6ac',
+    defaults: {
+      name: { value: '' },
+      lwm2mClient: { type: 'lwm2m client', required: true },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'bridge-dash.png',
+    label: function() {
+      return toLabel(this, 'lwm2m client');
+    },
+    labelStyle: function() {
+      return (this.name || this.lwm2mClient) ? 'node_label_italic' : '';
+    }
+  });
+
+  RED.nodes.registerType('lwm2m client out', {
+    category: 'output',
+    color: '#00e6ac',
+    defaults: {
+      name: { value: '' },
+      lwm2mClient: { type: 'lwm2m client', required: true }
+    },
+    inputs: 1,
+    outputs: 0,
+    icon: 'bridge-dash.png',
+    align: 'right',
+    label: function() {
+      return toLabel(this, 'lwm2m client');
+    },
+    labelStyle: function() {
+      return (this.name || this.lwm2mClient) ? 'node_label_italic' : '';
+    }
+  });
+
   RED.nodes.registerType('lwm2m client',{
     category: 'config',
     defaults: {
