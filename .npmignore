@@ -10,4 +10,4 @@ node_modules
 gulpfile.js
 .travis.yml
 src
-example
+docs
