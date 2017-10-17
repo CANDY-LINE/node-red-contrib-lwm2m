@@ -33,6 +33,7 @@ import {
 chai.should();
 chai.use(sinonChai);
 const expect = chai.expect;
+const HEADER_LEN = 5;
 
 describe('ResourceRepositoryBuilder', () => {
   let sandbox;
@@ -180,6 +181,61 @@ describe('Resource', () => {
   });
   afterEach(() => {
     sandbox.restore();
+  });
+
+  describe('#serialize()', () => {
+    it('should serialize a Resource', (done) => {
+      Resource.from('string').then((r) => {
+        let buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('string');
+
+        return Resource.from('');
+      }).then((r) => {
+        let buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('');
+
+        return Resource.from(0);
+      }).then((r) => {
+        let buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('0');
+
+        return Resource.from(0.1);
+      }).then((r) => {
+        let buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('0.1');
+
+        return Resource.from({type:LWM2M_TYPE.FLOAT});
+      }).then((r) => {
+        let buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('0');
+
+        return Resource.from({type:LWM2M_TYPE.OPAQUE, value:Buffer.from([1,2,3])});
+      }).then((r) => {
+        let buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length)).to.deep.equal(Buffer.from([1,2,3]));
+
+        return Resource.from({type:LWM2M_TYPE.OPAQUE, value:[1,2,3]});
+      }).then((r) => {
+        let buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length)).to.deep.equal(Buffer.from([1,2,3]));
+
+        return Resource.from({type:LWM2M_TYPE.OPAQUE});
+      }).then((r) => {
+        let buf;
+
+        r.value = 'base64:AQID';
+        buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length)).to.deep.equal(Buffer.from([1,2,3]));
+
+        r.value = 'hex:010203';
+        buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length)).to.deep.equal(Buffer.from([1,2,3]));
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
   });
 
   describe('#from()', () => {
