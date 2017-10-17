@@ -49,6 +49,7 @@ describe('ResourceRepositoryBuilder', () => {
     it('should have valid query URI resources', () => {
       let b = new ResourceRepositoryBuilder([
         {
+          version: '1.2.3',
           '0': {
             '0': {
               '0': 'string', // /0/0/0
