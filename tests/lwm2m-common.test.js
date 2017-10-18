@@ -403,6 +403,43 @@ describe('Resource', () => {
         expect(r.value[1].acl).to.equal(ACL.READABLE);
         expect(r.value[1].value).to.equal('456');
 
+        return Resource.from(['123', '456']);
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value).to.be.an('array');
+        expect(r.value.length).to.equal(2);
+        expect(r.value[0]).to.be.an.instanceof(Resource);
+        expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.value[0].acl).to.equal(ACL.READABLE);
+        expect(r.value[0].value).to.equal('123');
+        expect(r.value[1]).to.be.an.instanceof(Resource);
+        expect(r.value[1].type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.value[1].acl).to.equal(ACL.READABLE);
+        expect(r.value[1].value).to.equal('456');
+
+        return Resource.from({
+          type: LWM2M_TYPE.MULTIPLE_RESOURCE,
+          acl: ACL.WRITABLE,
+          value: {
+            1: '123',
+            99: '456'
+          }
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
+        expect(r.acl).to.equal(ACL.WRITABLE);
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(2);
+        expect(r.value[1]).to.be.an.instanceof(Resource);
+        expect(r.value[1].type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.value[1].acl).to.equal(ACL.READABLE);
+        expect(r.value[1].value).to.equal('123');
+        expect(r.value[99]).to.be.an.instanceof(Resource);
+        expect(r.value[99].type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.value[99].acl).to.equal(ACL.READABLE);
+        expect(r.value[99].value).to.equal('456');
+
         return Resource.from({
           type: LWM2M_TYPE.MULTIPLE_RESOURCE,
           acl: ACL.WRITABLE,
