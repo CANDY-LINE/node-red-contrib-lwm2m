@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "gulp build",
-    "test": "gulp test",
+    "test": "NODE_ENV=development gulp test",
     "clean": "gulp clean",
     "prepublish": "gulp build",
     "install": "node-pre-gyp install --fallback-to-build"
