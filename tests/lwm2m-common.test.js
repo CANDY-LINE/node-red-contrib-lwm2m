@@ -273,6 +273,13 @@ describe('Resource', () => {
         expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
         expect(r.acl).to.equal(ACL.READABLE);
         expect(r.value).to.equal(123456789);
+        return Resource.from({
+          type: LWM2M_TYPE.INTEGER
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value).to.equal(0);
       }).then(() => {
         done();
       }).catch((err) => {
@@ -293,6 +300,13 @@ describe('Resource', () => {
         expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
         expect(r.acl).to.equal(ACL.READABLE);
         expect(r.value).to.equal(12345.6789);
+        return Resource.from({
+          type: LWM2M_TYPE.FLOAT
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value).to.equal(0);
       }).then(() => {
         done();
       }).catch((err) => {
@@ -309,6 +323,13 @@ describe('Resource', () => {
         expect(r.acl).to.equal(ACL.WRITABLE);
         expect(r.value).to.equal(true);
         return Resource.from(false);
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.BOOLEAN);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value).to.equal(false);
+        return Resource.from({
+          type: LWM2M_TYPE.BOOLEAN
+        });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.BOOLEAN);
         expect(r.acl).to.equal(ACL.READABLE);
@@ -332,6 +353,14 @@ describe('Resource', () => {
         expect(r.acl).to.equal(ACL.WRITABLE);
         expect(r.value.objectId).to.equal(999);
         expect(r.value.objectInstanceId).to.equal(0);
+        return Resource.from({
+          type: LWM2M_TYPE.OBJECT_LINK
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.OBJECT_LINK);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value.objectId).to.equal(0);
+        expect(r.value.objectInstanceId).to.equal(0);
       }).then(() => {
         done();
       }).catch((err) => {
@@ -352,6 +381,13 @@ describe('Resource', () => {
         expect(r.type).to.equal(LWM2M_TYPE.OPAQUE);
         expect(r.acl).to.equal(ACL.READABLE);
         expect(r.value).to.deep.equal(Buffer.from([3,2,1]));
+        return Resource.from({
+          type: LWM2M_TYPE.OPAQUE
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.OPAQUE);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value).to.deep.equal(Buffer.from([]));
       }).then(() => {
         done();
       }).catch((err) => {
@@ -500,6 +536,14 @@ describe('Resource', () => {
         expect(r.value[1].type).to.equal(LWM2M_TYPE.STRING);
         expect(r.value[1].acl).to.equal(ACL.READABLE);
         expect(r.value[1].value).to.equal('456');
+
+        return Resource.from({
+          type: LWM2M_TYPE.STRING
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value).to.equal('');
 
       }).then(() => {
         done();
