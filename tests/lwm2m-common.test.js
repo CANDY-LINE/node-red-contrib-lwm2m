@@ -507,6 +507,44 @@ describe('Resource', () => {
         done(err);
       });
     });
+    it('should create a function Resource object', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.FUNCTION,
+        acl: ACL.WRITABLE,
+        value: Buffer.from([1,2,3])
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.FUNCTION);
+        expect(r.acl).to.equal(ACL.EXECUTABLE);
+        expect(r.value).to.be.undefined;
+
+        return Resource.from({
+          type: 'FUNCTION',
+          acl: 'W',
+          value: 'abcdefg'
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.FUNCTION);
+        expect(r.acl).to.equal(ACL.EXECUTABLE);
+        expect(r.value).to.be.undefined;
+
+        return Resource.from({
+          type: LWM2M_TYPE.FUNCTION,
+          acl: ACL.READABLE,
+          value() {
+            return 'ok';
+          }
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.FUNCTION);
+        expect(r.acl).to.equal(ACL.EXECUTABLE);
+        expect(r.value).to.be.undefined;
+
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
     // end of '#from()'
   });
   // end of 'Resource'
