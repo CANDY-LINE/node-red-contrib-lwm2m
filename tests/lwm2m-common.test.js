@@ -319,6 +319,25 @@ describe('Resource', () => {
         done(err);
       });
     });
+    it('should create a Object Link Resource object', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.OBJECT_LINK,
+        acl: ACL.WRITABLE,
+        value: {
+          objectId: 999,
+          objectInstanceId: 0
+        }
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.OBJECT_LINK);
+        expect(r.acl).to.equal(ACL.WRITABLE);
+        expect(r.value.objectId).to.equal(999);
+        expect(r.value.objectInstanceId).to.equal(0);
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
     it('should create a Buffer Resource object from a Buffer object', (done) => {
       Resource.from({
         type: LWM2M_TYPE.OPAQUE,
