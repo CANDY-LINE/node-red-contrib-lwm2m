@@ -4,16 +4,13 @@
 .npmignore
 .jshintrc
 .node-version
-.travisl.yml
+.travis.yml
 *.tgz
 *.zip
 tests
 *.log
-gulpfile.js
-.travis.yml
 docs
 build
-deps
 lib
 scripts
 tests
