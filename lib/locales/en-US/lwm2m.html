@@ -15,6 +15,38 @@ The inquiry result is set in <code>msg.payload</code> property.
 The payload property has a Key-Value object.
 Each key in the object is the resource URI.
 Each value in the object is a Resource object having <code>type</code>, <code>acl</code> and <code>value</code> proerpties.
+<dl class="message-properties">
+<dt>type<span class="property-type">string</span></dt>
+<dd>
+  the type of the resource.
+<ul>
+<li><code>INTEGER</code> ... 64-bit integer value</li>
+<li><code>FLOAT</code> ... double float value</li>
+<li><code>STRING</code> ... byte array treated as a string</li>
+<li><code>OPAQUE</code> ... byte array</li>
+<li><code>BOOLEAN</code> ... true or false</li>
+<li><code>OBJECT_LINK</code> ... having a reference to another object</li>
+<li><code>MULTIPLE_RESOURCE</code> ... association array of multiple resources</li>
+<li><code>FUNCTION</code> ... <i>out of OMA LwM2M scope</i>, specially defined for an executable resource</li>
+</ul>
+</dd>
+<dt>acl<span class="property-type">string</span></dt>
+<dd>
+  Access control list for the corresponding resource.
+<ul>
+<li><code>R</code> ... Read, Observe, Discover, Write-Attributes</li>
+<li><code>W</code> ... Write</li>
+<li><code>E</code> ... Execute, valid for only <code>FUNCTION</code> resource type</li>
+<li><code>C</code> ... Create</li>
+<li><code>D</code> ... Delete</li>
+</ul>
+</dd>
+<dt>value<span class="property-type">string | number | boolean | function</span></dt>
+<dd>
+  the value of the resource. <code>fuction</code> is evaluated only once on the configuration node being instantiated.
+</dd>
+</dl>
+Here is an example output for Manufacturer resource in DeviceObject.
 <pre>
 {
   "payload": {
@@ -36,35 +68,30 @@ This node shall emit object events. The supported events are as follows.
 <dt><code>updated</code></dt>
 <dd>Fired when a resource is updated by a LwM2M Server or a node in the running flow</dd>
 </dl>
-The payload property is an event object having the following structure.
-<pre>
-{
-  "payload": {
-    "serverId": "99",
-    "remote": true,
-    "uri": "/3/0/12",
-    "value": null,
-    "eventType": "executed",
-    "ts": 1234567890
-  }
-}
-</pre>
-<dl>
+
+The <code>msg.payload</code> property is an event object. Each property in the object is described below.
+<dl class="message-properties">
+<dt>serverId<span class="property-type">integer</span></dt>
 <dd>
-<code>serverId</code> is available only when <code>remote</code> is true.
-The value is currently not editable, always <code>99</code>.
+  short server ID, available only when <code>remote</code> is true.
+  the value is currently read-only, always <code>99</code>.
 </dd>
+<dt>remote<span class="property-type">boolean</span></dt>
 <dd>
-<code>remote</code> is true when the event is triggered by a remote server.
+  <code>true</code> when the event is triggered by a remote server.
 </dd>
+<dt>uri<span class="property-type">string</span></dt>
 <dd>
-<code>uri</code> is the URI to the resource associated with the event.
+  the URI to the resource associated with the event.
 </dd>
+<dt>eventType<span class="property-type">string</span></dt>
 <dd>
-<code>eventType</code> is either <code>executed</code> or <code>udpated</code>.
+  either <code>executed</code> (performed on <code>execute</code> operation)
+  or <code>udpated</code> (performed on <code>write</code> operation).
 </dd>
+<dt>ts<span class="property-type">integer</span></dt>
 <dd>
-<code>ts</code> is the event timestamp in milliseconds.
+  the event timestamp in milliseconds.
 </dd>
 </dl>
 </p>
@@ -95,32 +122,32 @@ Append <code>/execute</code> suffix to the URI to execute the resource.
 <p>
 LwM2M client configuration node. Populate parameters used for starting a new LwM2M client process.
 </p>
-<dl>
-<dt>Endpoint</dt>
-<dd>Enter Client Endpoint Name</dd>
-<dt>Server Host</dt>
-<dd>Enter LwM2M Server Host Address</dd>
-<dt>Server Port</dt>
-<dd>Enter LwM2M Server Port Number. By default, set 5683 for plain CoAP/UDP or 5684 for CoAP/DTLS.</dd>
-<dt>Enable DTLS</dt>
-<dd>Check if DTLS is required. Only PSK is supported. RPK and X.509 aren't supported</dd>
-<dt>PSK Identity</dt>
-<dd>Enter Pre-shared Key Identity. Required for DTLS communication</dd>
-<dt>PSK</dt>
-<dd>Enter Pre-shared Key. Required for DTLS communication</dd>
-<dt>Listen Port</dt>
-<dd>Enter LwM2M Client Listen Port. 56830 is used by default.</dd>
-<dt>Lifetime</dt>
-<dd>Enter LwM2M Client Life time in seconds. 300 sec. by default.</dd>
-<dt>Request Bootstrap</dt>
-<dd>Check if bootstrapping is required on starting LwM2M Client process</dd>
-<dt>Use IPv4 connection</dt>
-<dd>Check if IPv4 is used for interacting with LwM2M Server</dd>
-<dt>Output LwM2M client logs</dt>
-<dd>Check if you'd like to redirect LwM2M Client stderr logs to console (not the Debug tab). Disabled by default.</dd>
-<dt>Hide Sensitive Device Info</dt>
-<dd>Uncheck if you'd like to send everything to LwM2M Server including sensitive resources like Serial Number. Enabled by default.</dd>
-<dt>Objects</dt>
-<dd>Define custom management objects</dd>
+<dl class="message-properties">
+<dt>Endpoint<span class="property-type">string</span></dt>
+<dd>the client endpoint name.</dd>
+<dt>Server Host<span class="property-type">string</span></dt>
+<dd>the LwM2M remote server host address.</dd>
+<dt>Server Port<span class="property-type">integer</span></dt>
+<dd>the LwM2M remote server port number. set 5683 for plain CoAP/UDP (default) or 5684 for CoAP/DTLS.</dd>
+<dt>Enable DTLS<span class="property-type">boolean</span></dt>
+<dd>whether or not DTLS is required. PSK is supported but RPK and X.509 aren't supported</dd>
+<dt>PSK Identity<span class="property-type">string</span></dt>
+<dd>the pre-shared key identity. Required for DTLS communication</dd>
+<dt>PSK<span class="property-type">string</span></dt>
+<dd>the pre-shared key. Required for DTLS communication</dd>
+<dt>Listen Port<span class="property-type">integer</span></dt>
+<dd>the LwM2M client listen port. <code>56830</code> is used by default.</dd>
+<dt>Lifetime<span class="property-type">intger</span></dt>
+<dd>the LwM2M client life time in seconds. 300 sec. by default.</dd>
+<dt>Request Bootstrap<span class="property-type">boolean</span></dt>
+<dd>whether or not bootstrapping is required on starting the LwM2M client executable process</dd>
+<dt>Use IPv4 connection<span class="property-type">boolean</span></dt>
+<dd>whether or not IPv4 is used for interacting with the LwM2M remote server</dd>
+<dt>Output LwM2M client logs<span class="property-type">boolean</span></dt>
+<dd>whether or not to redirect LwM2M Client stderr logs to console (not the Debug tab). Disabled by default.</dd>
+<dt>Hide Sensitive Device Info<span class="property-type">boolean</span></dt>
+<dd>whether or not to send everything to LwM2M Server including sensitive resources like Serial Number. Enabled by default.</dd>
+<dt>Objects<span class="property-type">string</span></dt>
+<dd>the custom management object definition text in JSON format.</dd>
 </dl>
 </script>
