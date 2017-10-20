@@ -1,17 +1,12 @@
 language: generic
 
-sudo: false
+sudo: required
+
+services:
+  - docker
 
 git:
   depth: 10
-
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.5
-    packages:
-     - clang-3.5
 
 # don't re-build for tags so that [publish binary] is not re-run
 # https://github.com/travis-ci/travis-ci/issues/1532
@@ -21,48 +16,45 @@ branches:
 
 matrix:
   include:
-     # Linux
+     # ARM Linux
      - os: linux
-       compiler: clang
-       env: NODE_VERSION="8"
-       addons:
-         apt:
-            sources: [ 'ubuntu-toolchain-r-test','llvm-toolchain-precise-3.5', 'gcc-multilib', 'g++-multilib' ]
-            packages: [ 'clang-3.5']
+       env:
+        - NODE_VERSION="8"
+        - ARCH="arm"
+        - DOCKROSS="linux-armv6"
      - os: linux
-       compiler: clang
-       env: NODE_VERSION="7"
-       addons:
-         apt:
-            sources: [ 'ubuntu-toolchain-r-test','llvm-toolchain-precise-3.5', 'gcc-multilib', 'g++-multilib' ]
-            packages: [ 'clang-3.5']
+       env:
+        - NODE_VERSION="7"
+        - ARCH="arm"
+        - DOCKROSS="linux-armv6"
      - os: linux
-       compiler: clang
-       env: NODE_VERSION="6"
-       addons:
-         apt:
-            sources: [ 'ubuntu-toolchain-r-test','llvm-toolchain-precise-3.5', 'gcc-multilib', 'g++-multilib' ]
-            packages: [ 'clang-3.5']
+       env:
+        - NODE_VERSION="6"
+        - ARCH="arm"
+        - DOCKROSS="linux-armv6"
 
 before_install:
   - export PUBLISHABLE=${PUBLISHABLE:-true}
   - export COVERAGE=${COVERAGE:-false}
   - if [[ $(uname -s) == 'Linux' ]]; then
-      export CXX="clang++-3.5";
-      export CC="clang-3.5";
       export PYTHONPATH=$(pwd)/py-local/lib/python2.7/site-packages;
     else
       export PYTHONPATH=$(pwd)/py-local/lib/python/site-packages;
     fi;
   - scripts/validate_tag.sh
   - git submodule update --init --recursive
-  - source ./scripts/install_node.sh ${NODE_VERSION}
 
 install:
-  # put node-pre-gyp on path
-  - export PATH=./node_modules/.bin/:$PATH
+  - docker run --rm dockcross/${DOCKROSS} > ./dockcross
+  - chmod +x ./dockcross
 
 before_script:
+  # docker args
+  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e NODE_PRE_GYP_GITHUB_TOKEN=${NODE_PRE_GYP_GITHUB_TOKEN}"
+  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e COMMIT_MESSAGE=${COMMIT_MESSAGE}"
+  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e PUBLISHABLE=${PUBLISHABLE}"
+  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e COVERAGE=${COVERAGE}"
+  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e ARCH=${ARCH}"
   # get commit message
   - export COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
   - if [[ ${COVERAGE} == true ]]; then
@@ -74,4 +66,6 @@ before_script:
      fi
 
 script:
-  - if [[ "${NODE_VERSION}" ]]; then ./scripts/build_against_node.sh; fi;
+  - ./dockcross \
+    bash -c \
+    "./scripts/install_node.sh ${NODE_VERSION} && ./scripts/build_against_node.sh"

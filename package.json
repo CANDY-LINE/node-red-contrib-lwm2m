@@ -16,7 +16,7 @@
     "test": "NODE_ENV=development gulp test",
     "clean": "gulp clean",
     "prepublish": "gulp build",
-    "install": "node-pre-gyp install --fallback-to-build",
+    "install": "node-pre-gyp install --fallback-to-build --target_arch=${ARCH:-$(node -e 'console.log(require(\"os\").arch())')}",
     "package": "node-pre-gyp package"
   },
   "os": [
