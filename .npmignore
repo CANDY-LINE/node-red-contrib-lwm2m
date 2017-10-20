@@ -14,3 +14,5 @@ build
 lib
 scripts
 tests
+__nvm
+dockcross*

@@ -17,3 +17,5 @@ Debug
 *.target.gyp.mk
 .DS_Store
 .idea
+__nvm
+dockcross*
