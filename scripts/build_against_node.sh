@@ -8,9 +8,8 @@ PATH=${PATH}:./node_modules/.bin
 
 function publish() {
     if [[ ${PUBLISHABLE:-false} == true ]] && [[ ${COMMIT_MESSAGE} =~ "[publish binary]" ]]; then
-        node-pre-gyp package testpackage --target_arch=${ARCH}
-        node-pre-gyp-github publish --target_arch=${ARCH} --release
-        node-pre-gyp info --target_arch=${ARCH}
+        make package ARCH=${ARCH}
+        make publish
         make clean
     fi
 }
