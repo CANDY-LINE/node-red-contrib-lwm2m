@@ -240,6 +240,27 @@ ACL characters and allowed operations are shown below.
 - `D` ... Delete
 - `C` ... Create
 
+## Preserved global predefined objects
+
+You can add your own systemwide custom objects by describing them in your `settings.js` or `RED.settings` objects. These objects are **preserved** and **never overwritten** by user's configuration node.
+
+Here's an example for providing the predefined manufacturer name.
+
+`settings.js`
+```
+{
+    lwm2m: {
+        objects : {
+            '0': {
+                '0': {
+                    '0': "ACME Corporation"
+                }
+            }
+        }
+    }
+}
+```
+
 # Supported OS
 
 This node should work on Unix and Linux OS. Windows is not supported.

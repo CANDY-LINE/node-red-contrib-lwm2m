@@ -49,6 +49,7 @@ describe('ResourceRepositoryBuilder', () => {
   describe('#constructor', () => {
     it('should have valid query URI resources', () => {
       let b = new ResourceRepositoryBuilder([
+        // settings.js, always preserved
         {
           version: '1.2.3',
           '0': {
@@ -67,6 +68,7 @@ describe('ResourceRepositoryBuilder', () => {
             },
           }, // '1'
         },
+        // user's custom overlay objects
         {
           '0': {
             '0': {
@@ -85,6 +87,7 @@ describe('ResourceRepositoryBuilder', () => {
             }
           }, // '1'
         },
+        // system default opjects (can be overwritten by user's overlay objects)
         {
           '0': {
             '0': {
