@@ -1,7 +1,7 @@
 Node-RED node for OMA LwM2M Client using Eclipse Wakaama
 ===
 
-This node internally spawns a `lwm2mclient` process and starts inter-process communication (IPC) over stdin and stdout. The `lwm2mclient` executable is slightly different from Wakaama's implementation, some of management objects are stripped and replaced with Node.js implementation so that you can describe your own applications on top of Node-RED.
+This node internally spawns a `wakatiwaiclient` process, which is a revised version of Eclipse Wakaama executable, and starts inter-process communication (IPC) over stdin and stdout. The `wakatiwaiclient` executable is slightly different from Wakaama's implementation, some of management objects are stripped. This node allows you to describe your own management objects on top of Node-RED.
 
 When the parent process (i.e. Node-RED) exits, this node tries to emit a De-registration message to LwM2M server so that the server knows the client is gone.
 
@@ -9,7 +9,7 @@ This node restarts a new process when the child process is exited after a given 
 
 CoAP over DTLS is supported but disabled by default. Users are able to enable DTLS if necessary. However, supported security mechanism is only pre-shared key. RPK and X.509 are not supported.
 
-The inter-process communication over stdin/stdio is NOT encrypted. `ps` command allows you to show entire command line to start `lwm2mclient` including PSK Identity and PSK information.
+Keep in mind that the inter-process communication over stdin/stdio is NOT encrypted and does NOT have any authentication mechanism. `ps` command allows you to show entire command line to start `wakatiwaiclient` including PSK Identity and PSK information.
 
 The supported message format is `TLV` rather than `JSON`.
 
@@ -359,14 +359,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-## Eclipse Wakaama License
-
-Eclipse Wakaama is available under EPL v1.0 and EDL v1.0.
-
-## Eclipse tinydtls License
-
-Eclipse tinydtls is available under EPL v1.0 and EDL v1.0.
 
 # Revision History
 
