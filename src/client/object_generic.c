@@ -287,9 +287,9 @@ static uint8_t prv_generic_read(uint16_t instanceId,
             *numDataP = response[7] + (((uint16_t)response[8]) << 8);
             *dataArrayP = lwm2m_data_new(*numDataP);
             if (*dataArrayP == NULL) return COAP_500_INTERNAL_SERVER_ERROR;
-            fprintf(stderr, "prv_generic_read:(lwm2m_data_new):*numDataP=>%d\r\n",
-                *numDataP);
         }
+        fprintf(stderr, "prv_generic_read:(lwm2m_data_new):*numDataP=>%d\r\n",
+            *numDataP);
         for (i = 0; i < *numDataP; i++)
         {
             (*dataArrayP)[i].id = response[idx++];
