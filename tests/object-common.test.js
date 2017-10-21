@@ -23,12 +23,36 @@ import * as sinon from 'sinon';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import {
+  LWM2M_TYPE,
   ACL,
 } from './object-common';
 
 chai.should();
 chai.use(sinonChai);
 const expect = chai.expect;
+
+describe('LWM2M_TYPE', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  describe('#toType()', () => {
+    it('should turn an LWM2M_TYPE string into a valid 16-bit int', () => {
+      expect(LWM2M_TYPE.toType('UNDEFINED')).to.equal(LWM2M_TYPE.UNDEFINED);
+      expect(LWM2M_TYPE.toType('OBJECT')).to.equal(LWM2M_TYPE.OBJECT);
+      expect(LWM2M_TYPE.toType('OBJECT_INSTANCE')).to.equal(LWM2M_TYPE.OBJECT_INSTANCE);
+      expect(LWM2M_TYPE.toType('MULTIPLE_RESOURCE')).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
+      expect(LWM2M_TYPE.toType('STRING')).to.equal(LWM2M_TYPE.STRING);
+      expect(LWM2M_TYPE.toType('OBJECT_LINK')).to.equal(LWM2M_TYPE.OBJECT_LINK);
+      expect(LWM2M_TYPE.toType('FUNCTION')).to.equal(LWM2M_TYPE.FUNCTION);
+    });
+  });
+  // end of '#toValue()'
+});
 
 describe('ACL', () => {
   let sandbox;
