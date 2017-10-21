@@ -251,11 +251,21 @@ describe('Resource', () => {
         expect(r.type).to.equal(LWM2M_TYPE.STRING);
         expect(r.acl).to.equal(ACL.WRITABLE);
         expect(r.value).to.equal('abcdef');
+
         return Resource.from('abcdef');
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.STRING);
         expect(r.acl).to.equal(ACL.READABLE);
         expect(r.value).to.equal('abcdef');
+
+        return Resource.from({
+          type: LWM2M_TYPE.STRING
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value).to.equal('');
+
       }).then(() => {
         done();
       }).catch((err) => {
@@ -541,12 +551,27 @@ describe('Resource', () => {
         expect(r.value[1].value).to.equal('456');
 
         return Resource.from({
-          type: LWM2M_TYPE.STRING
+          type: 'MULTIPLE_RESOURCE',
+          value: {
+            '0': {
+              type: 'OBJECT_LINK',
+              value: {
+                objectId: 999,
+                objectInstanceId: 111
+              }
+            }
+          }
         });
       }).then((r) => {
-        expect(r.type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
         expect(r.acl).to.equal(ACL.READABLE);
-        expect(r.value).to.equal('');
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(1);
+        expect(r.value[0]).to.be.an.instanceof(Resource);
+        expect(r.value[0].type).to.equal(LWM2M_TYPE.OBJECT_LINK);
+        expect(r.value[0].acl).to.equal(ACL.READABLE);
+        expect(r.value[0].value.objectId).to.equal(999);
+        expect(r.value[0].value.objectInstanceId).to.equal(111);
 
       }).then(() => {
         done();
