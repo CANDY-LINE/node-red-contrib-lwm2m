@@ -26,7 +26,6 @@
       '<(wakaama_core_dir)/bootstrap.c',
       '<(wakaama_core_dir)/data.c',
       '<(wakaama_core_dir)/discover.c',
-      '<(wakaama_core_dir)/json.c',
       '<(wakaama_core_dir)/liblwm2m.c',
       '<(wakaama_core_dir)/list.c',
       '<(wakaama_core_dir)/management.c',
@@ -55,7 +54,6 @@
     ],
     'wakaama_defines': [
       'LWM2M_BOOTSTRAP',
-      'LWM2M_SUPPORT_JSON',
       'LWM2M_LITTLE_ENDIAN=<!(python <(deps_dir)/endianess.py)',
       'WITH_TINYDTLS',
       'DTLSv12',
