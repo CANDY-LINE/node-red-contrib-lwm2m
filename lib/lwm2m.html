@@ -205,12 +205,14 @@
       return this.clientName;
     },
     oneditprepare: function() {
-      $('#node-config-input-pskIdentity').prop('disabled', !this.enableDTLS);
-      $('#node-config-input-presharedKey').prop('disabled', !this.enableDTLS);
-      $('#node-config-input-enableDTLS').click(function() {
-        var disabled = !$(this).prop('checked');
+      function disablePskItems(disabled) {
         $('#node-config-input-pskIdentity').prop('disabled', disabled);
         $('#node-config-input-presharedKey').prop('disabled', disabled);
+      }
+      disablePskItems(!this.enableDTLS);
+      $('#node-config-input-enableDTLS').click(function() {
+        var disabled = !$(this).prop('checked');
+        disablePskItems(disabled);
         var serverPort = $('#node-config-input-serverPort');
         if (disabled && serverPort.val() == '5684') {
           serverPort.val('5683');
@@ -222,6 +224,18 @@
       $("#node-config-input-objects").typedInput({
         default: 'json',
         types:['json']
+      });
+      function disableServerConfigs(disabled) {
+        $('#node-config-input-enableDTLS').prop('disabled', disabled);
+        disablePskItems(disabled);
+        $('#node-config-input-serverHost').prop('disabled', disabled);
+        $('#node-config-input-serverPort').prop('disabled', disabled);
+        $('#node-config-input-lifetimeSec').prop('disabled', disabled);
+      }
+      disableServerConfigs(!!this.requestBootstrap);
+      $('#node-config-input-requestBootstrap').click(function() {
+        var disabled = !!$(this).prop('checked');
+        disableServerConfigs(disabled);
       });
     }
   });
