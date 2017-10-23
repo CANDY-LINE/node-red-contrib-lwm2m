@@ -7,7 +7,7 @@ When the parent process (i.e. Node-RED) exits, this node tries to emit a De-regi
 
 This node restarts a new process when the child process is exited after a given interval time passes.
 
-CoAP over DTLS is supported but disabled by default. Users are able to enable DTLS if necessary. However, supported security mechanism is only pre-shared key. RPK and X.509 are not supported.
+CoAP over DTLS is supported but disabled by default. Users are able to enable DTLS if necessary. However, supported security mechanism is only pre-shared key(PSK). RPK and X.509 are not supported.
 
 Keep in mind that the inter-process communication over stdin/stdio is NOT encrypted and does NOT have any authentication mechanism. `ps` command allows you to show entire command line to start `wakatiwaiclient` including PSK Identity and PSK information.
 
@@ -46,7 +46,7 @@ The input and output nodes show the following connection status.
 
 † ACL Object management will be implemented on `create` and `delete` operation support
 
-† Bootstrap is not yet tested
+† Bootstrap isn't fully supported (should work but retrieving the provisioned information from the node isn't yet implemented)
 
 ## Predefined Objects
 
@@ -303,6 +303,12 @@ sudo systemctl restart candy-red
 
 You can import example flows available under `examples` folder on Node-RED UI.
 
+# TODOs
+
+- `create` operation support
+- `delete` operation support
+- Bootstrapping support
+
 # Appendix
 
 ## How to build from source
@@ -346,7 +352,7 @@ http://leshan.eclipse.org/#/clients
 
 ## Source Code License
 
-Copyright (c) 2017 CANDY LINE INC.
+Copyright (c) 2017 [CANDY LINE INC.](https://www.candy-line.io)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
