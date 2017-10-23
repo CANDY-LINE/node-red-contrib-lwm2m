@@ -153,7 +153,7 @@ LwM2M client configuration node. Populate parameters used for starting a new LwM
 <dt>Listen Port<span class="property-type">integer</span></dt>
 <dd>the LwM2M client listen port. <code>56830</code> is used by default.</dd>
 <dt>Lifetime<span class="property-type">intger</span></dt>
-<dd>the LwM2M client life time in seconds. 300 sec. by default.</dd>
+<dd>the LwM2M client life time in seconds. 300 sec. by default. After the time elapsed, the client tries to tell the server "I'm alive".</dd>
 <dt>Request Bootstrap<span class="property-type">boolean</span></dt>
 <dd>whether or not bootstrapping is required on starting the LwM2M client executable process</dd>
 <dt>Use IPv4 connection<span class="property-type">boolean</span></dt>
