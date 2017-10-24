@@ -246,16 +246,19 @@ describe('Resource', () => {
       Resource.from({
         type: LWM2M_TYPE.STRING,
         acl: ACL.WRITABLE,
+        sensitive: true,
         value: 'abcdef'
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.STRING);
         expect(r.acl).to.equal(ACL.WRITABLE);
+        expect(r.sensitive).to.equal(true);
         expect(r.value).to.equal('abcdef');
 
         return Resource.from('abcdef');
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.STRING);
         expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.sensitive).to.equal(false);
         expect(r.value).to.equal('abcdef');
 
         return Resource.from({
