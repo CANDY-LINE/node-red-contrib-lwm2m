@@ -19,11 +19,13 @@
 'use strict';
 
 import 'source-map-support/register';
+import { EventEmitter } from 'events';
 import * as sinon from 'sinon';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import {
-  Resource, LwM2MClientProxy, RequestHandler, ResourceRepositoryBuilder
+  Resource, LwM2MClientProxy, LwM2MObjectStore,
+  RequestHandler, ResourceRepositoryBuilder
 } from './lwm2m-common';
 import {
   LWM2M_TYPE,
@@ -34,6 +36,57 @@ chai.should();
 chai.use(sinonChai);
 const expect = chai.expect;
 const HEADER_LEN = 5;
+
+describe('LwM2MObjectStore', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  describe('#constructor', () => {
+    it('should initialize props', () => {
+      let opts = new EventEmitter();
+      opts.serverId = 1234;
+      let store = new LwM2MObjectStore(opts);
+      expect(store.repo).to.be.null;
+      expect(store.serverId).to.equal(1234);
+    });
+  });
+
+  describe('#emit', () => {
+    it('should emit a remote event to user app', (done) => {
+      let opts = new EventEmitter();
+      opts.serverId = 1234;
+      let store = new LwM2MObjectStore(opts);
+      opts.on('object-event', (ev) => {
+        expect(ev.serverId).to.equal(opts.serverId);
+        expect(ev.uri).to.equal('uri');
+        expect(ev.value).to.equal('value');
+        expect(ev.eventType).to.equal('eventType');
+        done();
+      });
+      store.emit('uri', 'value', 'eventType', true);
+    });
+
+    it('should emit a local event to user app', (done) => {
+      let opts = new EventEmitter();
+      opts.serverId = 1234;
+      let store = new LwM2MObjectStore(opts);
+      opts.on('object-event', (ev) => {
+        expect(ev.serverId).to.be.undefined;
+        expect(ev.uri).to.equal('uri');
+        expect(ev.value).to.equal('value');
+        expect(ev.eventType).to.equal('eventType');
+        done();
+      });
+      store.emit('uri', 'value', 'eventType', false);
+    });
+  });
+  // end of 'LwM2MObjectStore'
+});
 
 describe('ResourceRepositoryBuilder', () => {
   let sandbox;
