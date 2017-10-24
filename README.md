@@ -255,7 +255,7 @@ Here's an example for providing the predefined manufacturer name.
 {
     lwm2m: {
         objects : {
-            '0': {
+            '3': {
                 '0': {
                     '0': "ACME Corporation"
                 }
