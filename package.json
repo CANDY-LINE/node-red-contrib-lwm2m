@@ -1,7 +1,7 @@
 {
   "name": "node-red-contrib-lwm2m",
   "version": "0.1.0",
-  "description": "Node-RED nodes for LwM2M using Eclipse Wakaama",
+  "description": "Node-RED nodes for OMA LwM2M",
   "repository": {
     "type": "git",
     "url": "https://github.com/CANDY-LINE/node-red-contrib-lwm2m.git"
