@@ -85,6 +85,40 @@ describe('LwM2MObjectStore', () => {
       store.emit('uri', 'value', 'eventType', false);
     });
   });
+
+  describe('#get', () => {
+    it('should return a query result', (done) => {
+      let opts = new EventEmitter();
+      let store = new LwM2MObjectStore(opts);
+      store.repo = {
+        '/1/2/3': {
+          type: 'STRING',
+          value: 'test0',
+        },
+        '/3/0/0': {
+          type: 'STRING',
+          value: 'test',
+        },
+        '/3/0/1': {
+          type: 'STRING',
+          value: 'test2',
+        },
+      };
+      store.get('^/3/*').then((result) => {
+        expect(result).to.be.an('array');
+        expect(result.length).to.equal(2);
+        expect(result[0].uri).to.equal('/3/0/0');
+        expect(result[0].value.type).to.equal('STRING');
+        expect(result[0].value.value).to.equal('test');
+        expect(result[1].uri).to.equal('/3/0/1');
+        expect(result[1].value.type).to.equal('STRING');
+        expect(result[1].value.value).to.equal('test2');
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+  });
   // end of 'LwM2MObjectStore'
 });
 

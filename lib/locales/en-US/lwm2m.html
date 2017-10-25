@@ -64,13 +64,16 @@ Each value in the object is a Resource object having <code>type</code>, <code>ac
 Here is an example output for Manufacturer resource in DeviceObject.
 <pre>
 {
-  "payload": {
-    "/3/0/0": {
-      "type": "STRING",
-      "acl": "R",
-      "value": "Manufacturer"
+  "payload": [
+    {
+      "uri": "/3/0/0",
+      "value": {
+        "type": "STRING",
+        "acl": "R",
+        "value": "Manufacturer"
+      }
     }
-  }
+  ]
 }
 </pre>
 </p>
