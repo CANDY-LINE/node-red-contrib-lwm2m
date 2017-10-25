@@ -52,7 +52,7 @@ The input and output nodes show the following connection status.
 
 ## Predefined Objects
 
-The following objects are implemented in C (Using Wakaama example).
+The following objects are implemented in C (Using Wakaama's "AS IS" example).
 
 - `Security Object`
 - `Server Object`
@@ -102,7 +102,7 @@ Supported resource types are as follows:
 - `BOOLEAN` ... boolean
 - `OBJECT_LINK` ... Object Link
 - `MULTIPLE_RESOURCE` ... Resource Array
-- `FUNCTION` ... This is NOT a LwM2M Resource Type. Used for defining `execute` operation Resource
+- `FUNCTION` ... This is **NOT** a LwM2M Resource Type. Used for defining `execute` operation Resource
 
 #### Resource Type JSON format
 
@@ -259,7 +259,7 @@ Here's an example for providing the predefined manufacturer name.
         objects : {
             '3': {
                 '0': {
-                    '0': "ACME Corporation"
+                    '0': 'ACME Corporation'
                 }
             }
         }
@@ -309,7 +309,7 @@ You can import example flows available under `examples` folder on Node-RED UI.
 
 - `create` operation support
 - `delete` operation support
-- Bootstrapping support
+- Bootstrapping support (partially supported so far)
 
 # Appendix
 
@@ -318,7 +318,7 @@ You can import example flows available under `examples` folder on Node-RED UI.
 Clone dependencies.
 
 ```
-# clone submodules (wakaama and tinydtls)
+# clone submodules (Wakatiwai, Eclipse Wakaama and Eclipse tinydtls)
 $ git submodule update --init --recursive
 ```
 
