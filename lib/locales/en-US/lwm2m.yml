@@ -27,7 +27,7 @@ lwm2m:
     error: error
     timeout: timeout
   placeholder:
-    clientName: Client Endpoint Name
+    clientName: (urn format is recommended)
     clientPort: 56830
     serverHost: ""
     serverPort: 5683

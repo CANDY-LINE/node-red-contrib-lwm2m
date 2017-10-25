@@ -27,10 +27,13 @@ The topic can be a regular expression text like <code>/3/.*</code>, which allows
 <h4>Inquiry Result</h4>
 <p>
 The inquiry result is set in <code>msg.payload</code> property.
-The payload property has a Key-Value object.
-Each key in the object is the resource URI.
-Each value in the object is a Resource object having <code>type</code>, <code>acl</code> and <code>value</code> proerpties.
+The payload property has a Resource object array.
+Each element in the array has <code>uri</code>, <code>type</code>, <code>acl</code> and <code>value</code> proerpties (see below).
 <dl class="message-properties">
+<dt>uri<span class="property-type">string</span></dt>
+<dd>
+the object resource URI e.g. <code>/3/0/0</code>
+</dd>
 <dt>type<span class="property-type">string</span></dt>
 <dd>
   the type of the resource.
@@ -79,7 +82,8 @@ Here is an example output for Manufacturer resource in DeviceObject.
 </p>
 <h4>Object Events</h4>
 <p>
-This node shall emit object events. The supported events are as follows.
+This node shall emit object events triggered when a resource is manipulated.
+The supported events are as follows.
 <dl>
 <dt><code>executed</code></dt>
 <dd>Fired when a resource is executed by a LwM2M Server or a node in the running flow</dd>
