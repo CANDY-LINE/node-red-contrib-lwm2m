@@ -185,13 +185,13 @@
   RED.nodes.registerType('lwm2m client',{
     category: 'config',
     defaults: {
-      clientName: { value: '', required: true },
+      clientName: { value: '', required: true, validate: RED.validators.regex(/^[a-zA-Z0-9:\-]+$/) },
       enableDTLS: { value: false, required: false },
       clientPort: { value: '56830', required: true, validate: RED.validators.number() },
       lifetimeSec: { value: '300', required: false, validate: RED.validators.number() },
       requestBootstrap: { value: false, required: false },
       useIPv4: { value: true, required: false },
-      serverHost: { value: 'localhost', required: true },
+      serverHost: { value: 'localhost', required: true, validate: RED.validators.regex(/^[a-zA-Z0-9:\-\._%]+$/) },
       serverPort: { value: '5683', required: true, validate: RED.validators.number() },
       redirectLwm2mClientLog: { value: false, required: false },
       hideSensitiveInfo: { value: true, required: false },
