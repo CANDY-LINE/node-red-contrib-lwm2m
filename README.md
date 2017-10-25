@@ -339,6 +339,21 @@ In order to build JS code, run the following commands.
 $ npm run build
 ```
 
+## Eclipse Wakaama LwM2M Server
+
+With [Wakaama LwM2M](https://github.com/eclipse/wakaama) Server, you can test this node on your localhost. The instruction for building the executable file is described [here](https://github.com/eclipse/wakaama#examples).
+
+- Server Host: `localhost`
+- Server Port: `5683` (DTLS is NOT supported)
+
+Run the following command to start LwM2M Server to accept `localhost` address.
+
+```
+lwm2mserver -4
+```
+
+Enter `help` on the lwm2mserver console for supported commands.
+
 ## Eclipse Leshan Public Sandbox LwM2M Server with Web UI
 
 Provide the following host and port for your lwm2m client config node to connect to Public Leshan Server.
