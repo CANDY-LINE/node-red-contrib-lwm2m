@@ -341,7 +341,7 @@ Node.js v4+
 Run the following commands:
 ```
 cd ~/.node-red
-sudo npm install node-red-contrib-lwm2m
+sudo npm install --unsafe-perm node-red-contrib-lwm2m
 ```
 
 Then restart Node-RED process.
