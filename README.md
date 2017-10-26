@@ -350,8 +350,8 @@ Then restart Node-RED process.
 
 Run the following commands:
 ```
-cd $(npm -g root)/candy-red
-sudo npm install node-red-contrib-lwm2m
+cd /opt/candy-red/.node-red
+sudo npm install --unsafe-perm node-red-contrib-lwm2m
 ```
 
 Then restart `candy-red` service.
