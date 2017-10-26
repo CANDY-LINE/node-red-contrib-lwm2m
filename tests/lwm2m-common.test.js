@@ -90,32 +90,65 @@ describe('LwM2MObjectStore', () => {
     it('should return a query result', (done) => {
       let opts = new EventEmitter();
       let store = new LwM2MObjectStore(opts);
-      store.repo = {
-        '/1/2/3': {
-          type: 'STRING',
-          value: 'test0',
-        },
-        '/3/0/0': {
-          type: 'STRING',
-          value: 'test',
-        },
-        '/3/0/1': {
-          type: 'STRING',
-          value: 'test2',
-        },
-      };
-      store.get('^/3/*').then((result) => {
-        expect(result).to.be.an('array');
-        expect(result.length).to.equal(2);
-        expect(result[0].uri).to.equal('/3/0/0');
-        expect(result[0].value.type).to.equal('STRING');
-        expect(result[0].value.value).to.equal('test');
-        expect(result[1].uri).to.equal('/3/0/1');
-        expect(result[1].value.type).to.equal('STRING');
-        expect(result[1].value.value).to.equal('test2');
-        done();
-      }).catch((err) => {
-        done(err);
+      new ResourceRepositoryBuilder([
+        {
+          '1': {
+            '2': {
+              '3': {
+                type: 'STRING',
+                value: 'test0',
+              },
+            },
+          },
+          '3': {
+            '0': {
+              '0': {
+                type: 'STRING',
+                value: 'test',
+              },
+              '1': {
+                type: 'STRING',
+                value: 'test2',
+              },
+              '22': {
+                type: 'MULTIPLE_RESOURCE',
+                value: {
+                  '90': 'ABC',
+                  '99': 'XYZ',
+                },
+              },
+            },
+          },
+        }
+      ], false).build(false).then((repo) => {
+        store.repo = repo;
+        return store.get('^/3/*').then((result) => {
+          expect(result).to.be.an('array');
+          expect(result.length).to.equal(3);
+          expect(result[0].uri).to.equal('/3/0/0');
+          expect(result[0].value.type).to.equal('STRING');
+          expect(result[0].value.value).to.equal('test');
+          expect(result[1].uri).to.equal('/3/0/1');
+          expect(result[1].value.type).to.equal('STRING');
+          expect(result[1].value.value).to.equal('test2');
+          expect(result[2].uri).to.equal('/3/0/22');
+          expect(result[2].value.type).to.equal('MULTIPLE_RESOURCE');
+          expect(result[2].value.value).to.deep.equal({
+            '90': {
+              type: 'STRING',
+              acl: 'R',
+              value: 'ABC'
+            },
+            '99': {
+              type: 'STRING',
+              acl: 'R',
+              value: 'XYZ'
+            },
+          });
+          done();
+        }).catch((err) => {
+          done(err);
+        });
       });
     });
   });
