@@ -146,7 +146,7 @@
   }
 
   RED.nodes.registerType('lwm2m client in', {
-    category: 'input',
+    category: 'lwm2m',
     color: '#00e6ac',
     defaults: {
       name: { value: '' },
@@ -156,7 +156,7 @@
     outputs: 1,
     icon: 'bridge-dash.png',
     label: function() {
-      return toLabel(this, 'lwm2m client');
+      return toLabel(this, 'lwm2m client in');
     },
     labelStyle: function() {
       return (this.name || this.lwm2mClient) ? 'node_label_italic' : '';
@@ -164,7 +164,7 @@
   });
 
   RED.nodes.registerType('lwm2m client out', {
-    category: 'output',
+    category: 'lwm2m',
     color: '#00e6ac',
     defaults: {
       name: { value: '' },
@@ -175,7 +175,7 @@
     icon: 'bridge-dash.png',
     align: 'right',
     label: function() {
-      return toLabel(this, 'lwm2m client');
+      return toLabel(this, 'lwm2m client out');
     },
     labelStyle: function() {
       return (this.name || this.lwm2mClient) ? 'node_label_italic' : '';
