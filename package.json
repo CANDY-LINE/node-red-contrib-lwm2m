@@ -16,6 +16,7 @@
     "test": "NODE_ENV=development gulp test",
     "clean": "gulp clean",
     "prepublish": "gulp build",
+    "preinstall": "git submodule update --init --recursive;true",
     "install": "node-pre-gyp install --fallback-to-build --target_arch=${ARCH:-$(node -e 'console.log(require(\"os\").arch())')}",
     "package": "node-pre-gyp package"
   },

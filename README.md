@@ -374,11 +374,10 @@ You can import example flows available under `examples` folder on Node-RED UI.
 
 ## How to build from source
 
-Clone dependencies.
+Install dependencies.
 
 ```
-# clone submodules (Wakatiwai, Eclipse Wakaama and Eclipse tinydtls)
-$ git submodule update --init --recursive
+$ npm install
 ```
 
 Then run the following commands to build source code.
