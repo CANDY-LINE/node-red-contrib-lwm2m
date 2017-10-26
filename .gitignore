@@ -20,3 +20,4 @@ Debug
 __nvm
 dockcross*
 wakatiwai
+!deps/wakatiwai
