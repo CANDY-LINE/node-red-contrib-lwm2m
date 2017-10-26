@@ -63,6 +63,17 @@ describe('ACL', () => {
     sandbox.restore();
   });
 
+  describe('#isAllowed()', () => {
+    it('should evaluate ACL', () => {
+      expect(ACL.isAllowed(ACL.READABLE, ACL.READABLE)).to.equal(true);
+      expect(ACL.isAllowed(ACL.EXECUTABLE, ACL.READABLE)).to.equal(false);
+      expect(ACL.isAllowed(ACL.WRITABLE, ACL.READABLE)).to.equal(false);
+      expect(ACL.isAllowed(ACL.CREATABLE, ACL.READABLE)).to.equal(false);
+      expect(ACL.isAllowed(ACL.DELETABLE, ACL.READABLE)).to.equal(false);
+      expect(ACL.isAllowed(ACL.ALL, ACL.READABLE)).to.equal(true);
+    });
+  });
+
   describe('#toValue()', () => {
     it('should turn an ACL string into a valid 16-bit int', () => {
       expect(ACL.toValue(ACL.READABLE)).to.equal(ACL.READABLE);
