@@ -267,6 +267,63 @@ Here's an example for providing the predefined manufacturer name.
 }
 ```
 
+## Embedded Mode Extensions
+
+This node offers extra features for [embedded](https://nodered.org/docs/embedding) mode, which allows the host application to interact with this node via `EventEmitter` object named `internalEventBus` defined in `RED.settings` object.
+
+However, this feature is **disabled** by default (opt-in). In order to enable it, ask users to check `Allow Internal Event Propagation` property in `lwm2m` config node.
+
+**Pseudo code:**
+
+```
+const EventEmitter = require('events').EventEmitter;
+const RED = ...;
+let server = ...;
+
+let bus = new EventEmitter();
+bus.on('object-event', (ev) => {
+    // You can receive LwM2M object events here
+    if (ev.eventType === 'updated') {
+        ...
+    }
+});
+// Create the settings object - see default settings.js file for other options
+let settings = {
+    ...
+    lwm2m: {
+        internalEventBus: bus, // set your own EventEmitter object
+        objects : {
+            '3': {
+                '0': {
+                    '0': "ACME Corporation"
+                }
+            },
+            '99999': {
+                '0': {
+                    '0': 'ABCD'
+                }
+            }
+        }
+    },
+    ...
+};
+
+RED.init(server, settings);
+...
+
+bus.emit('object-read', { id: 123, topic: '/3/0/0' }); // 'Read' operation for retrieving Manufacturer
+bus.once('object-result', (msg) => {
+    if (msg.id === 123) {
+        if (/* boolean */ msg.error) {
+            console.error(msg.payload); // error info
+        } else {
+            let man = msg.payload['/3/0/0'];
+            ...
+        }
+    }
+});
+```
+
 # Supported OS
 
 This node should work on Unix and Linux OS. Windows is not supported.

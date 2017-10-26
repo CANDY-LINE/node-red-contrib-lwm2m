@@ -16,6 +16,7 @@ lwm2m:
     presharedKey: PSK
     redirectLwm2mClientLog: Output LwM2M client logs
     hideSensitiveInfo: Hide Sensitive Device Info
+    propagateInternalEvents: Allow Internal Event Propagation
     objects: Objects
   status:
     bootstrapRequired: bootstrap required
