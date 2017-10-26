@@ -126,6 +126,9 @@ The <code>msg.payload</code> property is an event object. Each property in the o
 <p>
 This node allows you to update or execute a resource in the management objects associated with the LwM2M client.
 </p>
+<p>
+When the operation is successful, either <code>updated</code> or <code>executed</code> event is emitted from <b>lwm2m client in</b> node.
+</p>
 <h3>Inputs</h3>
 <p>
 Provide a data with the associated URI to update or execute.
@@ -133,7 +136,8 @@ You can set the data to <code>msg.payload</code> property,
 and the URI to update to <code>msg.topic</code> property.
 </p>
 <p>
-Append <code>/execute</code> suffix to the URI to execute the resource.
+Rmember to append <code>/execute</code> suffix to the URI to execute the resource,
+e.g. <code>/3/0/4/execute</code> for performing reboot.
 </p>
 <p>
 <b>*</b> All errors will be propagated to <code>catch</code> node.
