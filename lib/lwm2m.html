@@ -138,7 +138,7 @@
     }
     var label = defaultLabel;
     RED.nodes.eachConfig(function(c) {
-      if((c.type === 'lwm2m client') && (c.id === node.lwm2mClient)) {
+      if(c.clientName && (c.type === 'lwm2m client') && (c.id === node.lwm2mClient)) {
         label = c.clientName;
       }
     });
