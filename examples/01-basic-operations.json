@@ -12,8 +12,8 @@
         "z": "dc706162.9f79a",
         "name": "",
         "lwm2mClient": "422f0802.8666",
-        "x": 480,
-        "y": 220,
+        "x": 500,
+        "y": 200,
         "wires": [
             [
                 "f2e71141.d58018",
@@ -27,8 +27,8 @@
         "z": "dc706162.9f79a",
         "name": "",
         "lwm2mClient": "422f0802.8666",
-        "x": 480,
-        "y": 500,
+        "x": 470,
+        "y": 480,
         "wires": []
     },
     {
@@ -42,8 +42,8 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 160,
-        "y": 100,
+        "x": 150,
+        "y": 80,
         "wires": [
             [
                 "e86eae90.188f2"
@@ -60,7 +60,7 @@
             "a81a5db.37e022"
         ],
         "x": 490,
-        "y": 80,
+        "y": 60,
         "wires": [
             [
                 "3acaa579.279c52"
@@ -76,7 +76,7 @@
         "console": "false",
         "complete": "payload",
         "x": 760,
-        "y": 180,
+        "y": 160,
         "wires": []
     },
     {
@@ -90,8 +90,8 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 190,
-        "y": 400,
+        "x": 180,
+        "y": 420,
         "wires": [
             [
                 "a81a5db.37e022"
@@ -115,7 +115,7 @@
         "checkall": "true",
         "outputs": 1,
         "x": 660,
-        "y": 300,
+        "y": 280,
         "wires": [
             [
                 "ed69c731.f8c038"
@@ -137,7 +137,7 @@
         "oldrc": false,
         "name": "fake reboot",
         "x": 780,
-        "y": 420,
+        "y": 400,
         "wires": [
             [],
             [],
@@ -155,7 +155,7 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 210,
+        "x": 200,
         "y": 500,
         "wires": [
             [
@@ -174,8 +174,8 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 160,
-        "y": 200,
+        "x": 150,
+        "y": 160,
         "wires": [
             [
                 "e86eae90.188f2"
@@ -193,8 +193,8 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 200,
-        "y": 600,
+        "x": 190,
+        "y": 580,
         "wires": [
             [
                 "a81a5db.37e022"
@@ -210,7 +210,7 @@
         "console": "false",
         "complete": "payload",
         "x": 730,
-        "y": 80,
+        "y": 60,
         "wires": []
     },
     {
@@ -224,8 +224,8 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 180,
-        "y": 300,
+        "x": 170,
+        "y": 320,
         "wires": [
             [
                 "e86eae90.188f2"
@@ -238,8 +238,8 @@
         "z": "dc706162.9f79a",
         "name": "Read Operation",
         "info": "",
-        "x": 170,
-        "y": 60,
+        "x": 160,
+        "y": 40,
         "wires": []
     },
     {
@@ -248,8 +248,8 @@
         "z": "dc706162.9f79a",
         "name": "Read Manufacturer",
         "info": "",
-        "x": 180,
-        "y": 160,
+        "x": 170,
+        "y": 120,
         "wires": []
     },
     {
@@ -258,8 +258,8 @@
         "z": "dc706162.9f79a",
         "name": "Trigger Not Found Error",
         "info": "",
-        "x": 190,
-        "y": 260,
+        "x": 180,
+        "y": 280,
         "wires": []
     },
     {
@@ -268,8 +268,8 @@
         "z": "dc706162.9f79a",
         "name": "Execute Operation",
         "info": "",
-        "x": 180,
-        "y": 360,
+        "x": 170,
+        "y": 380,
         "wires": []
     },
     {
@@ -278,7 +278,7 @@
         "z": "dc706162.9f79a",
         "name": "Write Operation",
         "info": "",
-        "x": 170,
+        "x": 160,
         "y": 460,
         "wires": []
     },
@@ -288,8 +288,8 @@
         "z": "dc706162.9f79a",
         "name": "Trigger Method Not Allowed Error",
         "info": "",
-        "x": 220,
-        "y": 560,
+        "x": 210,
+        "y": 540,
         "wires": []
     },
     {
@@ -299,7 +299,36 @@
         "name": "Execute /3/0/4",
         "info": "",
         "x": 790,
-        "y": 380,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "ac908a30.fbef88",
+        "type": "inject",
+        "z": "dc706162.9f79a",
+        "name": "",
+        "topic": "/3/0/7",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "e86eae90.188f2"
+            ]
+        ]
+    },
+    {
+        "id": "adaaaa23.5350c8",
+        "type": "comment",
+        "z": "dc706162.9f79a",
+        "name": "Read Multiple Resource",
+        "info": "",
+        "x": 180,
+        "y": 200,
         "wires": []
     },
     {
