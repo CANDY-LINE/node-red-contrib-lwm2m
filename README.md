@@ -67,7 +67,7 @@ The following objects are implemented in Javascript. They can be overlaid with u
 - `Access Control Object`
 - `Device Object`
 
-Security Notice) The project depends on [`systeminformation`](https://www.npmjs.com/package/systeminformation) package to collect system information. This package is excellent but it can expose sensitive information like serial number, device model and OS version to a LwM2M server. In order to avoid unexpected exposure to a public sandbox server, `Hide Sensitive Device Info` property is enabled by default. So you need to uncheck it prior to sending entire device information from the node.
+Security Notice) The project depends on [`systeminformation`](https://www.npmjs.com/package/systeminformation) package to collect system information. This package is excellent but it can expose sensitive information like serial number, device model and OS version to a LwM2M server. In order to avoid unexpected exposure to a public sandbox server, `Hide Sensitive Device Info` property is checked by default. So you need to uncheck it prior to sending entire device information from the node.
 
 ## User's Custom Objects and Object Overlay
 
