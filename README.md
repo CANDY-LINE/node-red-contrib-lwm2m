@@ -1,7 +1,7 @@
 Node-RED node for OMA LwM2M
 ===
 
-**ALPHA RELEASE** (Not yet published at https://flows.nodered.org)
+**ALPHA RELEASE** (Not yet published to https://flows.nodered.org)
 
 This node internally spawns a [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) process, which is a revised version of Eclipse Wakaama executable, and starts inter-process communication (IPC) over stdin and stdout. The [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) executable is slightly different from Wakaama's implementation, some of management objects are stripped. This node allows you to describe your own management objects on top of Node-RED.
 
