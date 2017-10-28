@@ -15,20 +15,36 @@
 -->
 <script type="text/x-red" data-help-name="lwm2m client in">
 <p>
-This node allows you to retrieve the management objects associated with the LwM2M client.
+This node allows you to retrieve LwM2M objects associated with the LwM2M client.
+It also emits LwM2M object events when you subscribe them.
 </p>
+
+<dl>
+<dt>Name</dt>
+<dd>
+  the label of the node.
+</dd>
+<dt>Client</dt>
+<dd>
+  the <i>lwm2m client</i> configuration node to be associated with the node.
+</dd>
+<dt>Subscribe LwM2M Object Events</dt>
+<dd>
+  whether or not to subscribe LwM2M object events, <b>false(unchecked)</b> by default.
+</dd>
+</dl>
+
 <h3>Inputs</h3>
 <p>
-Provide the URI to the object resource, e.g. <code>/3/0/0</code> in <code>msg.topic</code> property, to retrieve the data.
-The result is emitted via the output port (see below).
+Provide the URI to the object resource, e.g. <code>/3/0/0</code> in <code>msg.topic</code> property, to query the matching data.
+The query results are emitted via the output port (see below).
 The topic can be a regular expression text like <code>/3/.*</code>, which allows you to get all Device Object resources.
 </p>
-<h3>Outputs</h3>
-<h4>Inquiry Result</h4>
+
+<h3>Outputs 1/2 (Query Results)</h3>
 <p>
-The inquiry result is set in <code>msg.payload</code> property.
-The payload property has a Resource object array.
-Each element in the array has <code>uri</code>, <code>type</code>, <code>acl</code> and <code>value</code> proerpties (see below).
+The query results are set in <code>msg.payload</code> property as a Resource object <code>Array</code>.
+Each element in the array has <code>uri</code>, <code>type</code>, <code>acl</code> and <code>value</code> properties.
 <dl class="message-properties">
 <dt>uri<span class="property-type">string</span></dt>
 <dd>
@@ -38,57 +54,60 @@ the object resource URI e.g. <code>/3/0/0</code>
 <dd>
   the type of the resource.
 <ul>
-<li><code>INTEGER</code> ... 64-bit integer value</li>
-<li><code>FLOAT</code> ... double float value</li>
-<li><code>STRING</code> ... byte array treated as a string</li>
-<li><code>OPAQUE</code> ... byte array</li>
-<li><code>BOOLEAN</code> ... true or false</li>
-<li><code>OBJECT_LINK</code> ... having a reference to another object</li>
-<li><code>MULTIPLE_RESOURCE</code> ... association array of multiple resources</li>
-<li><code>FUNCTION</code> ... <i>out of OMA LwM2M scope</i>, specially defined for an executable resource</li>
+<li><code>INTEGER</code> ... a 64-bit integer value</li>
+<li><code>FLOAT</code> ... a double float value</li>
+<li><code>STRING</code> ... a string</li>
+<li><code>OPAQUE</code> ... a byte array</li>
+<li><code>BOOLEAN</code> ... <code>true</code> or <code>false</code></li>
+<li><code>OBJECT_LINK</code> ... having a reference to another LwM2M object</li>
+<li><code>MULTIPLE_RESOURCE</code> ... an association array of multiple resources</li>
+<li><code>FUNCTION</code> ... <i>out of OMA LwM2M scope</i>, the specially defined type for an executable resource</li>
 </ul>
 </dd>
 <dt>acl<span class="property-type">string</span></dt>
 <dd>
-  Access control list for the corresponding resource.
+  Access control list for the associated resource. The following values are available.
 <ul>
-<li><code>R</code> ... Read, Observe, Discover, Write-Attributes</li>
-<li><code>W</code> ... Write</li>
-<li><code>E</code> ... Execute, valid for only <code>FUNCTION</code> resource type</li>
-<li><code>C</code> ... Create</li>
-<li><code>D</code> ... Delete</li>
+<li><code>R</code> ... Allow <code>Read</code>, <code>Observe</code>, <code>Discover</code>, <code>Write-Attributes</code> operations</li>
+<li><code>W</code> ... Allow <code>Write</code> operation</li>
+<li><code>E</code> ... Allow <code>Execute</code> operation, valid only for <code>FUNCTION</code> resource type</li>
+<li><code>C</code> ... Allow <code>Create</code> operation</li>
+<li><code>D</code> ... Allow <code>Delete</code> operation</li>
 </ul>
 </dd>
 <dt>value<span class="property-type">string | number | boolean | function</span></dt>
 <dd>
-  the value of the resource. <code>fuction</code> is evaluated only once on the configuration node being instantiated.
+  the value of the resource. The <code>fuction</code> value is evaluated only once on the configuration node being instantiated.
 </dd>
 </dl>
-Here is an example output for Manufacturer resource in DeviceObject.
+Here is an example <code>msg.payload</code> output for Manufacturer resource in DeviceObject.
 <pre>
-{
-  "payload": [
-    {
-      "uri": "/3/0/0",
-      "value": {
-        "type": "STRING",
-        "acl": "R",
-        "value": "Manufacturer"
-      }
+[
+  {
+    "uri": "/3/0/0",
+    "value": {
+      "type": "STRING",
+      "acl": "R",
+      "value": "Manufacturer"
     }
-  ]
-}
+  }
+]
 </pre>
 </p>
-<h4>Object Events</h4>
+
+<h3>Outputs 2/2 (LwM2M Object Events)</h3>
 <p>
-This node shall emit object events triggered when a resource is manipulated.
+This node allows you to subscribe LwM2M object events triggered when a resource is manipulated as well.
+In order to subscribe the events you need to check <b>Subscribe LwM2M Object Events</b>.
+The checkbox is <b>unchecked by default</b>.
+</p>
+<p>
 The supported events are as follows.
 <dl>
 <dt><code>executed</code></dt>
-<dd>Fired when a resource is executed by a LwM2M Server or a node in the running flow</dd>
+<dd>Fired when a resource is executed by the remote LwM2M server or a node in the running flow</dd>
 <dt><code>updated</code></dt>
-<dd>Fired when a resource is updated by a LwM2M Server or a node in the running flow</dd>
+<dd>Fired when a resource is updated by the remote LwM2M server or a node in the running flow</dd>
 </dl>
 
 The <code>msg.payload</code> property is an event object. Each property in the object is described below.
@@ -129,6 +148,18 @@ This node allows you to update or execute a resource in the management objects a
 <p>
 When the operation is successful, either <code>updated</code> or <code>executed</code> event is emitted from <b>lwm2m client in</b> node.
 </p>
+
+<dl>
+<dt>Name</dt>
+<dd>
+  the label of the node.
+</dd>
+<dt>Client</dt>
+<dd>
+  the <i>lwm2m client</i> configuration node to be associated with the node.
+</dd>
+</dl>
+
 <h3>Inputs</h3>
 <p>
 Provide a data with the associated URI to update or execute.
@@ -146,36 +177,38 @@ e.g. <code>/3/0/4/execute</code> for performing reboot.
 
 <script type="text/x-red" data-help-name="lwm2m client">
 <p>
-LwM2M client configuration node. Populate parameters used for starting a new LwM2M client process.
+LwM2M client configuration node. The followiing parameters are used for starting a new LwM2M client runtime.
 </p>
-<dl class="message-properties">
-<dt>Endpoint<span class="property-type">string</span></dt>
+<dl>
+<dt>Endpoint</dt>
 <dd>the client endpoint name.</dd>
-<dt>Server Host<span class="property-type">string</span></dt>
+<dt>Server Host</dt>
 <dd>the LwM2M remote server host address.</dd>
-<dt>Server Port<span class="property-type">integer</span></dt>
+<dt>Server Port</dt>
 <dd>the LwM2M remote server port number. set 5683 for plain CoAP/UDP (default) or 5684 for CoAP/DTLS.</dd>
-<dt>Enable DTLS<span class="property-type">boolean</span></dt>
-<dd>whether or not DTLS is required. PSK is supported but RPK and X.509 aren't supported</dd>
-<dt>PSK Identity<span class="property-type">string</span></dt>
-<dd>the pre-shared key identity. Required for DTLS communication</dd>
-<dt>PSK<span class="property-type">string</span></dt>
-<dd>the pre-shared key. Required for DTLS communication</dd>
-<dt>Listen Port<span class="property-type">integer</span></dt>
+<dt>Enable DTLS</dt>
+<dd>whether or not DTLS is required. PSK is supported but RPK and X.509 aren't supported.</dd>
+<dt>PSK Identity</dt>
+<dd>the pre-shared key identity. Required for DTLS communication.</dd>
+<dt>PSK</dt>
+<dd>the pre-shared key. Required for DTLS communication.</dd>
+<dt>Listen Port</dt>
 <dd>the LwM2M client listen port. <code>56830</code> is used by default.</dd>
-<dt>Lifetime<span class="property-type">intger</span></dt>
-<dd>the LwM2M client life time in seconds. 300 sec. by default. After the time elapsed, the client tries to tell the server "I'm alive".</dd>
-<dt>Request Bootstrap<span class="property-type">boolean</span></dt>
-<dd>whether or not bootstrapping is required on starting the LwM2M client executable process</dd>
-<dt>Use IPv4 connection<span class="property-type">boolean</span></dt>
-<dd>whether or not IPv4 is used for interacting with the LwM2M remote server</dd>
-<dt>Output LwM2M client logs<span class="property-type">boolean</span></dt>
-<dd>whether or not to redirect LwM2M Client stderr logs to console (not the Debug tab). Disabled by default.</dd>
-<dt>Hide Sensitive Device Info<span class="property-type">boolean</span></dt>
-<dd>whether or not to send everything to LwM2M Server including sensitive resources like Serial Number. Enabled by default.</dd>
-<dt>Allow Internal Event Propagation<span class="property-type">boolean</span></dt>
-<dd>whether or not to propagate LwM2M object events to/from system internal module. Disabled by default.</dd>
-<dt>Objects<span class="property-type">string</span></dt>
-<dd>the custom management object definition text in JSON format.</dd>
+<dt>Lifetime</dt>
+<dd>
+  the LwM2M client life time in seconds, 300 sec. by default.
+  After the time elapsed, the client tries to send the server an "I'm alive" message (9 bytes).</dd>
+<dt>Request Bootstrap</dt>
+<dd>whether or not to require bootstrapping on starting this node.</dd>
+<dt>Use IPv4 connection</dt>
+<dd>whether or not to use IPv4 for interacting with the LwM2M remote server.</dd>
+<dt>Output LwM2M client logs</dt>
+<dd>whether or not to redirect the LwM2M client stderr logs to console (not the Debug tab), <b>false(unchecked) by default</b>.</dd>
+<dt>Hide Sensitive Device Info</dt>
+<dd>whether or not to send everything to the remote LwM2M server including sensitive resources like Serial Number, <b>true(checked) by default</b>.</dd>
+<dt>Allow Internal Event Propagation</dt>
+<dd>whether or not to propagate LwM2M object events to/from system internal module, <b>false(unchecked) by default</b>.</dd>
+<dt>Objects</dt>
+<dd>user defined/overlay object definition text in JSON format.</dd>
 </dl>
 </script>
