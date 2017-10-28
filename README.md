@@ -37,6 +37,7 @@ The input and output nodes show the following connection status.
 - disconnected
 - error
 - timeout
+- *subscribed* - only for `lwm2m client in` node with `Subscribe LwM2M Object Events` checked
 
 ## Supported LwM2M operations
 
