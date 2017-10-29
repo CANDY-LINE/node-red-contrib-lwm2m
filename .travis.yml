@@ -42,7 +42,6 @@ before_install:
       export PYTHONPATH=$(pwd)/py-local/lib/python/site-packages;
     fi;
   - scripts/validate_tag.sh
-  - git submodule update --init --recursive
 
 install:
   - docker run --rm dockcross/${DOCKROSS} > ./dockcross
