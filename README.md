@@ -454,7 +454,7 @@ limitations under the License.
 1. Checkout master: `git checkout master`
 1. Publish NPM package: `npm publish`
 1. Publish binaries: `git commit --allow-empty -m "[publish binary]"`
-1. Publish local binary (optional): `make publish`
+1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
 
 # Revision History
 
