@@ -9,7 +9,7 @@ Node-RED node for OMA LwM2M
 
 This node offers OMA LwM2M client functionalities and allows you to create your own OMA LwM2M client application on top of Node-RED.
 
-This node internally spawns a [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) process, which is a revised version of Eclipse Wakaama executable, and starts inter-process communication (IPC) over stdin and stdout. The [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) executable is slightly different from Wakaama's implementation, some of management objects are stripped. This node allows you to describe your own management objects as well.
+This node internally spawns a [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) process, which is a revised version of [Eclipse Wakaama](https://github.com/eclipse/wakaama) executable, and starts inter-process communication (IPC) over stdin and stdout. The [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) executable is slightly different from [Wakaama](https://github.com/eclipse/wakaama)'s implementation, some of management objects are stripped. This node allows you to describe your own management objects as well.
 
 When the parent process (i.e. Node-RED) exits, this node tries to emit a De-registration message to LwM2M server so that the server knows the client is gone.
 
@@ -61,7 +61,7 @@ The input and output nodes show the following connection status.
 
 ## Predefined Objects
 
-The following objects are implemented in C (Using Wakaama's "AS IS" example).
+The following objects are implemented in C (Using [Wakaama](https://github.com/eclipse/wakaama)'s "AS IS" example).
 
 - `Security Object`
 - `Server Object`
@@ -421,7 +421,7 @@ Enter `help` on the lwm2mserver console for supported commands.
 
 ## Eclipse Leshan Public Sandbox LwM2M Server with Web UI
 
-Provide the following host and port for your lwm2m client config node to connect to Public Leshan Server.
+Provide the following host and port for your lwm2m client config node to connect to Public [Leshan](https://github.com/eclipse/leshan) Server.
 
 - Server Host: `leshan.eclipse.org`
 - Server Port: `5683` for plain UDP or `5684` for DTLS with checking `Enable DTLS`
