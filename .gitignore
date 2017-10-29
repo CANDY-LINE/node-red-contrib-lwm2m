@@ -21,3 +21,4 @@ __nvm
 dockcross*
 wakatiwai
 !deps/wakatiwai
+.commit_message

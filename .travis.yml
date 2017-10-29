@@ -34,13 +34,9 @@ matrix:
         - DOCKROSS="linux-armv6"
 
 before_install:
+  - git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n' > ./.commit_message
   - export PUBLISHABLE=${PUBLISHABLE:-true}
   - export COVERAGE=${COVERAGE:-false}
-  - if [[ $(uname -s) == 'Linux' ]]; then
-      export PYTHONPATH=$(pwd)/py-local/lib/python2.7/site-packages;
-    else
-      export PYTHONPATH=$(pwd)/py-local/lib/python/site-packages;
-    fi;
   - scripts/validate_tag.sh
 
 install:
@@ -50,21 +46,10 @@ install:
 before_script:
   # docker args
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e NODE_PRE_GYP_GITHUB_TOKEN=${NODE_PRE_GYP_GITHUB_TOKEN}"
-  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e COMMIT_MESSAGE=${COMMIT_MESSAGE}"
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e PUBLISHABLE=${PUBLISHABLE}"
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e COVERAGE=${COVERAGE}"
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e ARCH=${ARCH}"
-  # get commit message
-  - export COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
-  - if [[ ${COVERAGE} == true ]]; then
-       if [[ $(uname -s) == 'Linux' ]]; then
-         PYTHONUSERBASE=$(pwd)/py-local pip install --user cpp-coveralls;
-       else
-         PYTHONUSERBASE=$(pwd)/py-local easy_install --user cpp-coveralls;
-       fi;
-     fi
 
 script:
-  - ./dockcross \
-    bash -c \
-    "./scripts/install_node.sh ${NODE_VERSION} && ./scripts/build_against_node.sh"
+  # bash commands are performed inside the dockcross container
+  - ./dockcross bash -c "./scripts/install_node.sh ${NODE_VERSION} && ./scripts/build_against_node.sh"
