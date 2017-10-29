@@ -442,8 +442,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
+# How to Release
+
+1. Tag Release and Push
+1. Publish binaries `git commit --allow-empty -m "[publish binary]"`
+1. Publish NPM package
+
 # Revision History
 
-* 0.1.0
+* 0.1.x
   - Initial Release (alpha)
   - `node-red` keyword is not yet added to package.json
