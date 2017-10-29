@@ -5,6 +5,7 @@
 .jshintrc
 .node-version
 .travis.yml
+.commit_message
 *.tgz
 *.zip
 tests
@@ -16,3 +17,4 @@ scripts
 tests
 __nvm
 dockcross*
+dist/binding

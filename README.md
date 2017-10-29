@@ -1,9 +1,15 @@
 Node-RED node for OMA LwM2M
 ===
 
+[![GitHub release](https://img.shields.io/github/release/CANDY-LINE/node-red-contrib-lwm2m.svg)](https://github.com/CANDY-LINE/node-red-contrib-lwm2m/releases/latest)
+[![master Build Status](https://travis-ci.org/CANDY-LINE/node-red-contrib-lwm2m.svg?branch=master)](https://travis-ci.org/CANDY-LINE/node-red-contrib-lwm2m/)
+[![License MIT](https://img.shields.io/github/license/CANDY-LINE/node-red-contrib-lwm2m.svg)](http://opensource.org/licenses/Apache-2.0)
+
 **ALPHA RELEASE** (Not yet published to https://flows.nodered.org)
 
-This node internally spawns a [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) process, which is a revised version of Eclipse Wakaama executable, and starts inter-process communication (IPC) over stdin and stdout. The [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) executable is slightly different from Wakaama's implementation, some of management objects are stripped. This node allows you to describe your own management objects on top of Node-RED.
+This node offers OMA LwM2M client functionalities and allows you to create your own OMA LwM2M client application on top of Node-RED.
+
+This node internally spawns a [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) process, which is a revised version of Eclipse Wakaama executable, and starts inter-process communication (IPC) over stdin and stdout. The [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) executable is slightly different from Wakaama's implementation, some of management objects are stripped. This node allows you to describe your own management objects as well.
 
 When the parent process (i.e. Node-RED) exits, this node tries to emit a De-registration message to LwM2M server so that the server knows the client is gone.
 
@@ -333,7 +339,7 @@ This node should work on Unix and Linux OS. Windows is not supported.
 
 # Supported Node.js version
 
-Node.js v4+
+Node.js v6+
 
 # How to install
 
@@ -445,8 +451,10 @@ limitations under the License.
 # How to Release
 
 1. Tag Release and Push
-1. Publish binaries `git commit --allow-empty -m "[publish binary]"`
-1. Publish NPM package
+1. Checkout master: `git checkout master`
+1. Publish NPM package: `npm publish`
+1. Publish binaries: `git commit --allow-empty -m "[publish binary]"`
+1. Publish local binary (optional): `make publish`
 
 # Revision History
 
