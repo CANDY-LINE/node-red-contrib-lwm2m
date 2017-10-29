@@ -1,0 +1,41 @@
+# Message Resources for English (fallback language)
+lwm2m:
+  label:
+    lwm2mClient: Client
+    useString: Stringify payload
+    notification: Emit events
+    clientName: Endpoint
+    clientPort: Listen Port
+    serverHost: Server Host
+    serverPort: Server Port
+    useIPv4: Use IPv4 connection
+    lifetimeSec: Lifetime
+    requestBootstrap: Request Bootstrap
+    subscribeObjectEvents: Subscribe LwM2M Object Events
+    enableDTLS: Enable DTLS
+    pskIdentity: PSK Identitiy
+    presharedKey: PSK
+    redirectLwm2mClientLog: Output LwM2M client logs
+    hideSensitiveInfo: Hide Sensitive Device Info
+    propagateInternalEvents: Allow Internal Event Propagation
+    objects: Objects
+  status:
+    bootstrapRequired: bootstrap required
+    bootstrapping: bootstrapping
+    registerRequired: register required
+    registering: registering
+    connected: connected
+    subscribed: subscribed
+    disconnected: disconnected
+    error: error
+    timeout: timeout
+  placeholder:
+    clientName: (urn format is recommended)
+    clientPort: 56830
+    serverHost: ""
+    serverPort: 5683
+    lifetimeSec: (in seconds)
+    pskIdentity: (hex string)
+    presharedKey: (hex string)
+  error:
+    duplicateEntry: Duplicate LwM2M Server Configuration (Host:__host__, Port:__port__)

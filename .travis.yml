@@ -1,0 +1,70 @@
+language: generic
+
+sudo: required
+
+services:
+  - docker
+
+git:
+  depth: 10
+
+# don't re-build for tags so that [publish binary] is not re-run
+# https://github.com/travis-ci/travis-ci/issues/1532
+branches:
+  except:
+    - /^[0-9]/
+
+matrix:
+  include:
+     # ARM Linux
+     - os: linux
+       env:
+        - NODE_VERSION="8"
+        - ARCH="arm"
+        - DOCKROSS="linux-armv6"
+     - os: linux
+       env:
+        - NODE_VERSION="7"
+        - ARCH="arm"
+        - DOCKROSS="linux-armv6"
+     - os: linux
+       env:
+        - NODE_VERSION="6"
+        - ARCH="arm"
+        - DOCKROSS="linux-armv6"
+
+before_install:
+  - export PUBLISHABLE=${PUBLISHABLE:-true}
+  - export COVERAGE=${COVERAGE:-false}
+  - if [[ $(uname -s) == 'Linux' ]]; then
+      export PYTHONPATH=$(pwd)/py-local/lib/python2.7/site-packages;
+    else
+      export PYTHONPATH=$(pwd)/py-local/lib/python/site-packages;
+    fi;
+  - scripts/validate_tag.sh
+
+install:
+  - docker run --rm dockcross/${DOCKROSS} > ./dockcross
+  - chmod +x ./dockcross
+
+before_script:
+  # docker args
+  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e NODE_PRE_GYP_GITHUB_TOKEN=${NODE_PRE_GYP_GITHUB_TOKEN}"
+  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e COMMIT_MESSAGE=${COMMIT_MESSAGE}"
+  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e PUBLISHABLE=${PUBLISHABLE}"
+  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e COVERAGE=${COVERAGE}"
+  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e ARCH=${ARCH}"
+  # get commit message
+  - export COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
+  - if [[ ${COVERAGE} == true ]]; then
+       if [[ $(uname -s) == 'Linux' ]]; then
+         PYTHONUSERBASE=$(pwd)/py-local pip install --user cpp-coveralls;
+       else
+         PYTHONUSERBASE=$(pwd)/py-local easy_install --user cpp-coveralls;
+       fi;
+     fi
+
+script:
+  - ./dockcross \
+    bash -c \
+    "./scripts/install_node.sh ${NODE_VERSION} && ./scripts/build_against_node.sh"

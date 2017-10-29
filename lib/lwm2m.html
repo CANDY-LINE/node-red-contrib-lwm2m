@@ -1,0 +1,256 @@
+<!--
+  Copyright (c) 2017 CANDY LINE INC.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<script type="text/x-red" data-template-name="lwm2m client in">
+  <div class='form-row'>
+    <label for='node-input-name'>
+      <i class='fa fa-tag'></i>
+      <span data-i18n='node-red:common.label.name'></span>
+    </label>
+    <input type='text' id='node-input-name' data-i18n='[placeholder]node-red:common.label.name'>
+  </div>
+  <div class="form-row node-input-lwm2mClient">
+    <label for="node-input-lwm2mClient">
+      <i class="fa fa-cogs"></i>
+      <span data-i18n="lwm2m.label.lwm2mClient"></span></label>
+    <input type="text" id="node-input-lwm2mClient">
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
+    <input type="checkbox" id="node-input-subscribeObjectEvents" style="display: inline-block; width: auto; vertical-align: top;">
+    <i class='fa fa-feed'></i>
+    <label for="node-input-subscribeObjectEvents" style="width: 70%;" data-i18n="lwm2m.label.subscribeObjectEvents"></label>
+  </div>
+</script>
+
+<script type="text/x-red" data-template-name="lwm2m client out">
+  <div class='form-row'>
+    <label for='node-input-name'>
+      <i class='fa fa-tag'></i>
+      <span data-i18n='node-red:common.label.name'></span>
+    </label>
+    <input type='text' id='node-input-name' data-i18n='[placeholder]node-red:common.label.name'>
+  </div>
+  <div class="form-row node-input-lwm2mClient">
+    <label for="node-input-lwm2mClient">
+      <i class="fa fa-cogs"></i>
+      <span data-i18n="lwm2m.label.lwm2mClient"></span></label>
+    <input type="text" id="node-input-lwm2mClient">
+  </div>
+</script>
+
+<script type="text/x-red" data-template-name="lwm2m client">
+  <div class='form-row'>
+    <label for='node-config-input-clientName'>
+      <i class='fa fa-tag'></i>
+      <span data-i18n='lwm2m.label.clientName'></span>
+    </label>
+    <input type='text' id='node-config-input-clientName' data-i18n='[placeholder]lwm2m.placeholder.clientName'>
+  </div>
+  <div class='form-row'>
+    <label for='node-config-input-serverHost'>
+      <i class='fa fa-cloud'></i>
+      <span data-i18n='lwm2m.label.serverHost'></span>
+    </label>
+    <input type='text' id='node-config-input-serverHost' data-i18n='[placeholder]lwm2m.placeholder.serverHost'>
+  </div>
+  <div class='form-row'>
+    <label for='node-config-input-serverPort'>
+      <i class='fa fa-random'></i>
+      <span data-i18n='lwm2m.label.serverPort'></span>
+    </label>
+    <input type='text' id='node-config-input-serverPort' data-i18n='[placeholder]lwm2m.placeholder.serverPort'>
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
+    <input type="checkbox" id="node-config-input-enableDTLS" style="display: inline-block; width: auto; vertical-align: top;">
+    <i class='fa fa-lock'></i>
+    <label for="node-config-input-enableDTLS" style="width: 70%;" data-i18n="lwm2m.label.enableDTLS"></label>
+  </div>
+  <div class='form-row'>
+    <label for='node-config-input-pskIdentity'>
+      <i class='fa fa-user'></i>
+      <span data-i18n='lwm2m.label.pskIdentity'></span>
+    </label>
+    <input type='text' id='node-config-input-pskIdentity' data-i18n='[placeholder]lwm2m.placeholder.pskIdentity'>
+  </div>
+  <div class='form-row'>
+    <label for='node-config-input-presharedKey'>
+      <i class='fa fa-lock'></i>
+      <span data-i18n='lwm2m.label.presharedKey'></span>
+    </label>
+    <input type='password' id='node-config-input-presharedKey' data-i18n='[placeholder]lwm2m.placeholder.presharedKey'>
+  </div>
+  <div class='form-row'>
+    <label for='node-config-input-clientPort'>
+      <i class='fa fa-random'></i>
+      <span data-i18n='lwm2m.label.clientPort'></span>
+    </label>
+    <input type='text' id='node-config-input-clientPort' data-i18n='[placeholder]lwm2m.placeholder.clientPort'>
+  </div>
+  <div class='form-row'>
+    <label for='node-config-input-lifetimeSec'>
+      <i class='fa fa-clock-o'></i>
+      <span data-i18n='lwm2m.label.lifetimeSec'></span>
+    </label>
+    <input type='text' id='node-config-input-lifetimeSec' data-i18n='[placeholder]lwm2m.placeholder.lifetimeSec'>
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
+    <input type="checkbox" id="node-config-input-requestBootstrap" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-config-input-requestBootstrap" style="width: 70%;" data-i18n="lwm2m.label.requestBootstrap"></label>
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
+    <input type="checkbox" id="node-config-input-useIPv4" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-config-input-useIPv4" style="width: 70%;" data-i18n="lwm2m.label.useIPv4"></label>
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
+    <input type="checkbox" id="node-config-input-redirectLwm2mClientLog" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-config-input-redirectLwm2mClientLog" style="width: 70%;" data-i18n="lwm2m.label.redirectLwm2mClientLog"></label>
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
+    <input type="checkbox" id="node-config-input-hideSensitiveInfo" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-config-input-hideSensitiveInfo" style="width: 70%;" data-i18n="lwm2m.label.hideSensitiveInfo"></label>
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
+    <input type="checkbox" id="node-config-input-propagateInternalEvents" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-config-input-propagateInternalEvents" style="width: 70%;" data-i18n="lwm2m.label.propagateInternalEvents"></label>
+  </div>
+  <div class="form-row">
+    <label for='node-config-input-objects'>
+      <i class='fa fa-database'></i>
+      <span data-i18n='lwm2m.label.objects'></span>
+    </label>
+    <input type="text" id="node-config-input-objects" style="width:70%">
+  </div>
+</script>
+
+<script type="text/javascript">
+'use strict';
+
+  function toLabel(node, defaultLabel) {
+    if (node.name) {
+      return node.name;
+    }
+    var label = defaultLabel;
+    RED.nodes.eachConfig(function(c) {
+      if(c.clientName && (c.type === 'lwm2m client') && (c.id === node.lwm2mClient)) {
+        label = c.clientName;
+      }
+    });
+    return label;
+  }
+
+  RED.nodes.registerType('lwm2m client in', {
+    category: 'lwm2m',
+    color: '#00e6ac',
+    defaults: {
+      name: { value: '' },
+      lwm2mClient: { type: 'lwm2m client', required: true },
+      subscribeObjectEvents: { value: false, required: false },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'bridge-dash.png',
+    label: function() {
+      return toLabel(this, 'lwm2m client');
+    },
+    labelStyle: function() {
+      return (this.name || this.lwm2mClient) ? 'node_label_italic' : '';
+    }
+  });
+
+  RED.nodes.registerType('lwm2m client out', {
+    category: 'lwm2m',
+    color: '#00e6ac',
+    defaults: {
+      name: { value: '' },
+      lwm2mClient: { type: 'lwm2m client', required: true }
+    },
+    inputs: 1,
+    outputs: 0,
+    icon: 'bridge-dash.png',
+    align: 'right',
+    label: function() {
+      return toLabel(this, 'lwm2m client');
+    },
+    labelStyle: function() {
+      return (this.name || this.lwm2mClient) ? 'node_label_italic' : '';
+    }
+  });
+
+  RED.nodes.registerType('lwm2m client',{
+    category: 'config',
+    defaults: {
+      clientName: { value: '', required: true, validate: RED.validators.regex(/^[a-zA-Z0-9:\-]+$/) },
+      enableDTLS: { value: false, required: false },
+      clientPort: { value: '56830', required: true, validate: RED.validators.number() },
+      lifetimeSec: { value: '300', required: false, validate: RED.validators.number() },
+      requestBootstrap: { value: false, required: false },
+      useIPv4: { value: true, required: false },
+      serverHost: { value: 'localhost', required: true, validate: RED.validators.regex(/^[a-zA-Z0-9:\-\._%]+$/) },
+      serverPort: { value: '5683', required: true, validate: RED.validators.number() },
+      redirectLwm2mClientLog: { value: false, required: false },
+      hideSensitiveInfo: { value: true, required: false },
+      propagateInternalEvents: { value: false, required: false },
+      objects: { value:'{}', required: false },
+    },
+    credentials: {
+      pskIdentity: { type: 'text', validate: RED.validators.regex(/^[a-fA-F0-9]*$/) },
+      presharedKey: { type: 'text', validate: RED.validators.regex(/^[a-fA-F0-9]*$/) },
+    },
+    label: function() {
+      return this.clientName;
+    },
+    oneditprepare: function() {
+      function disablePskItems(disabled) {
+        $('#node-config-input-pskIdentity').prop('disabled', disabled);
+        $('#node-config-input-presharedKey').prop('disabled', disabled);
+      }
+      disablePskItems(!this.enableDTLS);
+      $('#node-config-input-enableDTLS').click(function() {
+        var disabled = !$(this).prop('checked');
+        disablePskItems(disabled);
+        var serverPort = $('#node-config-input-serverPort');
+        if (disabled && serverPort.val() == '5684') {
+          serverPort.val('5683');
+        }
+        if (!disabled && serverPort.val() == '5683') {
+          serverPort.val('5684');
+        }
+      });
+      $("#node-config-input-objects").typedInput({
+        default: 'json',
+        types:['json']
+      });
+      function disableServerConfigs(disabled) {
+        $('#node-config-input-enableDTLS').prop('disabled', disabled);
+        disablePskItems(disabled);
+        $('#node-config-input-serverHost').prop('disabled', disabled);
+        $('#node-config-input-serverPort').prop('disabled', disabled);
+        $('#node-config-input-lifetimeSec').prop('disabled', disabled);
+      }
+      disableServerConfigs(!!this.requestBootstrap);
+      $('#node-config-input-requestBootstrap').click(function() {
+        var disabled = !!$(this).prop('checked');
+        disableServerConfigs(disabled);
+      });
+    }
+  });
+</script>

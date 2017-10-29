@@ -1,0 +1,367 @@
+[
+    {
+        "id": "dc706162.9f79a",
+        "type": "tab",
+        "label": "LwM2M Operation Example",
+        "disabled": false,
+        "info": "In order to deploy this flow, you need to provide the following information to `lwm2m` config node.\n\n- Endpoint ... Client Endpoint Name\n- Server Host ... LwM2M Server Host Name or IP Address\n\nTap each inject node to test *lwm2m client in* and *lwm2m client out* nodes.\nSee `debug` tab for the node output logs and you can find the messages these nodes emit.\n\nThe exec node labeled `fake reboot` will perform `echo` command when `/3/0/4` resource is executed.\nYou can find the output in Node-RED stdout.\n\nThe `catch` node will catch errors thrown by *lwm2m client in* and *lwm2m client out* nodes.\n"
+    },
+    {
+        "id": "e86eae90.188f2",
+        "type": "lwm2m client in",
+        "z": "dc706162.9f79a",
+        "name": "Read LwM2M Object Resources",
+        "lwm2mClient": "422f0802.8666",
+        "subscribeObjectEvents": false,
+        "x": 530,
+        "y": 100,
+        "wires": [
+            [
+                "f2e71141.d58018"
+            ]
+        ]
+    },
+    {
+        "id": "a81a5db.37e022",
+        "type": "lwm2m client out",
+        "z": "dc706162.9f79a",
+        "name": "Write or Execute LwM2M Resources",
+        "lwm2mClient": "422f0802.8666",
+        "x": 550,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "a745c693.71a98",
+        "type": "inject",
+        "z": "dc706162.9f79a",
+        "name": "",
+        "topic": "^/3/",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 150,
+        "y": 80,
+        "wires": [
+            [
+                "e86eae90.188f2"
+            ]
+        ]
+    },
+    {
+        "id": "23124c7d.9a949c",
+        "type": "catch",
+        "z": "dc706162.9f79a",
+        "name": "Catch lwm2m client node errors",
+        "scope": [
+            "339b79c.9739306",
+            "e86eae90.188f2",
+            "a81a5db.37e022"
+        ],
+        "x": 530,
+        "y": 560,
+        "wires": [
+            [
+                "3acaa579.279c52"
+            ]
+        ]
+    },
+    {
+        "id": "f2e71141.d58018",
+        "type": "debug",
+        "z": "dc706162.9f79a",
+        "name": "Read Results",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 790,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "927ace63.f91c3",
+        "type": "inject",
+        "z": "dc706162.9f79a",
+        "name": "",
+        "topic": "/3/0/4/execute",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 180,
+        "y": 420,
+        "wires": [
+            [
+                "a81a5db.37e022"
+            ]
+        ]
+    },
+    {
+        "id": "ac99ca6d.d968d",
+        "type": "switch",
+        "z": "dc706162.9f79a",
+        "name": "Route executed resource",
+        "property": "payload.uri",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "/3/0/4",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 1,
+        "x": 550,
+        "y": 340,
+        "wires": [
+            [
+                "ed69c731.f8c038"
+            ]
+        ],
+        "outputLabels": [
+            "/3/0/4 reboot"
+        ]
+    },
+    {
+        "id": "ed69c731.f8c038",
+        "type": "exec",
+        "z": "dc706162.9f79a",
+        "command": "echo",
+        "addpay": false,
+        "append": "##::##::##::##::##::##::##::##::##::##::##::##::",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "fake reboot",
+        "x": 810,
+        "y": 380,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "a8fa1178.ae41b8",
+        "type": "inject",
+        "z": "dc706162.9f79a",
+        "name": "",
+        "topic": "/3/0/0",
+        "payload": "MyManufacturer",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 200,
+        "y": 500,
+        "wires": [
+            [
+                "a81a5db.37e022"
+            ]
+        ]
+    },
+    {
+        "id": "4e6ab0cc.9b6c48",
+        "type": "inject",
+        "z": "dc706162.9f79a",
+        "name": "",
+        "topic": "/3/0/0",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 150,
+        "y": 160,
+        "wires": [
+            [
+                "e86eae90.188f2"
+            ]
+        ]
+    },
+    {
+        "id": "40bc535a.8ba72c",
+        "type": "inject",
+        "z": "dc706162.9f79a",
+        "name": "",
+        "topic": "/3/0/4",
+        "payload": "not allowed",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 190,
+        "y": 580,
+        "wires": [
+            [
+                "a81a5db.37e022"
+            ]
+        ]
+    },
+    {
+        "id": "3acaa579.279c52",
+        "type": "debug",
+        "z": "dc706162.9f79a",
+        "name": "Error Info.",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 800,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "4888bf05.b4af38",
+        "type": "inject",
+        "z": "dc706162.9f79a",
+        "name": "",
+        "topic": "no-such-uri",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 170,
+        "y": 320,
+        "wires": [
+            [
+                "e86eae90.188f2"
+            ]
+        ]
+    },
+    {
+        "id": "a176d415.08a5e8",
+        "type": "comment",
+        "z": "dc706162.9f79a",
+        "name": "Read Operation",
+        "info": "",
+        "x": 160,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "5c29b52a.66233c",
+        "type": "comment",
+        "z": "dc706162.9f79a",
+        "name": "Read Manufacturer",
+        "info": "",
+        "x": 170,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "95f27a50.81ef88",
+        "type": "comment",
+        "z": "dc706162.9f79a",
+        "name": "Trigger Not Found Error",
+        "info": "",
+        "x": 180,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "fdf2b9c3.351d78",
+        "type": "comment",
+        "z": "dc706162.9f79a",
+        "name": "Execute Operation",
+        "info": "",
+        "x": 170,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "d2e016cd.ba2968",
+        "type": "comment",
+        "z": "dc706162.9f79a",
+        "name": "Write Operation",
+        "info": "",
+        "x": 160,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "d84c6a26.3d19f8",
+        "type": "comment",
+        "z": "dc706162.9f79a",
+        "name": "Trigger Method Not Allowed Error",
+        "info": "",
+        "x": 210,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "e95343ff.fd908",
+        "type": "comment",
+        "z": "dc706162.9f79a",
+        "name": "Execute /3/0/4",
+        "info": "",
+        "x": 820,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "ac908a30.fbef88",
+        "type": "inject",
+        "z": "dc706162.9f79a",
+        "name": "",
+        "topic": "/3/0/7",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 150,
+        "y": 240,
+        "wires": [
+            [
+                "e86eae90.188f2"
+            ]
+        ]
+    },
+    {
+        "id": "adaaaa23.5350c8",
+        "type": "comment",
+        "z": "dc706162.9f79a",
+        "name": "Read Multiple Resource",
+        "info": "",
+        "x": 180,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "f9b1d6ab.2a69b",
+        "type": "lwm2m client in",
+        "z": "dc706162.9f79a",
+        "name": "Subscribe LwM2M Object Events",
+        "lwm2mClient": "422f0802.8666",
+        "subscribeObjectEvents": true,
+        "x": 540,
+        "y": 260,
+        "wires": [
+            [
+                "ac99ca6d.d968d"
+            ]
+        ]
+    },
+    {
+        "id": "422f0802.8666",
+        "type": "lwm2m client",
+        "z": "",
+        "clientName": "",
+        "enableDTLS": false,
+        "clientPort": "56830",
+        "lifetimeSec": "300",
+        "requestBootstrap": false,
+        "useIPv4": true,
+        "serverHost": "",
+        "serverPort": "5683",
+        "redirectLwm2mClientLog": false,
+        "hideSensitiveInfo": true,
+        "propagateInternalEvents": false,
+        "objects": "{\"41000\":{\"3\":{\"0\":\"abcd\"}}}"
+    }
+]
