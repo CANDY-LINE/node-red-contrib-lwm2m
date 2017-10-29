@@ -65,6 +65,5 @@ before_script:
      fi
 
 script:
-  - ./dockcross \
-    bash -c \
-    "$(pwd)/scripts/install_node.sh ${NODE_VERSION} && $(pwd)/scripts/build_against_node.sh"
+  # bash commands are performed inside the dockcross container
+  - ./dockcross bash -c "./scripts/install_node.sh ${NODE_VERSION} && ./scripts/build_against_node.sh"
