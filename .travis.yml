@@ -67,4 +67,4 @@ before_script:
 script:
   - ./dockcross \
     bash -c \
-    "./scripts/install_node.sh ${NODE_VERSION} && ./scripts/build_against_node.sh"
+    "$(pwd)/scripts/install_node.sh ${NODE_VERSION} && $(pwd)/scripts/build_against_node.sh"
