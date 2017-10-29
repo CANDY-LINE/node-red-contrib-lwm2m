@@ -11,7 +11,7 @@ This node restarts a new process when the child process exits after a given inte
 
 CoAP over DTLS is supported but disabled by default. Users are able to enable DTLS if necessary. However, supported security mechanism is only pre-shared key(PSK). RPK and X.509 are not supported.
 
-The supported message format is `TLV` rather than `JSON`.
+The supported message format is `TLV` rather than ~~`JSON`~~.
 
 **Security Notice:**
 
