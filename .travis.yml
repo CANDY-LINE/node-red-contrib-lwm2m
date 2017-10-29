@@ -34,7 +34,7 @@ matrix:
         - DOCKROSS="linux-armv6"
 
 before_install:
-  - export COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
+  - git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n' > ./.commit_message
   - export PUBLISHABLE=${PUBLISHABLE:-true}
   - export COVERAGE=${COVERAGE:-false}
   - scripts/validate_tag.sh
@@ -46,7 +46,6 @@ install:
 before_script:
   # docker args
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e NODE_PRE_GYP_GITHUB_TOKEN=${NODE_PRE_GYP_GITHUB_TOKEN}"
-  - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e COMMIT_MESSAGE=${COMMIT_MESSAGE}"
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e PUBLISHABLE=${PUBLISHABLE}"
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e COVERAGE=${COVERAGE}"
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e ARCH=${ARCH}"

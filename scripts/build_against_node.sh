@@ -5,6 +5,7 @@ source ./__nvm/nvm.sh
 set -e -u
 
 PATH=${PATH}:./node_modules/.bin
+COMMIT_MESSAGE=$(cat ./.commit_message)
 
 if [[ $(uname -s) == 'Linux' ]]; then
   export PYTHONPATH=$(pwd)/py-local/lib/python2.7/site-packages;
