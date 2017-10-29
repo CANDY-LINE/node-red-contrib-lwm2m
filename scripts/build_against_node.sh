@@ -6,6 +6,20 @@ set -e -u
 
 PATH=${PATH}:./node_modules/.bin
 
+if [[ $(uname -s) == 'Linux' ]]; then
+  export PYTHONPATH=$(pwd)/py-local/lib/python2.7/site-packages;
+else
+  export PYTHONPATH=$(pwd)/py-local/lib/python/site-packages;
+fi;
+
+if [[ ${COVERAGE} == true ]]; then
+  if [[ $(uname -s) == 'Linux' ]]; then
+    PYTHONUSERBASE=$(pwd)/py-local pip install --user cpp-coveralls;
+  else
+    PYTHONUSERBASE=$(pwd)/py-local easy_install --user cpp-coveralls;
+  fi;
+fi
+
 function publish() {
     if [[ ${PUBLISHABLE:-false} == true ]] && [[ ${COMMIT_MESSAGE} =~ "[publish binary]" ]]; then
         make package ARCH=${ARCH}

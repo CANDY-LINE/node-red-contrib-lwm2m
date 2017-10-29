@@ -34,13 +34,9 @@ matrix:
         - DOCKROSS="linux-armv6"
 
 before_install:
+  - export COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
   - export PUBLISHABLE=${PUBLISHABLE:-true}
   - export COVERAGE=${COVERAGE:-false}
-  - if [[ $(uname -s) == 'Linux' ]]; then
-      export PYTHONPATH=$(pwd)/py-local/lib/python2.7/site-packages;
-    else
-      export PYTHONPATH=$(pwd)/py-local/lib/python/site-packages;
-    fi;
   - scripts/validate_tag.sh
 
 install:
@@ -54,15 +50,6 @@ before_script:
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e PUBLISHABLE=${PUBLISHABLE}"
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e COVERAGE=${COVERAGE}"
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e ARCH=${ARCH}"
-  # get commit message
-  - export COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
-  - if [[ ${COVERAGE} == true ]]; then
-       if [[ $(uname -s) == 'Linux' ]]; then
-         PYTHONUSERBASE=$(pwd)/py-local pip install --user cpp-coveralls;
-       else
-         PYTHONUSERBASE=$(pwd)/py-local easy_install --user cpp-coveralls;
-       fi;
-     fi
 
 script:
   # bash commands are performed inside the dockcross container
