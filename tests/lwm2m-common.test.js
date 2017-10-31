@@ -290,7 +290,7 @@ describe('RequestHandler', () => {
         expect(r.resourceLen).to.equal(1);
         r = RequestHandler.build(client, 'read', Buffer.from('AQECAAAAAAA=', 'base64'));
         expect(r.resourceLen).to.equal(0);
-        expect(r.uris).to.deep.equal(['/2/0/*']);
+        expect(r.uris).to.deep.equal(['^/2/0/']);
       });
     });
     // end of Read
