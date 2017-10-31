@@ -223,7 +223,6 @@
         $('#node-config-input-pskIdentity').prop('disabled', disabled);
         $('#node-config-input-presharedKey').prop('disabled', disabled);
       }
-      disablePskItems(!this.enableDTLS);
       $('#node-config-input-enableDTLS').click(function() {
         var disabled = !$(this).prop('checked');
         disablePskItems(disabled);
@@ -246,11 +245,12 @@
         $('#node-config-input-serverPort').prop('disabled', disabled);
         $('#node-config-input-lifetimeSec').prop('disabled', disabled);
       }
-      disableServerConfigs(!!this.requestBootstrap);
       $('#node-config-input-requestBootstrap').click(function() {
         var disabled = !!$(this).prop('checked');
         disableServerConfigs(disabled);
       });
+      disableServerConfigs(!!this.requestBootstrap);
+      disablePskItems(!this.enableDTLS);
     }
   });
 </script>
