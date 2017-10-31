@@ -343,6 +343,18 @@ Node.js v6+
 
 # How to install
 
+## Prebuilt Binaries
+
+The prebuilt binaries are available for the following OS and architectures:
+
+1. ARM(armv6+) Linux with Node.js 6/7/8 (For Raspberry Pi, ASUS tinker board and other ARMv6+ CPU computers)
+1. macOS with Node.js 6
+
+Other users need to install the following software manually:
+
+1. GCC (4.8+)
+1. make
+
 ## Node-RED users
 
 Run the following commands:
