@@ -28,6 +28,7 @@ import {
   RequestHandler, ResourceRepositoryBuilder
 } from './lwm2m-common';
 import {
+  COAP_ERROR,
   LWM2M_TYPE,
   ACL,
 } from './object-common';
@@ -289,7 +290,7 @@ describe('RequestHandler', () => {
         expect(r.resourceLen).to.equal(1);
         r = RequestHandler.build(client, 'read', Buffer.from('AQECAAAAAAA=', 'base64'));
         expect(r.resourceLen).to.equal(0);
-        expect(r.uris).to.deep.equal(['/2/0/*']);
+        expect(r.uris).to.deep.equal(['^/2/0/']);
       });
     });
     // end of Read
@@ -357,6 +358,287 @@ describe('Resource', () => {
         done();
       }).catch((err) => {
         done(err);
+      });
+    });
+  });
+
+  describe('#update()', () => {
+    it('should update a String value', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.WRITABLE,
+        value: 'xyz'
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.STRING,
+          value: 'abcdef'
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal('abcdef');
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn a Buffer object into a String value when a String Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.WRITABLE,
+        value: 'xyz'
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.OPAQUE,
+          value: Buffer.from('abcdef')
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal('abcdef');
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should udpate an opaque Resource', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.OPAQUE,
+        acl: ACL.READABLE,
+        value: Buffer.from('xyz')
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.OPAQUE,
+          value: Buffer.from('abcdef')
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.deep.equal(Buffer.from('abcdef'));
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn a String object into a Buffer value when an opaque Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.OPAQUE,
+        acl: ACL.WRITABLE,
+        value: 111
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.STRING,
+          value: '123456abcdef'
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.deep.equal(Buffer.from('123456abcdef'));
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should update an integer Resource', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.INTEGER,
+        acl: ACL.WRITABLE,
+        value: 111
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.INTEGER,
+          value: 9999
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal(9999);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn a String object into an int value when an integer Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.INTEGER,
+        acl: ACL.WRITABLE,
+        value: 111
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.STRING,
+          value: '9999'
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal(9999);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should update a float Resource', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.FLOAT,
+        acl: ACL.WRITABLE,
+        value: 111
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.FLOAT,
+          value: 99.99
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal(99.99);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn a String object into a float value when a float Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.FLOAT,
+        acl: ACL.WRITABLE,
+        value: 111
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.STRING,
+          value: '99.99'
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal(99.99);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should update a Boolean Resource', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.BOOLEAN,
+        acl: ACL.WRITABLE,
+        value: true
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.BOOLEAN,
+          value: false
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal(false);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn a String object into a boolean value when a Boolean Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.BOOLEAN,
+        acl: ACL.WRITABLE,
+        value: true
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.STRING,
+          value: 'false' // string boolean value is NOT ACCEPTABLE!
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal(true); // not empty string is `true`
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should update an ObjectLink Resource', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.OBJECT_LINK,
+        acl: ACL.WRITABLE,
+        value: {}
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.OBJECT_LINK,
+          value: {
+            objectId: 123,
+            objectInstanceId: 987
+          }
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.deep.equal({
+            objectId: 123,
+            objectInstanceId: 987
+          });
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should return 4.00 Bad Request Error on updating ObjectLink', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.OBJECT_LINK,
+        acl: ACL.WRITABLE,
+        value: {}
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.STRING,
+          value: '1234567890'
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          done('error');
+        });
+      }).catch((err) => {
+        expect(err.status).to.equal(COAP_ERROR.COAP_400_BAD_REQUEST);
+        done();
+      });
+    });
+    it('should update a Multiple Resource', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.MULTIPLE_RESOURCE,
+        acl: ACL.WRITABLE,
+        value: {}
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.MULTIPLE_RESOURCE,
+          value: {
+            '0': {
+              type: LWM2M_TYPE.FLOAT,
+              value: 99.99
+            }
+          }
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value[0].type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value[0].value).to.equal(99.99);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should return 4.00 Bad Request Error on updating Multiple Resource', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.MULTIPLE_RESOURCE,
+        acl: ACL.WRITABLE,
+        value: {}
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.STRING,
+          value: 'abcdef'
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          done('error');
+        });
+      }).catch((err) => {
+        expect(err.status).to.equal(COAP_ERROR.COAP_400_BAD_REQUEST);
+        done();
       });
     });
   });
@@ -518,6 +800,14 @@ describe('Resource', () => {
         expect(r.acl).to.equal(ACL.READABLE);
         expect(r.value).to.deep.equal(Buffer.from([3,2,1]));
         return Resource.from({
+          type: LWM2M_TYPE.OPAQUE,
+          value: Buffer.from('abcdef')
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.OPAQUE);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value).to.deep.equal(Buffer.from('abcdef'));
+        return Resource.from({
           type: LWM2M_TYPE.OPAQUE
         });
       }).then((r) => {
@@ -538,8 +828,8 @@ describe('Resource', () => {
       }]).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
         expect(r.acl).to.equal(ACL.READABLE);
-        expect(r.value).to.be.an('array');
-        expect(r.value.length).to.equal(1);
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(1);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
         expect(r.value[0].acl).to.equal(ACL.WRITABLE);
@@ -549,8 +839,8 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
         expect(r.acl).to.equal(ACL.READABLE);
-        expect(r.value).to.be.an('array');
-        expect(r.value.length).to.equal(1);
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(1);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
         expect(r.value[0].acl).to.equal(ACL.WRITABLE);
@@ -568,8 +858,8 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
         expect(r.acl).to.equal(ACL.WRITABLE);
-        expect(r.value).to.be.an('array');
-        expect(r.value.length).to.equal(1);
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(1);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
         expect(r.value[0].acl).to.equal(ACL.WRITABLE);
@@ -583,8 +873,8 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
         expect(r.acl).to.equal(ACL.WRITABLE);
-        expect(r.value).to.be.an('array');
-        expect(r.value.length).to.equal(2);
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(2);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
         expect(r.value[0].acl).to.equal(ACL.READABLE);
@@ -598,8 +888,8 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
         expect(r.acl).to.equal(ACL.READABLE);
-        expect(r.value).to.be.an('array');
-        expect(r.value.length).to.equal(2);
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(2);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
         expect(r.value[0].acl).to.equal(ACL.READABLE);
@@ -641,8 +931,8 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
         expect(r.acl).to.equal(ACL.WRITABLE);
-        expect(r.value).to.be.an('array');
-        expect(r.value.length).to.equal(2);
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(2);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
         expect(r.value[0].acl).to.equal(ACL.READABLE);
@@ -662,8 +952,8 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
         expect(r.acl).to.equal(ACL.WRITABLE);
-        expect(r.value).to.be.an('array');
-        expect(r.value.length).to.equal(2);
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(2);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
         expect(r.value[0].acl).to.equal(ACL.READABLE);

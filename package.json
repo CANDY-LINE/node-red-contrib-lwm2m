@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-lwm2m",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "description": "Node-RED nodes for OMA LwM2M",
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   ],
   "homepage": "https://github.com/CANDY-LINE/node-red-contrib-lwm2m#readme",
   "keywords": [
+    "node-red",
     "OMA",
     "LwM2M",
     "Wakaama",

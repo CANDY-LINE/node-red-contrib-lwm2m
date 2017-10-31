@@ -212,7 +212,7 @@
       objects: { value:'{}', required: false },
     },
     credentials: {
-      pskIdentity: { type: 'text', validate: RED.validators.regex(/^[a-fA-F0-9]*$/) },
+      pskIdentity: { type: 'text', validate: RED.validators.regex(/^[\u0020-\u007e\u00a0-\u00ff]*$/) },
       presharedKey: { type: 'text', validate: RED.validators.regex(/^[a-fA-F0-9]*$/) },
     },
     label: function() {
@@ -223,7 +223,6 @@
         $('#node-config-input-pskIdentity').prop('disabled', disabled);
         $('#node-config-input-presharedKey').prop('disabled', disabled);
       }
-      disablePskItems(!this.enableDTLS);
       $('#node-config-input-enableDTLS').click(function() {
         var disabled = !$(this).prop('checked');
         disablePskItems(disabled);
@@ -246,11 +245,12 @@
         $('#node-config-input-serverPort').prop('disabled', disabled);
         $('#node-config-input-lifetimeSec').prop('disabled', disabled);
       }
-      disableServerConfigs(!!this.requestBootstrap);
       $('#node-config-input-requestBootstrap').click(function() {
         var disabled = !!$(this).prop('checked');
         disableServerConfigs(disabled);
       });
+      disableServerConfigs(!!this.requestBootstrap);
+      disablePskItems(!this.enableDTLS);
     }
   });
 </script>

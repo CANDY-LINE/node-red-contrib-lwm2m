@@ -1,40 +1,40 @@
 [
     {
-        "id": "dc706162.9f79a",
+        "id": "635b54db.ae6ca4",
         "type": "tab",
         "label": "LwM2M Operation Example",
         "disabled": false,
         "info": "In order to deploy this flow, you need to provide the following information to `lwm2m` config node.\n\n- Endpoint ... Client Endpoint Name\n- Server Host ... LwM2M Server Host Name or IP Address\n\nTap each inject node to test *lwm2m client in* and *lwm2m client out* nodes.\nSee `debug` tab for the node output logs and you can find the messages these nodes emit.\n\nThe exec node labeled `fake reboot` will perform `echo` command when `/3/0/4` resource is executed.\nYou can find the output in Node-RED stdout.\n\nThe `catch` node will catch errors thrown by *lwm2m client in* and *lwm2m client out* nodes.\n"
     },
     {
-        "id": "e86eae90.188f2",
+        "id": "14a5dd88.e5e902",
         "type": "lwm2m client in",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Read LwM2M Object Resources",
-        "lwm2mClient": "422f0802.8666",
+        "lwm2mClient": "86761388.aec3f",
         "subscribeObjectEvents": false,
         "x": 530,
         "y": 100,
         "wires": [
             [
-                "f2e71141.d58018"
+                "9e21110e.a7f3b"
             ]
         ]
     },
     {
-        "id": "a81a5db.37e022",
+        "id": "798be09e.25f2b",
         "type": "lwm2m client out",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Write or Execute LwM2M Resources",
-        "lwm2mClient": "422f0802.8666",
+        "lwm2mClient": "86761388.aec3f",
         "x": 550,
         "y": 460,
         "wires": []
     },
     {
-        "id": "a745c693.71a98",
+        "id": "86ac64f2.ef66e",
         "type": "inject",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "",
         "topic": "^/3/",
         "payload": "",
@@ -46,32 +46,32 @@
         "y": 80,
         "wires": [
             [
-                "e86eae90.188f2"
+                "14a5dd88.e5e902"
             ]
         ]
     },
     {
-        "id": "23124c7d.9a949c",
+        "id": "99ae2c51.8099",
         "type": "catch",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Catch lwm2m client node errors",
         "scope": [
             "339b79c.9739306",
-            "e86eae90.188f2",
-            "a81a5db.37e022"
+            "14a5dd88.e5e902",
+            "798be09e.25f2b"
         ],
         "x": 530,
         "y": 560,
         "wires": [
             [
-                "3acaa579.279c52"
+                "a30a791c.94c0a8"
             ]
         ]
     },
     {
-        "id": "f2e71141.d58018",
+        "id": "9e21110e.a7f3b",
         "type": "debug",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Read Results",
         "active": true,
         "console": "false",
@@ -81,9 +81,9 @@
         "wires": []
     },
     {
-        "id": "927ace63.f91c3",
+        "id": "1b30cae1.067f5d",
         "type": "inject",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "",
         "topic": "/3/0/4/execute",
         "payload": "",
@@ -95,14 +95,14 @@
         "y": 420,
         "wires": [
             [
-                "a81a5db.37e022"
+                "798be09e.25f2b"
             ]
         ]
     },
     {
-        "id": "ac99ca6d.d968d",
+        "id": "3a58e4.368bd71c",
         "type": "switch",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Route executed resource",
         "property": "payload.uri",
         "propertyType": "msg",
@@ -119,7 +119,7 @@
         "y": 340,
         "wires": [
             [
-                "ed69c731.f8c038"
+                "760650d8.75daf"
             ]
         ],
         "outputLabels": [
@@ -127,9 +127,9 @@
         ]
     },
     {
-        "id": "ed69c731.f8c038",
+        "id": "760650d8.75daf",
         "type": "exec",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "command": "echo",
         "addpay": false,
         "append": "##::##::##::##::##::##::##::##::##::##::##::##::",
@@ -146,9 +146,9 @@
         ]
     },
     {
-        "id": "a8fa1178.ae41b8",
+        "id": "e8445d0f.54ef68",
         "type": "inject",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "",
         "topic": "/3/0/0",
         "payload": "MyManufacturer",
@@ -160,14 +160,14 @@
         "y": 500,
         "wires": [
             [
-                "a81a5db.37e022"
+                "798be09e.25f2b"
             ]
         ]
     },
     {
-        "id": "4e6ab0cc.9b6c48",
+        "id": "d52c0df6.b3226",
         "type": "inject",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "",
         "topic": "/3/0/0",
         "payload": "",
@@ -179,14 +179,14 @@
         "y": 160,
         "wires": [
             [
-                "e86eae90.188f2"
+                "14a5dd88.e5e902"
             ]
         ]
     },
     {
-        "id": "40bc535a.8ba72c",
+        "id": "7511bb1c.5953ac",
         "type": "inject",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "",
         "topic": "/3/0/4",
         "payload": "not allowed",
@@ -198,14 +198,14 @@
         "y": 580,
         "wires": [
             [
-                "a81a5db.37e022"
+                "798be09e.25f2b"
             ]
         ]
     },
     {
-        "id": "3acaa579.279c52",
+        "id": "a30a791c.94c0a8",
         "type": "debug",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Error Info.",
         "active": true,
         "console": "false",
@@ -215,9 +215,9 @@
         "wires": []
     },
     {
-        "id": "4888bf05.b4af38",
+        "id": "98778c88.cf1988",
         "type": "inject",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "",
         "topic": "no-such-uri",
         "payload": "",
@@ -229,14 +229,14 @@
         "y": 320,
         "wires": [
             [
-                "e86eae90.188f2"
+                "14a5dd88.e5e902"
             ]
         ]
     },
     {
-        "id": "a176d415.08a5e8",
+        "id": "697ffb6d.85dca4",
         "type": "comment",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Read Operation",
         "info": "",
         "x": 160,
@@ -244,9 +244,9 @@
         "wires": []
     },
     {
-        "id": "5c29b52a.66233c",
+        "id": "9ecaaeb4.df823",
         "type": "comment",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Read Manufacturer",
         "info": "",
         "x": 170,
@@ -254,9 +254,9 @@
         "wires": []
     },
     {
-        "id": "95f27a50.81ef88",
+        "id": "eb8e4adc.4d7e2",
         "type": "comment",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Trigger Not Found Error",
         "info": "",
         "x": 180,
@@ -264,9 +264,9 @@
         "wires": []
     },
     {
-        "id": "fdf2b9c3.351d78",
+        "id": "aaa6ad5c.0ee1f",
         "type": "comment",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Execute Operation",
         "info": "",
         "x": 170,
@@ -274,9 +274,9 @@
         "wires": []
     },
     {
-        "id": "d2e016cd.ba2968",
+        "id": "2fbc1fff.ee413",
         "type": "comment",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Write Operation",
         "info": "",
         "x": 160,
@@ -284,9 +284,9 @@
         "wires": []
     },
     {
-        "id": "d84c6a26.3d19f8",
+        "id": "318d673e.414be8",
         "type": "comment",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Trigger Method Not Allowed Error",
         "info": "",
         "x": 210,
@@ -294,9 +294,9 @@
         "wires": []
     },
     {
-        "id": "e95343ff.fd908",
+        "id": "aa9924.7a3206e",
         "type": "comment",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Execute /3/0/4",
         "info": "",
         "x": 820,
@@ -304,9 +304,9 @@
         "wires": []
     },
     {
-        "id": "ac908a30.fbef88",
+        "id": "2981ed72.de51f2",
         "type": "inject",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "",
         "topic": "/3/0/7",
         "payload": "",
@@ -318,14 +318,14 @@
         "y": 240,
         "wires": [
             [
-                "e86eae90.188f2"
+                "14a5dd88.e5e902"
             ]
         ]
     },
     {
-        "id": "adaaaa23.5350c8",
+        "id": "b62d9801.7a2b2",
         "type": "comment",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Read Multiple Resource",
         "info": "",
         "x": 180,
@@ -333,24 +333,37 @@
         "wires": []
     },
     {
-        "id": "f9b1d6ab.2a69b",
+        "id": "64432ff3.a7ad8",
         "type": "lwm2m client in",
-        "z": "dc706162.9f79a",
+        "z": "635b54db.ae6ca4",
         "name": "Subscribe LwM2M Object Events",
-        "lwm2mClient": "422f0802.8666",
+        "lwm2mClient": "86761388.aec3f",
         "subscribeObjectEvents": true,
         "x": 540,
         "y": 260,
         "wires": [
             [
-                "ac99ca6d.d968d"
+                "3a58e4.368bd71c",
+                "ac9e5f3b.d86d4"
             ]
         ]
     },
     {
-        "id": "422f0802.8666",
+        "id": "ac9e5f3b.d86d4",
+        "type": "debug",
+        "z": "635b54db.ae6ca4",
+        "name": "Events",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 770,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "86761388.aec3f",
         "type": "lwm2m client",
-        "z": "",
+        "z": "635b54db.ae6ca4",
         "clientName": "",
         "enableDTLS": false,
         "clientPort": "56830",
@@ -362,6 +375,6 @@
         "redirectLwm2mClientLog": false,
         "hideSensitiveInfo": true,
         "propagateInternalEvents": false,
-        "objects": "{\"41000\":{\"3\":{\"0\":\"abcd\"}}}"
+        "objects": "{\"32769\":{\"0\":{\"0\":{\"type\":\"STRING\",\"acl\":\"RW\",\"value\":\"abcd\"},\"1\":{\"type\":\"INTEGER\",\"acl\":\"RW\",\"value\":123456},\"2\":true}}}"
     }
 ]

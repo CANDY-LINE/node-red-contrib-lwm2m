@@ -21,17 +21,17 @@ matrix:
        env:
         - NODE_VERSION="8"
         - ARCH="arm"
-        - DOCKROSS="linux-armv6"
+        - DOCKCROSS="linux-armv6"
      - os: linux
        env:
         - NODE_VERSION="7"
         - ARCH="arm"
-        - DOCKROSS="linux-armv6"
+        - DOCKCROSS="linux-armv6"
      - os: linux
        env:
         - NODE_VERSION="6"
         - ARCH="arm"
-        - DOCKROSS="linux-armv6"
+        - DOCKCROSS="linux-armv6"
 
 before_install:
   - git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n' > ./.commit_message
@@ -40,7 +40,7 @@ before_install:
   - scripts/validate_tag.sh
 
 install:
-  - docker run --rm dockcross/${DOCKROSS} > ./dockcross
+  - docker run --rm dockcross/${DOCKCROSS} > ./dockcross
   - chmod +x ./dockcross
 
 before_script:

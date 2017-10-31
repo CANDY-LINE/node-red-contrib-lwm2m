@@ -5,11 +5,9 @@ Node-RED node for OMA LwM2M
 [![master Build Status](https://travis-ci.org/CANDY-LINE/node-red-contrib-lwm2m.svg?branch=master)](https://travis-ci.org/CANDY-LINE/node-red-contrib-lwm2m/)
 [![License MIT](https://img.shields.io/github/license/CANDY-LINE/node-red-contrib-lwm2m.svg)](http://opensource.org/licenses/Apache-2.0)
 
-**ALPHA RELEASE** (Not yet published to https://flows.nodered.org)
+This node offers OMA LwM2M client functionalities and allows you to create your own OMA LwM2M client applications on top of Node-RED.
 
-This node offers OMA LwM2M client functionalities and allows you to create your own OMA LwM2M client application on top of Node-RED.
-
-This node internally spawns a [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) process, which is a revised version of Eclipse Wakaama executable, and starts inter-process communication (IPC) over stdin and stdout. The [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) executable is slightly different from Wakaama's implementation, some of management objects are stripped. This node allows you to describe your own management objects as well.
+This node internally spawns a [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) process, which is a revised version of [Eclipse Wakaama](https://github.com/eclipse/wakaama) executable, and starts inter-process communication (IPC) over stdin and stdout. The [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) executable is slightly different from [Wakaama](https://github.com/eclipse/wakaama)'s implementation, some of management objects are stripped. This node allows you to describe your own management objects as well.
 
 When the parent process (i.e. Node-RED) exits, this node tries to emit a De-registration message to LwM2M server so that the server knows the client is gone.
 
@@ -61,7 +59,7 @@ The input and output nodes show the following connection status.
 
 ## Predefined Objects
 
-The following objects are implemented in C (Using Wakaama's "AS IS" example).
+The following objects are implemented in C (Using [Wakaama](https://github.com/eclipse/wakaama)'s "AS IS" example).
 
 - `Security Object`
 - `Server Object`
@@ -343,6 +341,18 @@ Node.js v6+
 
 # How to install
 
+## Prebuilt Binaries
+
+The prebuilt binaries are available for the following OS and architectures:
+
+1. ARM(armv6+) Linux with Node.js 6/7/8 (For Raspberry Pi, ASUS tinker board and other ARMv6+ CPU computers)
+1. macOS with Node.js 6
+
+Other users need to install the following software manually:
+
+1. GCC (4.8+)
+1. make
+
 ## Node-RED users
 
 Run the following commands:
@@ -421,7 +431,7 @@ Enter `help` on the lwm2mserver console for supported commands.
 
 ## Eclipse Leshan Public Sandbox LwM2M Server with Web UI
 
-Provide the following host and port for your lwm2m client config node to connect to Public Leshan Server.
+Provide the following host and port for your lwm2m client config node to connect to Public [Leshan](https://github.com/eclipse/leshan) Server.
 
 - Server Host: `leshan.eclipse.org`
 - Server Port: `5683` for plain UDP or `5684` for DTLS with checking `Enable DTLS`
@@ -454,10 +464,13 @@ limitations under the License.
 1. Checkout master: `git checkout master`
 1. Publish NPM package: `npm publish`
 1. Publish binaries: `git commit --allow-empty -m "[publish binary]"`
-1. Publish local binary (optional): `make publish`
+1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
 
 # Revision History
 
-* 0.1.x
+* 1.0.0
+  - General Availability
+
+* 0.1.3
   - Initial Release (alpha)
   - `node-red` keyword is not yet added to package.json
