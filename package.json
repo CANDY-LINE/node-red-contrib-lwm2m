@@ -25,6 +25,7 @@
   ],
   "homepage": "https://github.com/CANDY-LINE/node-red-contrib-lwm2m#readme",
   "keywords": [
+    "node-red",
     "OMA",
     "LwM2M",
     "Wakaama",
