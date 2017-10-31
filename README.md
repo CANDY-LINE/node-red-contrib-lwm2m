@@ -470,6 +470,9 @@ limitations under the License.
 
 # Revision History
 
-* 0.1.x
+* 1.0.0
+  - General Availability
+
+* 0.1.3
   - Initial Release (alpha)
   - `node-red` keyword is not yet added to package.json
