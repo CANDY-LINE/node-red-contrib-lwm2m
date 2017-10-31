@@ -212,7 +212,7 @@
       objects: { value:'{}', required: false },
     },
     credentials: {
-      pskIdentity: { type: 'text', validate: RED.validators.regex(/^[a-fA-F0-9]*$/) },
+      pskIdentity: { type: 'text', validate: RED.validators.regex(/^[\u0020-\u007e\u00a0-\u00ff]*$/) },
       presharedKey: { type: 'text', validate: RED.validators.regex(/^[a-fA-F0-9]*$/) },
     },
     label: function() {
