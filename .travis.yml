@@ -32,6 +32,17 @@ matrix:
         - NODE_VERSION="6"
         - ARCH="arm"
         - DOCKCROSS="linux-armv6"
+     # x64 Linux (LTS)
+     - os: linux
+       env:
+        - NODE_VERSION="8"
+        - ARCH="x64"
+        - DOCKCROSS="linux-x64"
+     - os: linux
+       env:
+        - NODE_VERSION="6"
+        - ARCH="x64"
+        - DOCKCROSS="linux-x64"
 
 before_install:
   - git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n' > ./.commit_message
