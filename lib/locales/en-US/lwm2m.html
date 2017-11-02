@@ -130,6 +130,10 @@ The <code>msg.payload</code> property is an event object. Each property in the o
   either <code>executed</code> (performed on <code>execute</code> operation)
   or <code>udpated</code> (performed on <code>write</code> operation).
 </dd>
+<dt>value<span class="property-type">object | string | integer | float | boolean</span></dt>
+<dd>
+  the execute operation parameter for `executed` event type or the value updated by write operation for `updated` event type.
+</dd>
 <dt>ts<span class="property-type">integer</span></dt>
 <dd>
   the event timestamp in milliseconds.
