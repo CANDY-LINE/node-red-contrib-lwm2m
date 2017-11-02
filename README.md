@@ -468,6 +468,10 @@ limitations under the License.
 
 # Revision History
 
+* 1.0.1
+  - Suppress TinyDTLS debug logs
+  - Update help text
+
 * 1.0.0
   - General Availability
 
