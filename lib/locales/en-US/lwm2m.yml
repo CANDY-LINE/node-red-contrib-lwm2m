@@ -10,6 +10,7 @@ lwm2m:
     serverPort: Server Port
     useIPv4: Use IPv4 connection
     lifetimeSec: Lifetime
+    reconnectSec: Reconnect
     requestBootstrap: Request Bootstrap
     subscribeObjectEvents: Subscribe LwM2M Object Events
     enableDTLS: Enable DTLS
@@ -35,6 +36,7 @@ lwm2m:
     serverHost: ""
     serverPort: 5683
     lifetimeSec: (in seconds)
+    reconnectSec: (in seconds)
     pskIdentity: (ASCII string)
     presharedKey: (hex string)
   error:

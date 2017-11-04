@@ -202,6 +202,8 @@ LwM2M client configuration node. The followiing parameters are used for starting
 <dd>
   the LwM2M client life time in seconds, 300 sec. by default.
   After the time elapsed, the client tries to send the server an "I'm alive" message (9 bytes).</dd>
+<dt>Reconnect</dt>
+<dd>the auto-reconnect interval in seconds. 0 or negative value disables auto-reconnect.</dd>
 <dt>Request Bootstrap</dt>
 <dd>whether or not to require bootstrapping on starting this node.</dd>
 <dt>Use IPv4 connection</dt>
