@@ -469,6 +469,12 @@ limitations under the License.
 
 # Revision History
 
+* 1.1.0
+  - Add a new option to configure the auto-reconnect interval in seconds
+  - Fix an issue where object store operations may fail when the store isn't yet initialized at that time
+  - Fix an issue where the promise was never resolved when isConenct is false
+  - Suppress TinyDTLS warning logs
+
 * 1.0.1
   - Suppress TinyDTLS debug logs
   - Update help text
