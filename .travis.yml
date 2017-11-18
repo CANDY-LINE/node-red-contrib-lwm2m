@@ -16,33 +16,44 @@ branches:
 
 matrix:
   include:
-     # ARM Linux
-     - os: linux
-       env:
-        - NODE_VERSION="8"
-        - ARCH="arm"
-        - DOCKCROSS="linux-armv6"
-     - os: linux
-       env:
-        - NODE_VERSION="7"
-        - ARCH="arm"
-        - DOCKCROSS="linux-armv6"
-     - os: linux
-       env:
-        - NODE_VERSION="6"
-        - ARCH="arm"
-        - DOCKCROSS="linux-armv6"
-     # x64 Linux (LTS)
-     - os: linux
-       env:
-        - NODE_VERSION="8"
-        - ARCH="x64"
-        - DOCKCROSS="linux-x64"
-     - os: linux
-       env:
-        - NODE_VERSION="6"
-        - ARCH="x64"
-        - DOCKCROSS="linux-x64"
+    # ARM Linux
+    - os: linux
+      env:
+      - NODE_VERSION="8"
+      - ARCH="arm"
+      - DOCKCROSS="linux-armv6"
+    - os: linux
+      env:
+      - NODE_VERSION="7"
+      - ARCH="arm"
+      - DOCKCROSS="linux-armv6"
+    - os: linux
+      env:
+      - NODE_VERSION="6"
+      - ARCH="arm"
+      - DOCKCROSS="linux-armv6"
+    # x64 Linux (LTS)
+    - os: linux
+      env:
+      - NODE_VERSION="8"
+      - ARCH="x64"
+      - DOCKCROSS="linux-x64"
+    - os: linux
+      env:
+      - NODE_VERSION="6"
+      - ARCH="x64"
+      - DOCKCROSS="linux-x64"
+    # x64 macOS
+    - os: osx
+      env:
+      - NODE_VERSION="8"
+      - ARCH="x64"
+      - DOCKCROSS=""
+    - os: osx
+      env:
+      - NODE_VERSION="6"
+      - ARCH="x64"
+      - DOCKCROSS=""
 
 before_install:
   - git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n' > ./.commit_message
@@ -51,8 +62,11 @@ before_install:
   - scripts/validate_tag.sh
 
 install:
-  - docker run --rm dockcross/${DOCKCROSS} > ./dockcross
-  - chmod +x ./dockcross
+  - >
+    if [[ $TRAVIS_OS_NAME == "linux" ]]; then
+      docker run --rm dockcross/${DOCKCROSS} > ./dockcross
+      chmod +x ./dockcross
+    fi
 
 before_script:
   # docker args
@@ -62,5 +76,10 @@ before_script:
   - export DOCKCROSS_ARGS="${DOCKCROSS_ARGS} -e ARCH=${ARCH}"
 
 script:
-  # bash commands are performed inside the dockcross container
-  - ./dockcross bash -c "./scripts/install_node.sh ${NODE_VERSION} && ./scripts/build_against_node.sh"
+  - >
+    if [[ $TRAVIS_OS_NAME == "linux" ]]; then
+      # bash commands are performed inside the dockcross container
+      ./dockcross bash -c "./scripts/install_node.sh ${NODE_VERSION} && ./scripts/build_against_node.sh"
+    elif [[ $TRAVIS_OS_NAME == "osx" ]]; then
+      ./scripts/install_node.sh ${NODE_VERSION} && ./scripts/build_against_node.sh
+    fi
