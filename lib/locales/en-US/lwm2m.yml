@@ -40,4 +40,5 @@ lwm2m:
     pskIdentity: (ASCII string)
     presharedKey: (hex string)
   error:
-    duplicateEntry: Duplicate LwM2M Server Configuration (Host:__host__, Port:__port__)
+    duplicateEntry: Duplicate LwM2M Server Configuration (Host:__host__, Port:__port__, Endpoint:__endpoint__)
+    duplicateClientPort: Duplicate Client Listener Port. Modify the Port:__port__
