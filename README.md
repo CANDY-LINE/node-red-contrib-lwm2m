@@ -445,7 +445,7 @@ http://leshan.eclipse.org/#/clients
 
 ## Source Code License
 
-Copyright (c) 2017 [CANDY LINE INC.](https://www.candy-line.io)
+Copyright (c) 2018 [CANDY LINE INC.](https://www.candy-line.io)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -468,6 +468,12 @@ limitations under the License.
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
 
 # Revision History
+
+* 1.2.0
+  - Allow duplicate server host and port UNLESS client endpoint name is duplicate (#4)
+  - Disallow duplicate client listening port
+  - Fix an issue where client listening port parameter is ineffective
+  - Fix an issue where reconnectSec property is missing in the example flow
 
 * 1.1.0
   - Add a new option to configure the auto-reconnect interval in seconds
