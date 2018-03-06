@@ -368,6 +368,7 @@
         "enableDTLS": false,
         "clientPort": "56830",
         "lifetimeSec": "300",
+        "reconnectSec": "300",
         "requestBootstrap": false,
         "useIPv4": true,
         "serverHost": "",
