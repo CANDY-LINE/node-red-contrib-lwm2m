@@ -16,7 +16,7 @@
  */
 
 const gulp        = require('gulp');
-const util        = require("gulp-util");
+const noop        = require("gulp-noop");
 const babel       = require('gulp-babel');
 const uglify      = require('gulp-uglify');
 const del         = require('del');
@@ -75,11 +75,11 @@ gulp.task('assets', ['i18n'], () => {
 
 gulp.task('js', ['assets'], () => {
   return gulp.src('./lib/**/*.js')
-    .pipe(gulpif(sourcemapEnabled, sourcemaps.init(), util.noop()))
+    .pipe(gulpif(sourcemapEnabled, sourcemaps.init(), noop()))
     .pipe(babel({
       minified: minified,
       compact: minified,
-      presets: ["es2015"],
+      presets: ["env"],
       plugins: ['add-module-exports']
     }))
     .pipe(gulpif(!sourcemapEnabled, uglify({
@@ -99,17 +99,17 @@ gulp.task('js', ['assets'], () => {
         unsafe_math: true,
         unsafe: true
       },
-    }), util.noop()))
-    .pipe(gulpif(sourcemapEnabled, sourcemaps.write(), util.noop()))
+    }), noop()))
+    .pipe(gulpif(sourcemapEnabled, sourcemaps.write(), noop()))
     .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('less', () => {
   return gulp.src('./lib/**/*.less')
-    .pipe(gulpif(sourcemapEnabled, sourcemaps.init(), util.noop()))
+    .pipe(gulpif(sourcemapEnabled, sourcemaps.init(), noop()))
     .pipe(less())
     .pipe(cleancss({compatibility: 'ie8'}))
-    .pipe(gulpif(sourcemapEnabled, sourcemaps.write(), util.noop()))
+    .pipe(gulpif(sourcemapEnabled, sourcemaps.write(), noop()))
     .pipe(gulp.dest('./dist'));
 });
 
@@ -138,7 +138,7 @@ gulp.task('testJs', ['cleanTestJs', 'build'], () => {
   return gulp.src('./tests/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(babel({
-      presets: ['es2015'],
+      presets: ['env'],
       plugins: ['add-module-exports']
     }))
     .pipe(sourcemaps.write('.'))
