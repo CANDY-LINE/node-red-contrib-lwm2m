@@ -18,7 +18,8 @@
     "prepublish": "gulp build",
     "preinstall": "git submodule update --init --recursive;true",
     "install": "node-pre-gyp install --fallback-to-build --target_arch=${ARCH:-$(node -e 'console.log(require(\"os\").arch())')}",
-    "package": "node-pre-gyp package"
+    "package": "node-pre-gyp package",
+    "freeze": "npm prune && npm shrinkwrap --only=prod"
   },
   "os": [
     "!win32"
