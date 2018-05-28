@@ -468,6 +468,8 @@ limitations under the License.
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
 
 # Revision History
+* 1.2.2
+  - Fix an issue where the shrinkwrap file contained devDependencies by default (a known npm3 bug)
 
 * 1.2.1
   - Add a package lock file
