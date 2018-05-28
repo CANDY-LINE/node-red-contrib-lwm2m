@@ -19,7 +19,7 @@
     "preinstall": "if [ -d ./.git ]; then git submodule update --init --recursive;true; fi",
     "install": "node-pre-gyp install --fallback-to-build --target_arch=${ARCH:-$(node -e 'console.log(require(\"os\").arch())')}",
     "package": "node-pre-gyp package",
-    "freeze": "npm prune && npm shrinkwrap --only=prod"
+    "freeze": "npm prune --production && npm shrinkwrap"
   },
   "os": [
     "!win32"
