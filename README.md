@@ -469,6 +469,10 @@ limitations under the License.
 
 # Revision History
 
+* 1.2.1
+  - Add a package lock file
+  - Avoid to run git command unless .git directory exists while performing npm preinstall
+
 * 1.2.0
   - Allow duplicate server host and port UNLESS client endpoint name is duplicate (#4)
   - Disallow duplicate client listening port

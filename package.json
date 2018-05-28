@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-lwm2m",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Node-RED nodes for OMA LwM2M",
   "repository": {
     "type": "git",
@@ -16,9 +16,10 @@
     "test": "NODE_ENV=development gulp test",
     "clean": "gulp clean",
     "prepublish": "gulp build",
-    "preinstall": "git submodule update --init --recursive;true",
+    "preinstall": "if [ -d ./.git ]; then git submodule update --init --recursive;true; fi",
     "install": "node-pre-gyp install --fallback-to-build --target_arch=${ARCH:-$(node -e 'console.log(require(\"os\").arch())')}",
-    "package": "node-pre-gyp package"
+    "package": "node-pre-gyp package",
+    "freeze": "npm prune && npm shrinkwrap --only=prod"
   },
   "os": [
     "!win32"
