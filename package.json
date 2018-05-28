@@ -17,6 +17,7 @@
     "clean": "gulp clean",
     "prepublish": "gulp build",
     "preinstall": "if [ -d ./.git ]; then git submodule update --init --recursive;true; fi",
+    "postinstall": "git checkout HEAD -- npm-shrinkwrap.json",
     "install": "node-pre-gyp install --fallback-to-build --target_arch=${ARCH:-$(node -e 'console.log(require(\"os\").arch())')}",
     "package": "node-pre-gyp package",
     "freeze": "npm prune --production && npm shrinkwrap"
