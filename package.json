@@ -82,7 +82,7 @@
   },
   "dependencies": {
     "nan": "~2.6.2",
-    "node-pre-gyp": "0.6.x",
+    "node-pre-gyp": "^0.10.0",
     "source-map-support": "^0.4.2",
     "systeminformation": "^3.30.6"
   },
