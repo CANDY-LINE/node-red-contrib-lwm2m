@@ -359,7 +359,7 @@ Other users need to install the following software manually:
 Run the following commands:
 ```
 cd ~/.node-red
-npm install node-red-contrib-lwm2m
+npm install --production node-red-contrib-lwm2m
 ```
 
 Then restart Node-RED process.
@@ -369,7 +369,7 @@ Then restart Node-RED process.
 Run the following commands:
 ```
 cd /opt/candy-red/.node-red
-sudo npm install --unsafe-perm node-red-contrib-lwm2m
+sudo npm install --unsafe-perm --production node-red-contrib-lwm2m
 ```
 
 Then restart `candy-red` service.
@@ -462,7 +462,6 @@ limitations under the License.
 # How to Release
 
 1. Test all: `npm run test`
-1. Update the shrinkwrap: `npm freeze` (this prunes devDependencies under `node_modules`)
 1. Tag Release and Push
 1. Checkout master: `git checkout master`
 1. Install devDependencies: `npm install -dev`
