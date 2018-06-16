@@ -10,7 +10,7 @@ configure: ./node_modules
 	./node_modules/.bin/node-pre-gyp configure --target_arch=$(ARCH)
 
 build: ./node_modules
-	./node_modules/.bin/node-pre-gyp build --loglevel=silent --target_arch=$(ARCH)
+	./node_modules/.bin/node-pre-gyp build --loglevel=error --target_arch=$(ARCH)
 
 debug:
 	./node_modules/.bin/node-pre-gyp rebuild --debug --target_arch=$(ARCH)
