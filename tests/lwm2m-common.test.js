@@ -534,7 +534,7 @@ describe('Resource', () => {
         done(err);
       });
     });
-    it('should turn a String object into a boolean value when a Boolean Resource is updated', (done) => {
+    it('should turn a String object into false when a Boolean Resource is updated', (done) => {
       Resource.from({
         type: LWM2M_TYPE.BOOLEAN,
         acl: ACL.WRITABLE,
@@ -547,6 +547,82 @@ describe('Resource', () => {
           return r.update(newValue);
         }).then(() => {
           expect(r.value).to.equal(true); // not empty string is `true`
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn an integer into false when a Boolean Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.BOOLEAN,
+        acl: ACL.WRITABLE,
+        value: true
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.INTEGER,
+          value: 0,
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal(false);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn an integer into true when a Boolean Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.BOOLEAN,
+        acl: ACL.WRITABLE,
+        value: false
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.INTEGER,
+          value: 1,
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal(true);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn an opaque value into false when a Boolean Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.BOOLEAN,
+        acl: ACL.WRITABLE,
+        value: true
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.OPAQUE,
+          value: Buffer.from([0]),
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal(false);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn an opaque value into true when a Boolean Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.BOOLEAN,
+        acl: ACL.WRITABLE,
+        value: false
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.OPAQUE,
+          value: Buffer.from([1]),
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.value).to.equal(true);
           done();
         });
       }).catch((err) => {
