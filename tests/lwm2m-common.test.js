@@ -111,6 +111,10 @@ describe('LwM2MObjectStore', () => {
                 type: 'STRING',
                 value: 'test2',
               },
+              '2': {
+                type: 'STRING',
+                value: 'test3',
+              },
               '22': {
                 type: 'MULTIPLE_RESOURCE',
                 value: {
@@ -123,18 +127,21 @@ describe('LwM2MObjectStore', () => {
         }
       ], false).build(false).then((repo) => {
         store.repo = repo;
-        return store.get('^/3/*').then((result) => {
+        return store.get('^/3/.*').then((result) => {
           expect(result).to.be.an('array');
-          expect(result.length).to.equal(3);
+          expect(result.length).to.equal(4);
           expect(result[0].uri).to.equal('/3/0/0');
           expect(result[0].value.type).to.equal('STRING');
           expect(result[0].value.value).to.equal('test');
           expect(result[1].uri).to.equal('/3/0/1');
           expect(result[1].value.type).to.equal('STRING');
           expect(result[1].value.value).to.equal('test2');
-          expect(result[2].uri).to.equal('/3/0/22');
-          expect(result[2].value.type).to.equal('MULTIPLE_RESOURCE');
-          expect(result[2].value.value).to.deep.equal({
+          expect(result[2].uri).to.equal('/3/0/2');
+          expect(result[2].value.type).to.equal('STRING');
+          expect(result[2].value.value).to.equal('test3');
+          expect(result[3].uri).to.equal('/3/0/22');
+          expect(result[3].value.type).to.equal('MULTIPLE_RESOURCE');
+          expect(result[3].value.value).to.deep.equal({
             '90': {
               type: 'STRING',
               acl: 'R',
@@ -149,6 +156,60 @@ describe('LwM2MObjectStore', () => {
           done();
         }).catch((err) => {
           done(err);
+        });
+      });
+    });
+    it('should not include similar uri results', (done) => {
+      let opts = new EventEmitter();
+      let store = new LwM2MObjectStore(opts);
+      new ResourceRepositoryBuilder([
+        {
+          '1': {
+            '2': {
+              '3': {
+                type: 'STRING',
+                value: 'test0',
+              },
+            },
+          },
+          '3': {
+            '0': {
+              '0': {
+                type: 'STRING',
+                value: 'test',
+              },
+              '1': {
+                type: 'STRING',
+                value: 'test2',
+              },
+              '2': {
+                type: 'STRING',
+                value: 'test3',
+              },
+              '22': {
+                type: 'MULTIPLE_RESOURCE',
+                value: {
+                  '90': 'ABC',
+                  '99': 'XYZ',
+                },
+              },
+            },
+          },
+        }
+      ], false).build(false).then((repo) => {
+        store.repo = repo;
+        return store.get('^/3/0/2$').then((result) => {
+          expect(result).to.be.an('array');
+          expect(result.length).to.equal(1);
+          expect(result[0].uri).to.equal('/3/0/2');
+          expect(result[0].value.type).to.equal('STRING');
+          expect(result[0].value.value).to.equal('test3');
+          return store.get('/0/2');
+        }).then(() => {
+          done('Should be missing');
+        }).catch((err) => {
+          expect(err.status).to.equal(COAP_ERROR.COAP_404_NOT_FOUND);
+          done();
         });
       });
     });
@@ -286,11 +347,11 @@ describe('RequestHandler', () => {
       it('should have valid query URI resources', () => {
         let r;
         r = RequestHandler.build(client, 'read', Buffer.from('AQECAAAAAQAAAA==', 'base64'));
-        expect(r.uris).to.deep.equal(['/2/0/0']);
+        expect(r.uris).to.deep.equal(['^/2/0/0$']);
         expect(r.resourceLen).to.equal(1);
         r = RequestHandler.build(client, 'read', Buffer.from('AQECAAAAAAA=', 'base64'));
         expect(r.resourceLen).to.equal(0);
-        expect(r.uris).to.deep.equal(['^/2/0/']);
+        expect(r.uris).to.deep.equal(['^/2/0/[0-9]+$']);
       });
     });
     // end of Read
