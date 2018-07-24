@@ -103,10 +103,10 @@ With the powerful Node-RED JSON editor, you can easily manipulate your own manag
 Supported resource types are as follows:
 
 - `STRING` ... String
-- `OPAQUE` ... Byte Array
+- `OPAQUE` ... Buffer (byte array)
 - `INTEGER` ... 64bit integer
 - `FLOAT` ... double
-- `BOOLEAN` ... boolean
+- `BOOLEAN` ... boolean (`STRING` value `1`, `INTEGER` value `1`, and `OPAQUE` 1st byte `1` are all translated into `true`)
 - `OBJECT_LINK` ... Object Link
 - `MULTIPLE_RESOURCE` ... Resource Array
 - `FUNCTION` ... This is **NOT** a LwM2M Resource Type. Used for defining `execute` operation Resource
