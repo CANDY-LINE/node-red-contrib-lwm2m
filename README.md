@@ -349,7 +349,7 @@ This node should work on Unix and Linux OS. Windows is not supported.
 
 # Supported Node.js version
 
-Node.js v6+
+Node.js v6+ (v8+ is recommended)
 
 # How to install
 
