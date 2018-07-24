@@ -103,10 +103,10 @@ With the powerful Node-RED JSON editor, you can easily manipulate your own manag
 Supported resource types are as follows:
 
 - `STRING` ... String
-- `OPAQUE` ... Byte Array
+- `OPAQUE` ... Buffer (byte array)
 - `INTEGER` ... 64bit integer
 - `FLOAT` ... double
-- `BOOLEAN` ... boolean
+- `BOOLEAN` ... boolean (`STRING` value `1`, `INTEGER` value `1`, and `OPAQUE` 1st byte `1` are all translated into `true`)
 - `OBJECT_LINK` ... Object Link
 - `MULTIPLE_RESOURCE` ... Resource Array
 - `FUNCTION` ... This is **NOT** a LwM2M Resource Type. Used for defining `execute` operation Resource
@@ -274,6 +274,18 @@ Here's an example for providing the predefined manufacturer name.
 }
 ```
 
+## Debug output
+
+You can enable `Observe`, `Read` and `Write` command debug log (stdout or `/var/log/syslog`) by setting logging level to `debug` at `logging.console.logging` in `settings.js`. For CANDY RED users, modify `CANDY_RED_LOG_LEVEL` in `$(npm -g root)/services/systemd/environment` file.
+
+The example output is shown below.
+
+```
+Jul 24 03:13:38 raspberrypi start_systemd.sh[8524]: 24 Jul 03:13:38 - [debug] [lwm2m client:67a2f34a.15b424] [Observe] # of updated uris:3
+Jul 24 03:13:38 raspberrypi start_systemd.sh[8524]: 24 Jul 03:13:38 - [debug] [lwm2m client:67a2f34a.15b424] <Read> uris=>^/3304/0/5700$, response=>[{"uri":"/3304/0/5700","value":{"type":"FLOAT","acl":"R","value":45.97}}]
+Jul 24 03:13:38 raspberrypi start_systemd.sh[8524]: 24 Jul 03:13:38 - [debug] [lwm2m client:67a2f34a.15b424] <Read> uris=>^/3303/0/5700$, response=>[{"uri":"/3303/0/5700","value":{"type":"FLOAT","acl":"R","value":38.67}}]
+```
+
 ## Embedded Mode Extensions
 
 This node offers extra features for [embedded](https://nodered.org/docs/embedding) mode, which allows the host application to interact with this node via `EventEmitter` object named `internalEventBus` defined in `RED.settings` object.
@@ -337,7 +349,7 @@ This node should work on Unix and Linux OS. Windows is not supported.
 
 # Supported Node.js version
 
-Node.js v6+
+Node.js v6+ (v8+ is recommended)
 
 # How to install
 
@@ -359,7 +371,7 @@ Other users need to install the following software manually:
 Run the following commands:
 ```
 cd ~/.node-red
-npm install node-red-contrib-lwm2m
+npm install --production node-red-contrib-lwm2m
 ```
 
 Then restart Node-RED process.
@@ -369,7 +381,7 @@ Then restart Node-RED process.
 Run the following commands:
 ```
 cd /opt/candy-red/.node-red
-sudo npm install --unsafe-perm node-red-contrib-lwm2m
+sudo npm install --unsafe-perm --production node-red-contrib-lwm2m
 ```
 
 Then restart `candy-red` service.
@@ -461,13 +473,21 @@ limitations under the License.
 
 # How to Release
 
+1. Test all: `npm run test`
 1. Tag Release and Push
 1. Checkout master: `git checkout master`
+1. Install devDependencies: `npm install -dev`
+1. Revert shrinkwrap file changes: `npm run postinstall`
 1. Publish NPM package: `npm publish`
 1. Publish binaries: `git commit --allow-empty -m "[publish binary]"`
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
 
 # Revision History
+* 1.3.0
+  - Update wakatiwai client as well as wakaama client
+  - Fix an issue where the Write operation to a boolean object failed when non-`BOOLEAN` type value was provided (#5)
+  - Fix an issue where Discover command to existing resources returned 5.00 (Internal Server Error) (#6)
+
 * 1.2.2
   - Fix an issue where the shrinkwrap file contained devDependencies by default (a known npm3 bug)
 
