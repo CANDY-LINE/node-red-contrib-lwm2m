@@ -36,7 +36,7 @@
         "type": "inject",
         "z": "635b54db.ae6ca4",
         "name": "",
-        "topic": "^/3/",
+        "topic": "/3/",
         "payload": "",
         "payloadType": "str",
         "repeat": "",
