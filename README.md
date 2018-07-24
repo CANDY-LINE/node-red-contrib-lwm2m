@@ -274,6 +274,18 @@ Here's an example for providing the predefined manufacturer name.
 }
 ```
 
+## Debug output
+
+You can enable `Observe`, `Read` and `Write` command debug log (stdout or `/var/log/syslog`) by setting logging level to `debug` at `logging.console.logging` in `settings.js`. For CANDY RED users, modify `CANDY_RED_LOG_LEVEL` in `$(npm -g root)/services/systemd/environment` file.
+
+The example output is shown below.
+
+```
+Jul 24 03:13:38 raspberrypi start_systemd.sh[8524]: 24 Jul 03:13:38 - [debug] [lwm2m client:67a2f34a.15b424] [Observe] # of updated uris:3
+Jul 24 03:13:38 raspberrypi start_systemd.sh[8524]: 24 Jul 03:13:38 - [debug] [lwm2m client:67a2f34a.15b424] <Read> uris=>^/3304/0/5700$, response=>[{"uri":"/3304/0/5700","value":{"type":"FLOAT","acl":"R","value":45.97}}]
+Jul 24 03:13:38 raspberrypi start_systemd.sh[8524]: 24 Jul 03:13:38 - [debug] [lwm2m client:67a2f34a.15b424] <Read> uris=>^/3303/0/5700$, response=>[{"uri":"/3303/0/5700","value":{"type":"FLOAT","acl":"R","value":38.67}}]
+```
+
 ## Embedded Mode Extensions
 
 This node offers extra features for [embedded](https://nodered.org/docs/embedding) mode, which allows the host application to interact with this node via `EventEmitter` object named `internalEventBus` defined in `RED.settings` object.
