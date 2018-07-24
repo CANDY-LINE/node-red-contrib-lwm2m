@@ -483,6 +483,11 @@ limitations under the License.
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
 
 # Revision History
+* 1.3.0
+  - Update wakatiwai client as well as wakaama client
+  - Fix an issue where the Write operation to a boolean object failed when non-`BOOLEAN` type value was provided (#5)
+  - Fix an issue where Discover command to existing resources returned 5.00 (Internal Server Error) (#6)
+
 * 1.2.2
   - Fix an issue where the shrinkwrap file contained devDependencies by default (a known npm3 bug)
 
