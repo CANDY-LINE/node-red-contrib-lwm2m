@@ -16,15 +16,10 @@ branches:
 
 matrix:
   include:
-    # ARM Linux
+    # ARM Linux (LTS)
     - os: linux
       env:
       - NODE_VERSION="8"
-      - ARCH="arm"
-      - DOCKCROSS="linux-armv6"
-    - os: linux
-      env:
-      - NODE_VERSION="7"
       - ARCH="arm"
       - DOCKCROSS="linux-armv6"
     - os: linux
@@ -43,7 +38,7 @@ matrix:
       - NODE_VERSION="6"
       - ARCH="x64"
       - DOCKCROSS="linux-x64"
-    # x64 macOS
+    # x64 macOS (LTS)
     - os: osx
       env:
       - NODE_VERSION="8"
