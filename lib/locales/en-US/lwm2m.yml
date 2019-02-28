@@ -32,9 +32,9 @@ lwm2m:
     timeout: timeout
   placeholder:
     clientName: (urn format is recommended)
-    clientPort: 56830
+    clientPort: "56830"
     serverHost: ""
-    serverPort: 5683
+    serverPort: "5683"
     lifetimeSec: (in seconds)
     reconnectSec: (in seconds)
     pskIdentity: (ASCII string)
