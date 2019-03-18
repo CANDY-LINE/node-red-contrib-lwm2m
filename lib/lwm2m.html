@@ -247,8 +247,6 @@
         types:['json']
       });
       function disableServerConfigs(disabled) {
-        $('#node-config-input-enableDTLS').prop('disabled', disabled);
-        disablePskItems(disabled);
         $('#node-config-input-lifetimeSec').prop('disabled', disabled);
       }
       $('#node-config-input-requestBootstrap').click(function() {
