@@ -185,7 +185,10 @@ LwM2M client configuration node. The followiing parameters are used for starting
 </p>
 <dl>
 <dt>Endpoint</dt>
-<dd>the client endpoint name.</dd>
+<dd>the client endpoint name. This can be overwritten by a parent module when
+  <code>Allow Internal Event Propagation</code> is checked and
+  Node-RED is deployed on the <a href="https://nodered.org/docs/embedding">embedded mode</a>
+  in order to provide a custom method to resolve the client name.</dd>
 <dt>Server Host</dt>
 <dd>the LwM2M remote server host address.</dd>
 <dt>Server Port</dt>
