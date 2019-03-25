@@ -11,6 +11,7 @@ lwm2m:
     useIPv4: Use IPv4 connection
     lifetimeSec: Lifetime
     reconnectSec: Reconnect
+    disabled: Disable this client
     requestBootstrap: Request Bootstrap
     subscribeObjectEvents: Subscribe LwM2M Object Events
     enableDTLS: Enable DTLS
