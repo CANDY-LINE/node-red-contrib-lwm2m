@@ -457,7 +457,7 @@ http://leshan.eclipse.org/#/clients
 
 ## Source Code License
 
-Copyright (c) 2018 [CANDY LINE INC.](https://www.candy-line.io)
+Copyright (c) 2019 [CANDY LINE INC.](https://www.candy-line.io)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -483,6 +483,13 @@ limitations under the License.
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
 
 # Revision History
+* 1.4.0
+  - Update wakatiwai client as well as wakaama client
+  - Fix an issue where bootstrap server host and port cannot be modified by the node configuration
+  - Allow DTLS settings for bootstrapping as well
+  - Add a way for a parent module to resolve the client name if necessary
+  - Add a new property to turn on/off the LwM2M client
+
 * 1.3.0
   - Update wakatiwai client as well as wakaama client
   - Fix an issue where the Write operation to a boolean object failed when non-`BOOLEAN` type value was provided (#5)

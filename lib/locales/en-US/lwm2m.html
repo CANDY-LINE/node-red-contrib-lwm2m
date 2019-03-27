@@ -1,5 +1,5 @@
 <!--
-  Copyright (c) 2018 CANDY LINE INC.
+  Copyright (c) 2019 CANDY LINE INC.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -185,7 +185,10 @@ LwM2M client configuration node. The followiing parameters are used for starting
 </p>
 <dl>
 <dt>Endpoint</dt>
-<dd>the client endpoint name.</dd>
+<dd>the client endpoint name. This can be overwritten by a parent module when
+  <code>Allow Internal Event Propagation</code> is checked and
+  Node-RED is deployed on the <a href="https://nodered.org/docs/embedding">embedded mode</a>
+  in order to provide a custom method to resolve the client name.</dd>
 <dt>Server Host</dt>
 <dd>the LwM2M remote server host address.</dd>
 <dt>Server Port</dt>
@@ -204,6 +207,8 @@ LwM2M client configuration node. The followiing parameters are used for starting
   After the time elapsed, the client tries to send the server an "I'm alive" message (9 bytes).</dd>
 <dt>Reconnect</dt>
 <dd>the auto-reconnect interval in seconds. 0 or negative value disables auto-reconnect.</dd>
+<dt>Disable this client</dt>
+<dd>whether or not to disable this client.</dd>
 <dt>Request Bootstrap</dt>
 <dd>whether or not to require bootstrapping on starting this node.</dd>
 <dt>Use IPv4 connection</dt>
