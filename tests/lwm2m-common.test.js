@@ -423,6 +423,40 @@ describe('Resource', () => {
     });
   });
 
+  describe('#parse()', () => {
+    it('should parse a multiple Resource', () => {
+      let resources = {};
+      Resource.parse(resources, Buffer.from([
+        0x00, // ResourceId LSB
+        0x00, // ResourceId MSB
+        LWM2M_TYPE.MULTIPLE_RESOURCE, // Resouce Data Type
+        0x10, // Length of resource data LSB
+        0x00, // Length of resource data MSB
+        // Multiple Resource Entry 1
+        0x05, // ResourceId LSB
+        0x00, // ResourceId MSB
+        LWM2M_TYPE.STRING,
+        0x03, // Length of resource data LSB
+        0x00, // Length of resource data MSB
+        0x61,
+        0x62,
+        0x63,
+        // Multiple Resource Entry 2
+        0x00, // ResourceId LSB
+        0x01, // ResourceId MSB
+        LWM2M_TYPE.STRING,
+        0x03, // Length of resource data LSB
+        0x00, // Length of resource data MSB
+        0x64,
+        0x65,
+        0x66,
+      ]));
+      expect(Object.keys(resources).length).to.equal(1);
+      expect(resources[0].value[5].value).to.equal('abc');
+      expect(resources[0].value[256].value).to.equal('def');
+    });
+  });
+
   describe('#update()', () => {
     it('should update a String value', (done) => {
       Resource.from({
