@@ -23,6 +23,7 @@ import * as sinon from 'sinon';
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import {
+  LWM2M_OBJECT_ID,
   LWM2M_TYPE,
   ACL,
 } from './object-common';
@@ -30,6 +31,28 @@ import {
 chai.should();
 chai.use(sinonChai);
 const expect = chai.expect;
+
+describe('LWM2M_OBJECT_ID', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  describe('#toString()', () => {
+    it('should turn an int value into a text label', () => {
+      expect(LWM2M_OBJECT_ID.toString(LWM2M_OBJECT_ID.SECURITY)).to.equal('SECURITY');
+      expect(LWM2M_OBJECT_ID.toString(LWM2M_OBJECT_ID.SERVER)).to.equal('SERVER');
+      expect(LWM2M_OBJECT_ID.toString(LWM2M_OBJECT_ID.ACL)).to.equal('ACL');
+      expect(LWM2M_OBJECT_ID.toString(LWM2M_OBJECT_ID.DEVICE)).to.equal('DEVICE');
+      expect(LWM2M_OBJECT_ID.toString(LWM2M_OBJECT_ID.CONN_MONITOR)).to.equal('CONN_MONITOR');
+      expect(LWM2M_OBJECT_ID.toString(LWM2M_OBJECT_ID.CONN_STATS)).to.equal('CONN_STATS');
+    });
+  });
+  // end of '#toString()'
+});
 
 describe('LWM2M_TYPE', () => {
   let sandbox;
@@ -51,7 +74,7 @@ describe('LWM2M_TYPE', () => {
       expect(LWM2M_TYPE.toType('FUNCTION')).to.equal(LWM2M_TYPE.FUNCTION);
     });
   });
-  // end of '#toValue()'
+  // end of '#toType()'
 });
 
 describe('ACL', () => {
