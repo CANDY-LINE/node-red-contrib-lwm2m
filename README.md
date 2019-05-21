@@ -50,24 +50,15 @@ The input and output nodes show the following connection status.
 - `execute`
 - `observe`
 - `discover`
-- ~~`create`~~ (TBD)
-- ~~`delete`~~ (TBD)
-
-† ACL Object management will be implemented on `create` and `delete` operation support
-
-† Bootstrap isn't fully supported (should work but retrieving the provisioned information from the node isn't yet implemented)
-
-## Predefined Objects
-
-The following objects are implemented in C (Using [Wakaama](https://github.com/eclipse/wakaama)'s "AS IS" example).
-
-- `Security Object`
-- `Server Object`
+- `create`
+- `delete`
 
 ## Bundled Objects
 
 The following objects are implemented in Javascript. They can be overlaid with user defined object JSON (see below).
 
+- `Security Object`
+- `Server Object`
 - `Access Control Object`
 - `Device Object`
 
@@ -393,12 +384,6 @@ sudo systemctl restart candy-red
 # Example Flows
 
 You can import example flows available under `examples` folder on Node-RED UI.
-
-# TODOs
-
-- `create` operation support
-- `delete` operation support
-- Bootstrapping support (partially supported so far)
 
 # Appendix
 

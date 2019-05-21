@@ -125,7 +125,9 @@ describe('LwM2MObjectStore', () => {
             },
           },
         }
-      ], false).build(false).then((repo) => {
+      ], false).build({
+        hideSensitiveInfo: false
+      }).then((repo) => {
         store.repo = repo;
         return store.get('^/3/.*').then((result) => {
           expect(result).to.be.an('array');
@@ -196,7 +198,9 @@ describe('LwM2MObjectStore', () => {
             },
           },
         }
-      ], false).build(false).then((repo) => {
+      ], false).build({
+        hideSensitiveInfo: false
+      }).then((repo) => {
         store.repo = repo;
         return store.get('^/3/0/2$').then((result) => {
           expect(result).to.be.an('array');
@@ -327,6 +331,157 @@ describe('ResourceRepositoryBuilder', () => {
         }
       );
     });
+  });
+
+  describe('#build', () => {
+    it('should apply security and server information to built repo object with None security mode', (done) => {
+      new ResourceRepositoryBuilder().build({
+        serverHost: 'localhost',
+        serverPort: 5683,
+        enableDTLS: false, // security none
+        serverId: 123,
+        lifetimeSec: 500,
+      }).then((repo) => {
+        expect(repo['/0/0/0'].value).to.equal('coap://localhost:5683');
+        expect(repo['/0/0/1'].value).to.equal(false);
+        expect(repo['/0/0/2'].value).to.equal(3); // NONE
+        expect(repo['/0/0/3'].toString()).to.equal('');
+        expect(repo['/0/0/5'].toString()).to.equal('');
+        expect(repo['/0/0/10'].value).to.equal(123);
+
+        expect(repo['/1/0/0'].value).to.equal(123);
+        expect(repo['/1/0/1'].value).to.equal(500);
+
+        expect(repo['/2/0/2'].value[0]).to.be.undefined;
+        expect(repo['/2/0/2'].value[123].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/0/3'].value).to.equal(123);
+
+        expect(repo['/2/1/2'].value[0]).to.be.undefined;
+        expect(repo['/2/1/2'].value[123].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/1/3'].value).to.equal(123);
+
+        expect(repo['/2/2/2'].value[0]).to.be.undefined;
+        expect(repo['/2/2/2'].value[123].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/2/3'].value).to.equal(123);
+
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+
+    it('should apply security and server information to built repo object with PSK security mode', (done) => {
+      new ResourceRepositoryBuilder().build({
+        serverHost: 'localhost',
+        serverPort: 5684,
+        enableDTLS: true, // security none
+        pskIdentity: 'my-psk-identity-is-here',
+        presharedKey: 'my-secret-is-secret',
+        serverId: 987,
+        lifetimeSec: 500,
+      }).then((repo) => {
+        expect(repo['/0/0/0'].value).to.equal('coaps://localhost:5684');
+        expect(repo['/0/0/1'].value).to.equal(false);
+        expect(repo['/0/0/2'].value).to.equal(0); // PSK
+        expect(repo['/0/0/3'].toString()).to.equal('my-psk-identity-is-here');
+        expect(repo['/0/0/5'].toString()).to.equal('my-secret-is-secret');
+        expect(repo['/0/0/10'].value).to.equal(987);
+
+        // the server object won't be tested as it is removed on bootstrapping
+
+        expect(repo['/2/0/2'].value[0]).to.be.undefined;
+        expect(repo['/2/0/2'].value[987].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/0/3'].value).to.equal(987);
+
+        expect(repo['/2/1/2'].value[0]).to.be.undefined;
+        expect(repo['/2/1/2'].value[987].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/1/3'].value).to.equal(987);
+
+        expect(repo['/2/2/2'].value[0]).to.be.undefined;
+        expect(repo['/2/2/2'].value[987].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/2/3'].value).to.equal(987);
+
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+
+    it('should apply security and server information to built repo object with Bootstrap and None security mode', (done) => {
+      new ResourceRepositoryBuilder().build({
+        requestBootstrap: true,
+        serverHost: 'localhost',
+        serverPort: 5783,
+        enableDTLS: false, // security none
+        serverId: 123,
+        lifetimeSec: 500,
+      }).then((repo) => {
+        expect(repo['/0/0/0'].value).to.equal('coap://localhost:5783');
+        expect(repo['/0/0/1'].value).to.equal(true);
+        expect(repo['/0/0/2'].value).to.equal(3); // NONE
+        expect(repo['/0/0/3'].toString()).to.equal('');
+        expect(repo['/0/0/5'].toString()).to.equal('');
+        expect(repo['/0/0/10'].value).to.equal(123);
+
+        expect(repo['/1/0/0'].value).to.equal(123);
+        expect(repo['/1/0/1'].value).to.equal(500);
+
+        expect(repo['/2/0/2'].value[0]).to.be.undefined;
+        expect(repo['/2/0/2'].value[123].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/0/3'].value).to.equal(123);
+
+        expect(repo['/2/1/2'].value[0]).to.be.undefined;
+        expect(repo['/2/1/2'].value[123].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/1/3'].value).to.equal(123);
+
+        expect(repo['/2/2/2'].value[0]).to.be.undefined;
+        expect(repo['/2/2/2'].value[123].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/2/3'].value).to.equal(123);
+
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+
+    it('should apply security and server information to built repo object with Bootstrap and PSK security mode', (done) => {
+      new ResourceRepositoryBuilder().build({
+        requestBootstrap: true,
+        serverHost: 'localhost',
+        serverPort: 5784,
+        enableDTLS: true, // security none
+        pskIdentity: 'my-psk-identity-is-here',
+        presharedKey: 'my-secret-is-secret',
+        serverId: 987,
+        lifetimeSec: 500,
+      }).then((repo) => {
+        expect(repo['/0/0/0'].value).to.equal('coaps://localhost:5784');
+        expect(repo['/0/0/1'].value).to.equal(true);
+        expect(repo['/0/0/2'].value).to.equal(0); // PSK
+        expect(repo['/0/0/3'].toString()).to.equal('my-psk-identity-is-here');
+        expect(repo['/0/0/5'].toString()).to.equal('my-secret-is-secret');
+        expect(repo['/0/0/10'].value).to.equal(987);
+
+        // the server object won't be tested as it is removed on bootstrapping
+
+        expect(repo['/2/0/2'].value[0]).to.be.undefined;
+        expect(repo['/2/0/2'].value[987].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/0/3'].value).to.equal(987);
+
+        expect(repo['/2/1/2'].value[0]).to.be.undefined;
+        expect(repo['/2/1/2'].value[987].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/1/3'].value).to.equal(987);
+
+        expect(repo['/2/2/2'].value[0]).to.be.undefined;
+        expect(repo['/2/2/2'].value[987].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/2/3'].value).to.equal(987);
+
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+
   });
   // end of 'ResourceRepositoryBuilder'
 });
