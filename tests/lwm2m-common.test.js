@@ -376,7 +376,7 @@ describe('ResourceRepositoryBuilder', () => {
         serverPort: 5684,
         enableDTLS: true, // security none
         pskIdentity: 'my-psk-identity-is-here',
-        presharedKey: 'my-secret-is-secret',
+        presharedKey: '00112233ff',
         serverId: 987,
         lifetimeSec: 500,
       }).then((repo) => {
@@ -384,7 +384,7 @@ describe('ResourceRepositoryBuilder', () => {
         expect(repo['/0/0/1'].value).to.equal(false);
         expect(repo['/0/0/2'].value).to.equal(0); // PSK
         expect(repo['/0/0/3'].toString()).to.equal('my-psk-identity-is-here');
-        expect(repo['/0/0/5'].toString()).to.equal('my-secret-is-secret');
+        expect(repo['/0/0/5'].toBuffer().toString('hex')).to.equal('00112233ff');
         expect(repo['/0/0/10'].value).to.equal(987);
 
         // the server object won't be tested as it is removed on bootstrapping
@@ -451,7 +451,7 @@ describe('ResourceRepositoryBuilder', () => {
         serverPort: 5784,
         enableDTLS: true, // security none
         pskIdentity: 'my-psk-identity-is-here',
-        presharedKey: 'my-secret-is-secret',
+        presharedKey: '00112233ff',
         serverId: 987,
         lifetimeSec: 500,
       }).then((repo) => {
@@ -459,7 +459,7 @@ describe('ResourceRepositoryBuilder', () => {
         expect(repo['/0/0/1'].value).to.equal(true);
         expect(repo['/0/0/2'].value).to.equal(0); // PSK
         expect(repo['/0/0/3'].toString()).to.equal('my-psk-identity-is-here');
-        expect(repo['/0/0/5'].toString()).to.equal('my-secret-is-secret');
+        expect(repo['/0/0/5'].toBuffer().toString('hex')).to.equal('00112233ff');
         expect(repo['/0/0/10'].value).to.equal(987);
 
         // the server object won't be tested as it is removed on bootstrapping
