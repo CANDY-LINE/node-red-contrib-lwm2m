@@ -986,7 +986,7 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.STRING);
         expect(r.acl).to.equal(ACL.READABLE);
-        expect(r.sensitive).to.equal(false);
+        expect(r.sensitive).to.be.undefined;
         expect(r.value).to.equal('abcdef');
 
         return Resource.from({
@@ -1357,6 +1357,39 @@ describe('Resource', () => {
       });
     });
     // end of '#from()'
+  });
+  describe('#toJSON()', () => {
+    it('should return an object for generating JSON string', (done) => {
+      Resource.from([{
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.WRITABLE,
+        value: 'abcdefgh'
+      }]).then((r) => {
+        const j = r.toJSON();
+        expect(j.type).to.equal('MULTIPLE_RESOURCE');
+        expect(j.acl).to.equal('R');
+        expect(j.value).to.be.an('object');
+        expect(Object.keys(j.value).length).to.equal(1);
+        expect(r.value[0]).to.be.an('object');
+        expect(j.value[0].type).to.equal('STRING');
+        expect(j.value[0].acl).to.equal('W');
+        expect(j.value[0].value).to.equal('abcdefgh');
+        return Resource.from(j);
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(1);
+        expect(r.value[0]).to.be.an.instanceof(Resource);
+        expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.value[0].acl).to.equal(ACL.WRITABLE);
+        expect(r.value[0].value).to.equal('abcdefgh');
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    // end of #toJSON()
   });
   // end of 'Resource'
 });
