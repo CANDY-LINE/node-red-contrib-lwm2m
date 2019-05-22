@@ -18,6 +18,7 @@ lwm2m:
     pskIdentity: PSK Identitiy
     presharedKey: PSK
     redirectLwm2mClientLog: Output LwM2M client logs
+    dumpLwm2mMessages: Dump LwM2M messages
     hideSensitiveInfo: Hide Sensitive Device Info
     propagateInternalEvents: Allow Internal Event Propagation
     objects: Objects

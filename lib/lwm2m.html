@@ -136,6 +136,11 @@
   </div>
   <div class="form-row">
     <label>&nbsp;</label>
+    <input type="checkbox" id="node-config-input-dumpLwm2mMessages" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-config-input-dumpLwm2mMessages" style="width: 70%;" data-i18n="lwm2m.label.dumpLwm2mMessages"></label>
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
     <input type="checkbox" id="node-config-input-hideSensitiveInfo" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-config-input-hideSensitiveInfo" style="width: 70%;" data-i18n="lwm2m.label.hideSensitiveInfo"></label>
   </div>
@@ -221,6 +226,7 @@
       serverHost: { value: 'localhost', required: true, validate: RED.validators.regex(/^[a-zA-Z0-9:\-\._%]+$/) },
       serverPort: { value: '5683', required: true, validate: RED.validators.number() },
       redirectLwm2mClientLog: { value: false, required: false },
+      dumpLwm2mMessages: { value: false, required: false },
       hideSensitiveInfo: { value: true, required: false },
       propagateInternalEvents: { value: false, required: false },
       objects: { value:'{}', required: false },
@@ -259,8 +265,16 @@
         var disabled = !!$(this).prop('checked');
         disableServerConfigs(disabled);
       });
+      function disableDumpLwm2mMessages(disabled) {
+        $('#node-config-input-dumpLwm2mMessages').prop('disabled', disabled);
+      }
+      $('#node-config-input-redirectLwm2mClientLog').click(function() {
+        var disabled = !$(this).prop('checked');
+        disableDumpLwm2mMessages(disabled);
+      });
       disableServerConfigs(!!this.requestBootstrap);
       disablePskItems(!this.enableDTLS);
+      disableDumpLwm2mMessages(!this.redirectLwm2mClientLog);
     }
   });
 </script>
