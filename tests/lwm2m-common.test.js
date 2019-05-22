@@ -784,6 +784,7 @@ describe('Resource', () => {
           return r.update(newValue);
         }).then(() => {
           expect(r.value).to.deep.equal(Buffer.from('123456abcdef'));
+          expect(r.acl).to.equal(ACL.WRITABLE);
           done();
         });
       }).catch((err) => {
@@ -1426,7 +1427,7 @@ describe('Resource', () => {
         value: Buffer.from([1,2,3])
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.FUNCTION);
-        expect(r.acl).to.equal(ACL.EXECUTABLE);
+        expect(r.acl).to.equal(ACL.WRITABLE | ACL.EXECUTABLE);
         expect(r.value).to.be.undefined;
 
         return Resource.from({
@@ -1436,7 +1437,7 @@ describe('Resource', () => {
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.FUNCTION);
-        expect(r.acl).to.equal(ACL.EXECUTABLE);
+        expect(r.acl).to.equal(ACL.WRITABLE | ACL.EXECUTABLE);
         expect(r.value).to.be.undefined;
 
         return Resource.from({
@@ -1448,7 +1449,7 @@ describe('Resource', () => {
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.FUNCTION);
-        expect(r.acl).to.equal(ACL.EXECUTABLE);
+        expect(r.acl).to.equal(ACL.READABLE | ACL.EXECUTABLE);
         expect(r.value).to.be.undefined;
 
       }).then(() => {
