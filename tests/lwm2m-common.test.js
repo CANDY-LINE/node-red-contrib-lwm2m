@@ -692,6 +692,23 @@ describe('Resource', () => {
       expect(resources[0].value[5].value).to.equal('abc');
       expect(resources[0].value[256].value).to.equal('def');
     });
+
+    it('should parse a multiple Resource', () => {
+      const payload = '0000050100640100050200012c020005010001060005010001070005010055';
+      const resources = {};
+      let resoucePayload = Buffer.from(payload, 'hex');
+      while (resoucePayload.length > 0) {
+        resoucePayload = Resource.parse(resources, resoucePayload);
+      }
+      console.log(JSON.stringify(resources, null, 4));
+      expect(Object.keys(resources).length).to.equal(5);
+      expect(resources[0].toInteger()).to.equal(100);
+      expect(resources[1].toBuffer()).to.deep.equal(Buffer.from([1, 44]));
+      expect(resources[2].toInteger()).to.equal(1);
+      expect(resources[6].toInteger()).to.equal(1);
+      expect(resources[7].toString()).to.equal('U');
+    });
+
   });
 
   describe('#update()', () => {
