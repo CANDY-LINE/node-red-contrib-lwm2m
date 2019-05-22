@@ -106,6 +106,7 @@ describe('LwM2MObjectStore', () => {
             '0': {
               '0': {
                 type: 'STRING',
+                acl: 'RW',
                 value: 'test',
               },
               '1': {
@@ -135,6 +136,7 @@ describe('LwM2MObjectStore', () => {
           expect(result.length).to.equal(4);
           expect(result[0].uri).to.equal('/3/0/0');
           expect(result[0].value.type).to.equal('STRING');
+          expect(result[0].value.acl).to.equal('RW');
           expect(result[0].value.value).to.equal('test');
           expect(result[1].uri).to.equal('/3/0/1');
           expect(result[1].value.type).to.equal('STRING');
@@ -1105,11 +1107,11 @@ describe('Resource', () => {
     it('should create an Interger Resource object from an int value', (done) => {
       Resource.from({
         type: LWM2M_TYPE.INTEGER,
-        acl: ACL.WRITABLE,
+        acl: ACL.WRITABLE | ACL.DELETABLE,
         value: 123456789
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
-        expect(r.acl).to.equal(ACL.WRITABLE);
+        expect(r.acl).to.equal(ACL.WRITABLE | ACL.DELETABLE);
         expect(r.value).to.equal(123456789);
         return Resource.from(123456789);
       }).then((r) => {

@@ -94,6 +94,7 @@ describe('ACL', () => {
       expect(ACL.isAllowed(ACL.CREATABLE, ACL.READABLE)).to.equal(false);
       expect(ACL.isAllowed(ACL.DELETABLE, ACL.READABLE)).to.equal(false);
       expect(ACL.isAllowed(ACL.ALL, ACL.READABLE)).to.equal(true);
+      expect(ACL.isAllowed(ACL.READWRITE | ACL.DELETABLE, ACL.DELETABLE)).to.equal(true);
     });
   });
 
