@@ -29,6 +29,7 @@ import {
 } from './lwm2m-common';
 import {
   COAP_ERROR,
+  LWM2M_OBJECT_ID,
   LWM2M_TYPE,
   ACL,
 } from './object-common';
@@ -217,6 +218,87 @@ describe('LwM2MObjectStore', () => {
         });
       });
     });
+  });
+
+  describe('#backup', () => {
+    it('should backup a specifid object', (done) => {
+      let opts = new EventEmitter();
+      let store = new LwM2MObjectStore(opts);
+      new ResourceRepositoryBuilder().build({
+        requestBootstrap: true,
+        serverHost: 'localhost',
+        serverPort: 5783,
+        enableDTLS: false, // security none
+        serverId: 123,
+        lifetimeSec: 500,
+      }).then((repo) => {
+        store.repo = repo;
+        return store.backup(LWM2M_OBJECT_ID.SECURITY);
+      }).then(() => {
+        const result = store.backupObjects[LWM2M_OBJECT_ID.SECURITY];
+        expect(result.cleaner).to.be.an('object');
+        clearTimeout(result.cleaner);
+        expect(result).to.be.an('object');
+        expect(result.repo).to.be.an('array');
+        expect(result.repo.length).to.equal(13);
+        expect(result.repo.filter(x => x.uri === '/0/0/10')[0].value.value).to.equal(123);
+        return store.write('/0/0/10', 999);
+      }).then(() => {
+        const result = store.backupObjects[LWM2M_OBJECT_ID.SECURITY];
+        // assert the backup isn't affected
+        expect(result.repo.filter(x => x.uri === '/0/0/10')[0].value.value).to.equal(123);
+        done();
+      }).catch((err) => {
+        if (store.backupObjects[LWM2M_OBJECT_ID.SECURITY]) {
+          clearTimeout(store.backupObjects[LWM2M_OBJECT_ID.SECURITY].cleaner);
+        }
+        done(err);
+      });
+    });
+    // #backup
+  });
+
+  describe('#restore', () => {
+    it('should restore a specifid object', (done) => {
+      let opts = new EventEmitter();
+      let store = new LwM2MObjectStore(opts);
+      new ResourceRepositoryBuilder().build({
+        requestBootstrap: true,
+        serverHost: 'localhost',
+        serverPort: 5783,
+        enableDTLS: false, // security none
+        serverId: 123,
+        lifetimeSec: 500,
+      }).then((repo) => {
+        store.repo = repo;
+        return store.backup(LWM2M_OBJECT_ID.SECURITY);
+      }).then(() => {
+        const result = store.backupObjects[LWM2M_OBJECT_ID.SECURITY];
+        expect(result.cleaner).to.be.an('object');
+        clearTimeout(result.cleaner);
+        expect(result.repo.filter(x => x.uri === '/0/0/10')[0].value.value).to.equal(123);
+        return store.write('/0/0/10', 999);
+      }).then(() => {
+        const result = store.backupObjects[LWM2M_OBJECT_ID.SECURITY];
+        // assert the backup isn't affected
+        expect(result.repo.filter(x => x.uri === '/0/0/10')[0].value.value).to.equal(123);
+        return store.get('/0/0/10');
+      }).then((result) => {
+        expect(result[0].value.value).to.equal(999);
+        return store.restore(LWM2M_OBJECT_ID.SECURITY);
+      }).then(() => {
+        return store.get('/0/0/10');
+      }).then((result) => {
+        expect(result[0].value.value).to.equal(123);
+        done();
+      }).catch((err) => {
+        if (store.backupObjects[LWM2M_OBJECT_ID.SECURITY]) {
+          clearTimeout(store.backupObjects[LWM2M_OBJECT_ID.SECURITY].cleaner);
+        }
+        done(err);
+      });
+    });
+    // #restore
   });
   // end of 'LwM2MObjectStore'
 });
