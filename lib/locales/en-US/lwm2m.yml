@@ -12,15 +12,15 @@ lwm2m:
     lifetimeSec: Lifetime
     reconnectSec: Reconnect
     disabled: Disable this client
-    requestBootstrap: Request Bootstrap
-    subscribeObjectEvents: Subscribe LwM2M Object Events
+    requestBootstrap: Request bootstrap
+    subscribeObjectEvents: Subscribe LwM2M object events
     enableDTLS: Enable DTLS
-    pskIdentity: PSK Identitiy
+    pskIdentity: PSK identitiy
     presharedKey: PSK
     redirectLwm2mClientLog: Output LwM2M client logs
     dumpLwm2mMessages: Dump LwM2M messages
-    hideSensitiveInfo: Hide Sensitive Device Info
-    propagateInternalEvents: Allow Internal Event Propagation
+    hideSensitiveInfo: Hide sensitive device info.
+    propagateInternalEvents: Allow internal event propagation
     objects: Objects
   status:
     bootstrapRequired: bootstrap required
