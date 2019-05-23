@@ -126,6 +126,11 @@
   </div>
   <div class="form-row">
     <label>&nbsp;</label>
+    <input type="checkbox" id="node-config-input-saveProvisionedConfig" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-config-input-saveProvisionedConfig" style="width: 70%;" data-i18n="lwm2m.label.saveProvisionedConfig"></label>
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
     <input type="checkbox" id="node-config-input-useIPv4" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-config-input-useIPv4" style="width: 70%;" data-i18n="lwm2m.label.useIPv4"></label>
   </div>
@@ -222,6 +227,7 @@
       lifetimeSec: { value: '300', required: false, validate: RED.validators.number() },
       reconnectSec: { value: '300', required: false, validate: RED.validators.number() },
       requestBootstrap: { value: false, required: false },
+      saveProvisionedConfig: { value: false, required: false },
       useIPv4: { value: true, required: false },
       serverHost: { value: 'localhost', required: true, validate: RED.validators.regex(/^[a-zA-Z0-9:\-\._%]+$/) },
       serverPort: { value: '5683', required: true, validate: RED.validators.number() },
@@ -261,9 +267,13 @@
       function disableServerConfigs(disabled) {
         $('#node-config-input-lifetimeSec').prop('disabled', disabled);
       }
+      function disableSaveProvisionedConfig(disabled) {
+        $('#node-config-input-lifetimeSec').prop('disabled', disabled);
+      }
       $('#node-config-input-requestBootstrap').click(function() {
         var disabled = !!$(this).prop('checked');
         disableServerConfigs(disabled);
+        disableSaveProvisionedConfig(!disabled);
       });
       function disableDumpLwm2mMessages(disabled) {
         $('#node-config-input-dumpLwm2mMessages').prop('disabled', disabled);
@@ -273,6 +283,7 @@
         disableDumpLwm2mMessages(disabled);
       });
       disableServerConfigs(!!this.requestBootstrap);
+      disableSaveProvisionedConfig(!this.requestBootstrap);
       disablePskItems(!this.enableDTLS);
       disableDumpLwm2mMessages(!this.redirectLwm2mClientLog);
     }

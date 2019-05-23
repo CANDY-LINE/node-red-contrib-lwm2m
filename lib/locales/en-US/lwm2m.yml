@@ -13,6 +13,7 @@ lwm2m:
     reconnectSec: Reconnect
     disabled: Disable this client
     requestBootstrap: Request bootstrap
+    saveProvisionedConfig: Save provisioned configuration
     subscribeObjectEvents: Subscribe LwM2M object events
     enableDTLS: Enable DTLS
     pskIdentity: PSK identitiy

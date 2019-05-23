@@ -88,6 +88,35 @@ describe('LwM2MObjectStore', () => {
     });
   });
 
+  describe('#createCredentials', () => {
+    it('should return a query result', (done) => {
+      let opts = new EventEmitter();
+      let store = new LwM2MObjectStore(opts);
+      new ResourceRepositoryBuilder([], true).build({
+        hideSensitiveInfo: false,
+        serverHost: 'localhost',
+        serverPort: 5683,
+      }).then((repo) => {
+        store.repo = repo;
+        return store.createCredentials();
+      }).then((credentials) => {
+        expect(credentials).to.be.an('object');
+        expect(Object.keys(credentials).length).to.equal(2);
+        expect(credentials[0]).to.be.an('object');
+        expect(credentials[0][0]).to.be.an('object');
+        expect(credentials[0][0][0]).to.be.an('object');
+        expect(credentials[0][0][0].type).to.equal('STRING');
+        expect(credentials[0][0][0].acl).to.equal('RW');
+        expect(credentials[0][0][0].value).to.equal('coap://localhost:5683');
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+
+  });
+
   describe('#get', () => {
     it('should return a query result', (done) => {
       let opts = new EventEmitter();

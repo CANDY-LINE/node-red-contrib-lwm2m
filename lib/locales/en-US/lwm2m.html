@@ -211,6 +211,11 @@ LwM2M client configuration node. The followiing parameters are used for starting
 <dd>whether or not to disable this client.</dd>
 <dt>Request bootstrap</dt>
 <dd>whether or not to require bootstrapping on starting this node.</dd>
+<dt>Save provisioned configuration</dt>
+<dd>whether or not to save provisioned LwM2M server configurtaion by LwM2M Bootstrap server.
+  Enabling this option will save the configuration to a file after bootstrapping is successful.
+  This node will use the file if it exists on the flow deployment but remove it when authentication error is detected.
+</dd>
 <dt>Use IPv4 connection</dt>
 <dd>whether or not to use IPv4 for interacting with the LwM2M remote server.</dd>
 <dt>Output LwM2M client logs</dt>
