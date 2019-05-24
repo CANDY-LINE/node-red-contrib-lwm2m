@@ -244,9 +244,9 @@ ACL characters and allowed operations are shown below.
 - `D` ... Delete
 - `C` ... Create
 
-## Preserved global predefined objects
+## Global predefined objects
 
-You can add your own systemwide custom objects by describing them in your `settings.js` or `RED.settings` objects. These objects are **preserved** and **never overwritten** by user's configuration node.
+You can add your own systemwide custom objects by describing them in your `settings.js` or `RED.settings` objects.
 
 Here's an example for providing the predefined manufacturer name.
 
@@ -340,7 +340,7 @@ This node should work on Unix and Linux OS. Windows is not supported.
 
 # Supported Node.js version
 
-Node.js v6+ (v8+ is recommended)
+Node.js v8/10
 
 # How to install
 
@@ -348,9 +348,9 @@ Node.js v6+ (v8+ is recommended)
 
 The prebuilt binaries are available for the following OS and architectures:
 
-1. ARM(armv6+) Linux with Node.js 6/7/8 (For Raspberry Pi, ASUS tinker board and other ARMv6+ CPU computers)
-1. x64 Linux with Node.js 6/8
-1. macOS with Node.js 6
+1. ARM(armv6+) Linux with Node.js 8/10 (For Raspberry Pi, ASUS tinker board and other ARMv6+ CPU computers)
+1. x64 Linux with Node.js 8/10
+1. macOS with Node.js 8/10
 
 Other users need to install the following software manually:
 
