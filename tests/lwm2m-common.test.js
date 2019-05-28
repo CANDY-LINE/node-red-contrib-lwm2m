@@ -636,6 +636,24 @@ describe('Resource', () => {
     sandbox.restore();
   });
 
+  describe('#clone()', () => {
+    it('should clone a copy of the given resource object', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.WRITABLE,
+        value: 'xyz'
+      }).then((r) => {
+        const copy = r.clone();
+        copy.value = '';
+        expect(r.value).to.equal('xyz');
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+  });
+
   describe('#serialize()', () => {
     it('should serialize a Resource', (done) => {
       Resource.from('string').then((r) => {
