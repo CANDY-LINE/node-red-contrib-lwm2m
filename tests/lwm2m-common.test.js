@@ -41,18 +41,23 @@ const HEADER_LEN = 5;
 
 describe('LwM2MObjectStore', () => {
   let sandbox;
+  let opts;
+  let store;
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
+    opts = new EventEmitter();
   });
   afterEach(() => {
     sandbox.restore();
+    if (store) {
+      return store.shutdown();
+    }
   });
 
   describe('#constructor', () => {
     it('should initialize props', () => {
-      let opts = new EventEmitter();
       opts.serverId = 1234;
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       expect(store.repo).to.be.null;
       expect(store.serverId).to.equal(1234);
     });
@@ -60,9 +65,8 @@ describe('LwM2MObjectStore', () => {
 
   describe('#emit', () => {
     it('should emit a remote event to user app', (done) => {
-      let opts = new EventEmitter();
       opts.serverId = 1234;
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       opts.on('object-event', (ev) => {
         expect(ev.serverId).to.equal(opts.serverId);
         expect(ev.uri).to.equal('uri');
@@ -74,9 +78,8 @@ describe('LwM2MObjectStore', () => {
     });
 
     it('should emit a local event to user app', (done) => {
-      let opts = new EventEmitter();
       opts.serverId = 1234;
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       opts.on('object-event', (ev) => {
         expect(ev.serverId).to.be.undefined;
         expect(ev.uri).to.equal('uri');
@@ -90,8 +93,7 @@ describe('LwM2MObjectStore', () => {
 
   describe('#createCredentials', () => {
     it('should return a query result', (done) => {
-      let opts = new EventEmitter();
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       new ResourceRepositoryBuilder([], true).build({
         hideSensitiveInfo: false,
         serverHost: 'localhost',
@@ -119,8 +121,7 @@ describe('LwM2MObjectStore', () => {
 
   describe('#get', () => {
     it('should return a query result', (done) => {
-      let opts = new EventEmitter();
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       new ResourceRepositoryBuilder([
         {
           '1': {
@@ -194,8 +195,7 @@ describe('LwM2MObjectStore', () => {
       });
     });
     it('should not include similar uri results', (done) => {
-      let opts = new EventEmitter();
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       new ResourceRepositoryBuilder([
         {
           '1': {
@@ -253,8 +253,7 @@ describe('LwM2MObjectStore', () => {
 
   describe('#backup', () => {
     it('should backup a specifid object', (done) => {
-      let opts = new EventEmitter();
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       new ResourceRepositoryBuilder().build({
         requestBootstrap: true,
         serverHost: 'localhost',
@@ -291,8 +290,7 @@ describe('LwM2MObjectStore', () => {
 
   describe('#restore', () => {
     it('should restore a specifid object', (done) => {
-      let opts = new EventEmitter();
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       new ResourceRepositoryBuilder().build({
         requestBootstrap: true,
         serverHost: 'localhost',
@@ -477,6 +475,8 @@ describe('ResourceRepositoryBuilder', () => {
         expect(repo['/2/2/2'].value[123].toInteger()).to.equal(ACL.ALL);
         expect(repo['/2/2/3'].value).to.equal(123);
 
+        return ResourceRepositoryBuilder.destroy(repo);
+      }).then(() => {
         done();
       }).catch((err) => {
         done(err);
@@ -514,6 +514,8 @@ describe('ResourceRepositoryBuilder', () => {
         expect(repo['/2/2/2'].value[987].toInteger()).to.equal(ACL.ALL);
         expect(repo['/2/2/3'].value).to.equal(987);
 
+        return ResourceRepositoryBuilder.destroy(repo);
+      }).then(() => {
         done();
       }).catch((err) => {
         done(err);
@@ -551,6 +553,8 @@ describe('ResourceRepositoryBuilder', () => {
         expect(repo['/2/2/2'].value[123].toInteger()).to.equal(ACL.ALL);
         expect(repo['/2/2/3'].value).to.equal(123);
 
+        return ResourceRepositoryBuilder.destroy(repo);
+      }).then(() => {
         done();
       }).catch((err) => {
         done(err);
@@ -589,6 +593,11 @@ describe('ResourceRepositoryBuilder', () => {
         expect(repo['/2/2/2'].value[987].toInteger()).to.equal(ACL.ALL);
         expect(repo['/2/2/3'].value).to.equal(987);
 
+        expect(repo['/3/0/9'].toValue()).to.be.a('number');
+        expect(repo['/3/0/10'].toValue()).to.be.a('number');
+
+        return ResourceRepositoryBuilder.destroy(repo);
+      }).then(() => {
         done();
       }).catch((err) => {
         done(err);
