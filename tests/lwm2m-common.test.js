@@ -1539,6 +1539,43 @@ describe('Resource', () => {
     });
     // end of '#from()'
   });
+  describe('#destroy()', () => {
+    it('should perform fini() function', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.INTEGER,
+        acl: ACL.READABLE,
+        value: {
+          init() {
+            this.myVal = 1;
+          },
+          get() {
+            return this.myVal;
+          },
+          fini() {
+            this.myVal = -1;
+            return Promise.resolve();
+          }
+        }
+      }).then((r) => {
+        expect(r.initialized).to.equal(true);
+        expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.toValue()).to.equal(1);
+        return r.destroy();
+
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.toValue()).to.equal(-1);
+
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    // end of '#destroy()'
+  });
   describe('#toJSON()', () => {
     it('should return an object for generating JSON string', (done) => {
       Resource.from([{
