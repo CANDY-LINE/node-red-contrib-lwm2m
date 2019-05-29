@@ -1505,6 +1505,38 @@ describe('Resource', () => {
         done(err);
       });
     });
+    it('should retain a function value in Resource object', (done) => {
+      const obj = {
+        state: 'ABC'
+      };
+      Resource.from({
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.READABLE,
+        value: {
+          get() {
+            return obj.state;
+          }
+        }
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.toValue()).to.equal('ABC');
+        return r;
+
+      }).then((r) => {
+        obj.state = 'XYZ';
+        expect(r.type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.toValue()).to.equal('XYZ');
+        expect(r.toString()).to.equal('XYZ');
+        expect(r.toBuffer()).to.deep.equal(Buffer.from('XYZ'));
+
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
     // end of '#from()'
   });
   describe('#toJSON()', () => {
