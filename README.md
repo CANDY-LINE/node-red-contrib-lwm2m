@@ -277,6 +277,24 @@ Jul 24 03:13:38 raspberrypi start_systemd.sh[8524]: 24 Jul 03:13:38 - [debug] [l
 Jul 24 03:13:38 raspberrypi start_systemd.sh[8524]: 24 Jul 03:13:38 - [debug] [lwm2m client:67a2f34a.15b424] <Read> uris=>^/3303/0/5700$, response=>[{"uri":"/3303/0/5700","value":{"type":"FLOAT","acl":"R","value":38.67}}]
 ```
 
+## LwM2M Message Dump
+
+With a new option `Dump LwM2M messages`, message hex dump is now available.
+All messages between client and server are displayed in console (not the debug tab) as shown below when `Dump LwM2M messages` is checked.
+
+```
+Sending 51 bytes to [127.0.0.1]:5684
+17 FE FD 00  01 00 00 00  00 00 10 00  26 00 01 00   ............&...
+00 00 00 00  10 5C 30 F4  0D 78 00 25  1D 5D D5 AD   .....\0..x.%.]..
+E8 64 32 F9  F0 7B A4 61  3A 15 AE C9  9B 2F CA 1C   .d2..{.a:..../..
+D9 F4 3F                                             ..?
+
+37 bytes received from [127.0.0.1]:5684
+17 FE FD 00  01 00 00 00  00 00 10 00  18 00 01 00   ................
+00 00 00 00  10 AC 42 8B  93 D2 E1 4E  40 6B F8 7F   ......B....N@k..
+76 E5 AA 9E  85                                      v....
+```
+
 ## Embedded Mode Extensions
 
 This node offers extra features for [embedded](https://nodered.org/docs/embedding) mode, which allows the host application to interact with this node via `EventEmitter` object named `internalEventBus` defined in `RED.settings` object.
@@ -288,9 +306,9 @@ However, this feature is **disabled** by default (opt-in). In order to enable it
 ```
 const EventEmitter = require('events').EventEmitter;
 const RED = ...;
-let server = ...;
+const server = ...;
 
-let bus = new EventEmitter();
+const bus = new EventEmitter();
 bus.on('object-event', (ev) => {
     // You can receive LwM2M object events here
     if (ev.eventType === 'updated') {
@@ -298,7 +316,7 @@ bus.on('object-event', (ev) => {
     }
 });
 // Create the settings object - see default settings.js file for other options
-let settings = {
+const settings = {
     ...
     lwm2m: {
         internalEventBus: bus, // set your own EventEmitter object
@@ -469,15 +487,26 @@ limitations under the License.
 # How to Release
 
 1. Test all: `npm run test`
+1. Publish NPM package: `npm publish`
 1. Tag Release and Push
 1. Checkout master: `git checkout master`
-1. Install devDependencies: `npm install -dev`
-1. Revert shrinkwrap file changes: `npm run postinstall`
-1. Publish NPM package: `npm publish`
 1. Publish binaries: `git commit --allow-empty -m "[publish binary]"`
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
 
 # Revision History
+
+* 2.0.0
+  - Bump wakatiwai version to 2.0.0
+  - LwM2M Bootstrap is supported (DTLS encryption with PSK or plain UDP)
+  - Security Object, Server Object and ACL Object are now implemented in Javascript
+  - Add a new option `Dump LwM2M messages` to dump LwM2M messages
+  - Add a new option `Save provisioned configuration` to save provisioned information into a file through bootstrap
+  - Object Backup/Restore commands are supported (issued by only Wakatiwai client)
+  - Add the one-time listener support for `object-read`/`object-write`/`object-execute` result events
+  - The resource value defined as a function is now evaluated whenever `Read` operation is performed
+  - Return 404 error when there's no resource/object to `Delete`
+  - Improve embedded mode integration
+
 * 1.4.0
   - Update wakatiwai client as well as wakaama client
   - Fix an issue where bootstrap server host and port cannot be modified by the node configuration
