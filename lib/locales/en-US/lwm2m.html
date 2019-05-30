@@ -38,7 +38,7 @@ It also emits LwM2M object events when you subscribe them.
 <p>
 Provide the URI to the object resource, e.g. <code>/3/0/0</code> in <code>msg.topic</code> property, to query the matching data.
 The query results are emitted via the output port (see below).
-The topic can be a regular expression text like <code>^/3/</code>, which allows you to get all Device Object resources.
+The topic can be a regular expression text like <code>^/3/.*</code>, which allows you to get all Device Object resources.
 </p>
 
 <h3>Outputs 1/2 (Query Results)</h3>
@@ -186,7 +186,7 @@ LwM2M client configuration node. The followiing parameters are used for starting
 <dl>
 <dt>Endpoint</dt>
 <dd>the client endpoint name. This can be overwritten by a parent module when
-  <code>Allow Internal Event Propagation</code> is checked and
+  <code>Allow internal event propagation</code> is checked and
   Node-RED is deployed on the <a href="https://nodered.org/docs/embedding">embedded mode</a>
   in order to provide a custom method to resolve the client name.</dd>
 <dt>Server Host</dt>
@@ -209,15 +209,23 @@ LwM2M client configuration node. The followiing parameters are used for starting
 <dd>the auto-reconnect interval in seconds. 0 or negative value disables auto-reconnect.</dd>
 <dt>Disable this client</dt>
 <dd>whether or not to disable this client.</dd>
-<dt>Request Bootstrap</dt>
+<dt>Request bootstrap</dt>
 <dd>whether or not to require bootstrapping on starting this node.</dd>
+<dt>Save provisioned configuration</dt>
+<dd>whether or not to save provisioned LwM2M server configurtaion by LwM2M Bootstrap server.
+  Enabling this option will save the configuration to a file after bootstrapping is successful.
+  This node will use the file if it exists on the flow deployment but remove it when authentication error is detected.
+</dd>
 <dt>Use IPv4 connection</dt>
 <dd>whether or not to use IPv4 for interacting with the LwM2M remote server.</dd>
 <dt>Output LwM2M client logs</dt>
 <dd>whether or not to redirect the LwM2M client stderr logs to console (not the Debug tab), <b>false(unchecked) by default</b>.</dd>
-<dt>Hide Sensitive Device Info</dt>
+<dt>Dump LwM2M messages</dt>
+<dd>whether or not to show the LwM2M messages between client and server to console (not the Debug tab), <b>false(unchecked) by default</b>.
+This option is enabled only when <code>Output LwM2M client logs</code> is true(checked).</dd>
+<dt>Hide sensitive device info.</dt>
 <dd>whether or not to send everything to the remote LwM2M server including sensitive resources like Serial Number, <b>true(checked) by default</b>.</dd>
-<dt>Allow Internal Event Propagation</dt>
+<dt>Allow internal event propagation</dt>
 <dd>whether or not to propagate LwM2M object events to/from system internal module, <b>false(unchecked) by default</b>.</dd>
 <dt>Objects</dt>
 <dd>user defined/overlay object definition text in JSON format.</dd>

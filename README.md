@@ -50,28 +50,19 @@ The input and output nodes show the following connection status.
 - `execute`
 - `observe`
 - `discover`
-- ~~`create`~~ (TBD)
-- ~~`delete`~~ (TBD)
-
-† ACL Object management will be implemented on `create` and `delete` operation support
-
-† Bootstrap isn't fully supported (should work but retrieving the provisioned information from the node isn't yet implemented)
-
-## Predefined Objects
-
-The following objects are implemented in C (Using [Wakaama](https://github.com/eclipse/wakaama)'s "AS IS" example).
-
-- `Security Object`
-- `Server Object`
+- `create`
+- `delete`
 
 ## Bundled Objects
 
 The following objects are implemented in Javascript. They can be overlaid with user defined object JSON (see below).
 
+- `Security Object`
+- `Server Object`
 - `Access Control Object`
 - `Device Object`
 
-Security Notice) The project depends on [`systeminformation`](https://www.npmjs.com/package/systeminformation) package to collect system information. This package is excellent but it can expose sensitive information like serial number, device model and OS version to a LwM2M server. In order to avoid unexpected exposure to a public sandbox server, `Hide Sensitive Device Info` property is checked by default. So you need to uncheck it prior to sending entire device information from the node.
+Security Notice) The project depends on [`systeminformation`](https://www.npmjs.com/package/systeminformation) package to collect system information. This package is excellent but it can expose sensitive information like serial number, device model and OS version to a LwM2M server. In order to avoid unexpected exposure to a public sandbox server, `Hide sensitive device info.` property is checked by default. So you need to uncheck it prior to sending entire device information from the node.
 
 ## User's Custom Objects and Object Overlay
 
@@ -253,9 +244,9 @@ ACL characters and allowed operations are shown below.
 - `D` ... Delete
 - `C` ... Create
 
-## Preserved global predefined objects
+## Global predefined objects
 
-You can add your own systemwide custom objects by describing them in your `settings.js` or `RED.settings` objects. These objects are **preserved** and **never overwritten** by user's configuration node.
+You can add your own systemwide custom objects by describing them in your `settings.js` or `RED.settings` objects.
 
 Here's an example for providing the predefined manufacturer name.
 
@@ -286,20 +277,38 @@ Jul 24 03:13:38 raspberrypi start_systemd.sh[8524]: 24 Jul 03:13:38 - [debug] [l
 Jul 24 03:13:38 raspberrypi start_systemd.sh[8524]: 24 Jul 03:13:38 - [debug] [lwm2m client:67a2f34a.15b424] <Read> uris=>^/3303/0/5700$, response=>[{"uri":"/3303/0/5700","value":{"type":"FLOAT","acl":"R","value":38.67}}]
 ```
 
+## LwM2M Message Dump
+
+With a new option `Dump LwM2M messages`, message hex dump is now available.
+All messages between client and server are displayed in console (not the debug tab) as shown below when `Dump LwM2M messages` is checked.
+
+```
+Sending 51 bytes to [127.0.0.1]:5684
+17 FE FD 00  01 00 00 00  00 00 10 00  26 00 01 00   ............&...
+00 00 00 00  10 5C 30 F4  0D 78 00 25  1D 5D D5 AD   .....\0..x.%.]..
+E8 64 32 F9  F0 7B A4 61  3A 15 AE C9  9B 2F CA 1C   .d2..{.a:..../..
+D9 F4 3F                                             ..?
+
+37 bytes received from [127.0.0.1]:5684
+17 FE FD 00  01 00 00 00  00 00 10 00  18 00 01 00   ................
+00 00 00 00  10 AC 42 8B  93 D2 E1 4E  40 6B F8 7F   ......B....N@k..
+76 E5 AA 9E  85                                      v....
+```
+
 ## Embedded Mode Extensions
 
 This node offers extra features for [embedded](https://nodered.org/docs/embedding) mode, which allows the host application to interact with this node via `EventEmitter` object named `internalEventBus` defined in `RED.settings` object.
 
-However, this feature is **disabled** by default (opt-in). In order to enable it, ask users to check `Allow Internal Event Propagation` property in `lwm2m` config node.
+However, this feature is **disabled** by default (opt-in). In order to enable it, ask users to check `Allow internal event propagation` property in `lwm2m` config node.
 
 **Pseudo code:**
 
 ```
 const EventEmitter = require('events').EventEmitter;
 const RED = ...;
-let server = ...;
+const server = ...;
 
-let bus = new EventEmitter();
+const bus = new EventEmitter();
 bus.on('object-event', (ev) => {
     // You can receive LwM2M object events here
     if (ev.eventType === 'updated') {
@@ -307,7 +316,7 @@ bus.on('object-event', (ev) => {
     }
 });
 // Create the settings object - see default settings.js file for other options
-let settings = {
+const settings = {
     ...
     lwm2m: {
         internalEventBus: bus, // set your own EventEmitter object
@@ -330,9 +339,19 @@ let settings = {
 RED.init(server, settings);
 ...
 
-bus.emit('object-read', { id: 123, topic: '/3/0/0' }); // 'Read' operation for retrieving Manufacturer
-bus.once('object-result', (msg) => {
-    if (msg.id === 123) {
+bus.emit('object-read', { id: '022eb56240784b43', topic: '/3/0/0' }); // 'Read' operation for retrieving Manufacturer
+// Use a one-time listener (once)
+bus.once('object-read-022eb56240784b43', (msg) => {
+    if (/* boolean */ msg.error) {
+        console.error(msg.payload); // error info
+    } else {
+        let man = msg.payload['/3/0/0'];
+        ...
+    }
+});
+// Same as above with a permanent listener
+bus.on('object-result', (msg) => {
+    if (msg.id === '022eb56240784b43') {
         if (/* boolean */ msg.error) {
             console.error(msg.payload); // error info
         } else {
@@ -349,7 +368,7 @@ This node should work on Unix and Linux OS. Windows is not supported.
 
 # Supported Node.js version
 
-Node.js v6+ (v8+ is recommended)
+Node.js v8/10
 
 # How to install
 
@@ -357,9 +376,9 @@ Node.js v6+ (v8+ is recommended)
 
 The prebuilt binaries are available for the following OS and architectures:
 
-1. ARM(armv6+) Linux with Node.js 6/7/8 (For Raspberry Pi, ASUS tinker board and other ARMv6+ CPU computers)
-1. x64 Linux with Node.js 6/8
-1. macOS with Node.js 6
+1. ARM(armv6+) Linux with Node.js 8/10 (For Raspberry Pi, ASUS tinker board and other ARMv6+ CPU computers)
+1. x64 Linux with Node.js 8/10
+1. macOS with Node.js 8/10
 
 Other users need to install the following software manually:
 
@@ -393,12 +412,6 @@ sudo systemctl restart candy-red
 # Example Flows
 
 You can import example flows available under `examples` folder on Node-RED UI.
-
-# TODOs
-
-- `create` operation support
-- `delete` operation support
-- Bootstrapping support (partially supported so far)
 
 # Appendix
 
@@ -474,15 +487,26 @@ limitations under the License.
 # How to Release
 
 1. Test all: `npm run test`
+1. Publish NPM package: `npm publish`
 1. Tag Release and Push
 1. Checkout master: `git checkout master`
-1. Install devDependencies: `npm install -dev`
-1. Revert shrinkwrap file changes: `npm run postinstall`
-1. Publish NPM package: `npm publish`
 1. Publish binaries: `git commit --allow-empty -m "[publish binary]"`
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
 
 # Revision History
+
+* 2.0.0
+  - Bump wakatiwai version to 2.0.0
+  - LwM2M Bootstrap is supported (DTLS encryption with PSK or plain UDP)
+  - Security Object, Server Object and ACL Object are now implemented in Javascript
+  - Add a new option `Dump LwM2M messages` to dump LwM2M messages
+  - Add a new option `Save provisioned configuration` to save provisioned information into a file through bootstrap
+  - Object Backup/Restore commands are supported (issued by only Wakatiwai client)
+  - Add the one-time listener support for `object-read`/`object-write`/`object-execute` result events
+  - The resource value defined as a function is now evaluated whenever `Read` operation is performed
+  - Return 404 error when there's no resource/object to `Delete`
+  - Improve embedded mode integration
+
 * 1.4.0
   - Update wakatiwai client as well as wakaama client
   - Fix an issue where bootstrap server host and port cannot be modified by the node configuration

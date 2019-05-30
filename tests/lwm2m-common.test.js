@@ -29,6 +29,7 @@ import {
 } from './lwm2m-common';
 import {
   COAP_ERROR,
+  LWM2M_OBJECT_ID,
   LWM2M_TYPE,
   ACL,
 } from './object-common';
@@ -40,18 +41,23 @@ const HEADER_LEN = 5;
 
 describe('LwM2MObjectStore', () => {
   let sandbox;
+  let opts;
+  let store;
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
+    opts = new EventEmitter();
   });
   afterEach(() => {
     sandbox.restore();
+    if (store) {
+      return store.shutdown();
+    }
   });
 
   describe('#constructor', () => {
     it('should initialize props', () => {
-      let opts = new EventEmitter();
       opts.serverId = 1234;
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       expect(store.repo).to.be.null;
       expect(store.serverId).to.equal(1234);
     });
@@ -59,9 +65,8 @@ describe('LwM2MObjectStore', () => {
 
   describe('#emit', () => {
     it('should emit a remote event to user app', (done) => {
-      let opts = new EventEmitter();
       opts.serverId = 1234;
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       opts.on('object-event', (ev) => {
         expect(ev.serverId).to.equal(opts.serverId);
         expect(ev.uri).to.equal('uri');
@@ -73,9 +78,8 @@ describe('LwM2MObjectStore', () => {
     });
 
     it('should emit a local event to user app', (done) => {
-      let opts = new EventEmitter();
       opts.serverId = 1234;
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       opts.on('object-event', (ev) => {
         expect(ev.serverId).to.be.undefined;
         expect(ev.uri).to.equal('uri');
@@ -87,10 +91,37 @@ describe('LwM2MObjectStore', () => {
     });
   });
 
+  describe('#createCredentials', () => {
+    it('should return a query result', (done) => {
+      store = new LwM2MObjectStore(opts);
+      new ResourceRepositoryBuilder([], true).build({
+        hideSensitiveInfo: false,
+        serverHost: 'localhost',
+        serverPort: 5683,
+      }).then((repo) => {
+        store.repo = repo;
+        return store.createCredentials();
+      }).then((credentials) => {
+        expect(credentials).to.be.an('object');
+        expect(Object.keys(credentials).length).to.equal(3);
+        expect(credentials[0]).to.be.an('object');
+        expect(credentials[0][0]).to.be.an('object');
+        expect(credentials[0][0][0]).to.be.an('object');
+        expect(credentials[0][0][0].type).to.equal('STRING');
+        expect(credentials[0][0][0].acl).to.equal('RW');
+        expect(credentials[0][0][0].value).to.equal('coap://localhost:5683');
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+
+  });
+
   describe('#get', () => {
     it('should return a query result', (done) => {
-      let opts = new EventEmitter();
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       new ResourceRepositoryBuilder([
         {
           '1': {
@@ -105,6 +136,7 @@ describe('LwM2MObjectStore', () => {
             '0': {
               '0': {
                 type: 'STRING',
+                acl: 'RW',
                 value: 'test',
               },
               '1': {
@@ -125,13 +157,16 @@ describe('LwM2MObjectStore', () => {
             },
           },
         }
-      ], false).build(false).then((repo) => {
+      ], false).build({
+        hideSensitiveInfo: false
+      }).then((repo) => {
         store.repo = repo;
         return store.get('^/3/.*').then((result) => {
           expect(result).to.be.an('array');
           expect(result.length).to.equal(4);
           expect(result[0].uri).to.equal('/3/0/0');
           expect(result[0].value.type).to.equal('STRING');
+          expect(result[0].value.acl).to.equal('RW');
           expect(result[0].value.value).to.equal('test');
           expect(result[1].uri).to.equal('/3/0/1');
           expect(result[1].value.type).to.equal('STRING');
@@ -160,8 +195,7 @@ describe('LwM2MObjectStore', () => {
       });
     });
     it('should not include similar uri results', (done) => {
-      let opts = new EventEmitter();
-      let store = new LwM2MObjectStore(opts);
+      store = new LwM2MObjectStore(opts);
       new ResourceRepositoryBuilder([
         {
           '1': {
@@ -196,7 +230,9 @@ describe('LwM2MObjectStore', () => {
             },
           },
         }
-      ], false).build(false).then((repo) => {
+      ], false).build({
+        hideSensitiveInfo: false
+      }).then((repo) => {
         store.repo = repo;
         return store.get('^/3/0/2$').then((result) => {
           expect(result).to.be.an('array');
@@ -213,6 +249,85 @@ describe('LwM2MObjectStore', () => {
         });
       });
     });
+  });
+
+  describe('#backup', () => {
+    it('should backup a specifid object', (done) => {
+      store = new LwM2MObjectStore(opts);
+      new ResourceRepositoryBuilder().build({
+        requestBootstrap: true,
+        serverHost: 'localhost',
+        serverPort: 5783,
+        enableDTLS: false, // security none
+        serverId: 123,
+        lifetimeSec: 500,
+      }).then((repo) => {
+        store.repo = repo;
+        return store.backup(LWM2M_OBJECT_ID.SECURITY);
+      }).then(() => {
+        const result = store.backupObjects[LWM2M_OBJECT_ID.SECURITY];
+        expect(result.cleaner).to.be.an('object');
+        clearTimeout(result.cleaner);
+        expect(result).to.be.an('object');
+        expect(result.repo).to.be.an('array');
+        expect(result.repo.length).to.equal(13);
+        expect(result.repo.filter(x => x.uri === '/0/0/10')[0].value.value).to.equal(123);
+        return store.write('/0/0/10', 999);
+      }).then(() => {
+        const result = store.backupObjects[LWM2M_OBJECT_ID.SECURITY];
+        // assert the backup isn't affected
+        expect(result.repo.filter(x => x.uri === '/0/0/10')[0].value.value).to.equal(123);
+        done();
+      }).catch((err) => {
+        if (store.backupObjects[LWM2M_OBJECT_ID.SECURITY]) {
+          clearTimeout(store.backupObjects[LWM2M_OBJECT_ID.SECURITY].cleaner);
+        }
+        done(err);
+      });
+    });
+    // #backup
+  });
+
+  describe('#restore', () => {
+    it('should restore a specifid object', (done) => {
+      store = new LwM2MObjectStore(opts);
+      new ResourceRepositoryBuilder().build({
+        requestBootstrap: true,
+        serverHost: 'localhost',
+        serverPort: 5783,
+        enableDTLS: false, // security none
+        serverId: 123,
+        lifetimeSec: 500,
+      }).then((repo) => {
+        store.repo = repo;
+        return store.backup(LWM2M_OBJECT_ID.SECURITY);
+      }).then(() => {
+        const result = store.backupObjects[LWM2M_OBJECT_ID.SECURITY];
+        expect(result.cleaner).to.be.an('object');
+        clearTimeout(result.cleaner);
+        expect(result.repo.filter(x => x.uri === '/0/0/10')[0].value.value).to.equal(123);
+        return store.write('/0/0/10', 999);
+      }).then(() => {
+        const result = store.backupObjects[LWM2M_OBJECT_ID.SECURITY];
+        // assert the backup isn't affected
+        expect(result.repo.filter(x => x.uri === '/0/0/10')[0].value.value).to.equal(123);
+        return store.get('/0/0/10');
+      }).then((result) => {
+        expect(result[0].value.value).to.equal(999);
+        return store.restore(LWM2M_OBJECT_ID.SECURITY);
+      }).then(() => {
+        return store.get('/0/0/10');
+      }).then((result) => {
+        expect(result[0].value.value).to.equal(123);
+        done();
+      }).catch((err) => {
+        if (store.backupObjects[LWM2M_OBJECT_ID.SECURITY]) {
+          clearTimeout(store.backupObjects[LWM2M_OBJECT_ID.SECURITY].cleaner);
+        }
+        done(err);
+      });
+    });
+    // #restore
   });
   // end of 'LwM2MObjectStore'
 });
@@ -328,6 +443,148 @@ describe('ResourceRepositoryBuilder', () => {
       );
     });
   });
+
+  describe('#build', () => {
+    it('should apply security and server information to built repo object with None security mode', (done) => {
+      let repo;
+      new ResourceRepositoryBuilder().build({
+        serverHost: 'localhost',
+        serverPort: 5683,
+        enableDTLS: false, // security none
+        serverId: 123,
+        lifetimeSec: 500,
+      }).then((r) => {
+        repo = r;
+        expect(repo['/0/0/0'].value).to.equal('coap://localhost:5683');
+        expect(repo['/0/0/1'].value).to.equal(false);
+        expect(repo['/0/0/2'].value).to.equal(3); // NONE
+        expect(repo['/0/0/3'].toString()).to.equal('');
+        expect(repo['/0/0/5'].toString()).to.equal('');
+        expect(repo['/0/0/10'].value).to.equal(123);
+
+        expect(repo['/1/0/0'].value).to.equal(123);
+        expect(repo['/1/0/1'].value).to.equal(500);
+
+        expect(repo['/2/0/2'].value[0]).to.be.undefined;
+        expect(repo['/2/0/2'].value[123].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/0/3'].value).to.equal(123);
+
+      }).then(() => {
+        ResourceRepositoryBuilder.destroy(repo);
+        done();
+      }).catch((err) => {
+        ResourceRepositoryBuilder.destroy(repo);
+        done(err);
+      });
+    });
+
+    it('should apply security and server information to built repo object with PSK security mode', (done) => {
+      let repo;
+      new ResourceRepositoryBuilder().build({
+        serverHost: 'localhost',
+        serverPort: 5684,
+        enableDTLS: true, // security none
+        pskIdentity: 'my-psk-identity-is-here',
+        presharedKey: '00112233ff',
+        serverId: 987,
+        lifetimeSec: 500,
+      }).then((r) => {
+        repo = r;
+        expect(repo['/0/0/0'].value).to.equal('coaps://localhost:5684');
+        expect(repo['/0/0/1'].value).to.equal(false);
+        expect(repo['/0/0/2'].value).to.equal(0); // PSK
+        expect(repo['/0/0/3'].toString()).to.equal('my-psk-identity-is-here');
+        expect(repo['/0/0/5'].toBuffer().toString('hex')).to.equal('00112233ff');
+        expect(repo['/0/0/10'].value).to.equal(987);
+
+        // the server object won't be tested as it is removed on bootstrapping
+
+        expect(repo['/2/0/2'].value[0]).to.be.undefined;
+        expect(repo['/2/0/2'].value[987].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/0/3'].value).to.equal(987);
+
+      }).then(() => {
+        ResourceRepositoryBuilder.destroy(repo);
+        done();
+      }).catch((err) => {
+        ResourceRepositoryBuilder.destroy(repo);
+        done(err);
+      });
+    });
+
+    it('should apply security and server information to built repo object with Bootstrap and None security mode', (done) => {
+      let repo;
+      new ResourceRepositoryBuilder().build({
+        requestBootstrap: true,
+        serverHost: 'localhost',
+        serverPort: 5783,
+        enableDTLS: false, // security none
+        serverId: 123,
+        lifetimeSec: 500,
+      }).then((r) => {
+        repo = r;
+        expect(repo['/0/0/0'].value).to.equal('coap://localhost:5783');
+        expect(repo['/0/0/1'].value).to.equal(true);
+        expect(repo['/0/0/2'].value).to.equal(3); // NONE
+        expect(repo['/0/0/3'].toString()).to.equal('');
+        expect(repo['/0/0/5'].toString()).to.equal('');
+        expect(repo['/0/0/10'].value).to.equal(123);
+
+        expect(repo['/1/0/0'].value).to.equal(123);
+        expect(repo['/1/0/1'].value).to.equal(500);
+
+        expect(repo['/2/0/2'].value[0]).to.be.undefined;
+        expect(repo['/2/0/2'].value[123].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/0/3'].value).to.equal(123);
+
+      }).then(() => {
+        ResourceRepositoryBuilder.destroy(repo);
+        done();
+      }).catch((err) => {
+        ResourceRepositoryBuilder.destroy(repo);
+        done(err);
+      });
+    });
+
+    it('should apply security and server information to built repo object with Bootstrap and PSK security mode', (done) => {
+      let repo;
+      new ResourceRepositoryBuilder().build({
+        requestBootstrap: true,
+        serverHost: 'localhost',
+        serverPort: 5784,
+        enableDTLS: true, // security none
+        pskIdentity: 'my-psk-identity-is-here',
+        presharedKey: '00112233ff',
+        serverId: 987,
+        lifetimeSec: 500,
+      }).then((r) => {
+        repo = r;
+        expect(repo['/0/0/0'].value).to.equal('coaps://localhost:5784');
+        expect(repo['/0/0/1'].value).to.equal(true);
+        expect(repo['/0/0/2'].value).to.equal(0); // PSK
+        expect(repo['/0/0/3'].toString()).to.equal('my-psk-identity-is-here');
+        expect(repo['/0/0/5'].toBuffer().toString('hex')).to.equal('00112233ff');
+        expect(repo['/0/0/10'].value).to.equal(987);
+
+        // the server object won't be tested as it is removed on bootstrapping
+
+        expect(repo['/2/0/2'].value[0]).to.be.undefined;
+        expect(repo['/2/0/2'].value[987].toInteger()).to.equal(ACL.ALL);
+        expect(repo['/2/0/3'].value).to.equal(987);
+
+        expect(repo['/3/0/9'].toValue()).to.be.a('number');
+        expect(repo['/3/0/10'].toValue()).to.be.a('number');
+
+      }).then(() => {
+        ResourceRepositoryBuilder.destroy(repo);
+        done();
+      }).catch((err) => {
+        ResourceRepositoryBuilder.destroy(repo);
+        done(err);
+      });
+    });
+
+  });
   // end of 'ResourceRepositoryBuilder'
 });
 
@@ -366,6 +623,24 @@ describe('Resource', () => {
   });
   afterEach(() => {
     sandbox.restore();
+  });
+
+  describe('#clone()', () => {
+    it('should clone a copy of the given resource object', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.WRITABLE,
+        value: 'xyz'
+      }).then((r) => {
+        const copy = r.clone();
+        copy.value = '';
+        expect(r.value).to.equal('xyz');
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
   });
 
   describe('#serialize()', () => {
@@ -421,6 +696,56 @@ describe('Resource', () => {
         done(err);
       });
     });
+  });
+
+  describe('#parse()', () => {
+    it('should parse a multiple Resource', () => {
+      let resources = {};
+      Resource.parse(resources, Buffer.from([
+        0x00, // ResourceId LSB
+        0x00, // ResourceId MSB
+        LWM2M_TYPE.MULTIPLE_RESOURCE, // Resouce Data Type
+        0x10, // Length of resource data LSB
+        0x00, // Length of resource data MSB
+        // Multiple Resource Entry 1
+        0x05, // ResourceId LSB
+        0x00, // ResourceId MSB
+        LWM2M_TYPE.STRING,
+        0x03, // Length of resource data LSB
+        0x00, // Length of resource data MSB
+        0x61,
+        0x62,
+        0x63,
+        // Multiple Resource Entry 2
+        0x00, // ResourceId LSB
+        0x01, // ResourceId MSB
+        LWM2M_TYPE.STRING,
+        0x03, // Length of resource data LSB
+        0x00, // Length of resource data MSB
+        0x64,
+        0x65,
+        0x66,
+      ]));
+      expect(Object.keys(resources).length).to.equal(1);
+      expect(resources[0].value[5].value).to.equal('abc');
+      expect(resources[0].value[256].value).to.equal('def');
+    });
+
+    it('should parse a multiple Resource', () => {
+      const payload = '0000050100640100050200012c020005010001060005010001070005010055';
+      const resources = {};
+      let resoucePayload = Buffer.from(payload, 'hex');
+      while (resoucePayload.length > 0) {
+        resoucePayload = Resource.parse(resources, resoucePayload);
+      }
+      expect(Object.keys(resources).length).to.equal(5);
+      expect(resources[0].toInteger()).to.equal(100);
+      expect(resources[1].toBuffer()).to.deep.equal(Buffer.from([1, 44]));
+      expect(resources[2].toInteger()).to.equal(1);
+      expect(resources[6].toInteger()).to.equal(1);
+      expect(resources[7].toString()).to.equal('U');
+    });
+
   });
 
   describe('#update()', () => {
@@ -494,6 +819,7 @@ describe('Resource', () => {
           return r.update(newValue);
         }).then(() => {
           expect(r.value).to.deep.equal(Buffer.from('123456abcdef'));
+          expect(r.acl).to.equal(ACL.WRITABLE);
           done();
         });
       }).catch((err) => {
@@ -759,6 +1085,26 @@ describe('Resource', () => {
         done(err);
       });
     });
+    it('should update a Multiple Resource with simpler value expression', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.MULTIPLE_RESOURCE,
+        acl: ACL.WRITABLE,
+        value: {}
+      }).then((r) => {
+        return Resource.from([11.11, 22.22]).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(Object.keys(r.value).length).to.equal(2);
+          expect(r.value[0].type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value[0].value).to.equal(11.11);
+          expect(r.value[1].type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value[1].value).to.equal(22.22);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
     it('should return 4.00 Bad Request Error on updating Multiple Resource', (done) => {
       Resource.from({
         type: LWM2M_TYPE.MULTIPLE_RESOURCE,
@@ -797,7 +1143,7 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.STRING);
         expect(r.acl).to.equal(ACL.READABLE);
-        expect(r.sensitive).to.equal(false);
+        expect(r.sensitive).to.be.undefined;
         expect(r.value).to.equal('abcdef');
 
         return Resource.from({
@@ -817,11 +1163,11 @@ describe('Resource', () => {
     it('should create an Interger Resource object from an int value', (done) => {
       Resource.from({
         type: LWM2M_TYPE.INTEGER,
-        acl: ACL.WRITABLE,
+        acl: ACL.WRITABLE | ACL.DELETABLE,
         value: 123456789
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
-        expect(r.acl).to.equal(ACL.WRITABLE);
+        expect(r.acl).to.equal(ACL.WRITABLE | ACL.DELETABLE);
         expect(r.value).to.equal(123456789);
         return Resource.from(123456789);
       }).then((r) => {
@@ -1136,7 +1482,7 @@ describe('Resource', () => {
         value: Buffer.from([1,2,3])
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.FUNCTION);
-        expect(r.acl).to.equal(ACL.EXECUTABLE);
+        expect(r.acl).to.equal(ACL.WRITABLE | ACL.EXECUTABLE);
         expect(r.value).to.be.undefined;
 
         return Resource.from({
@@ -1146,7 +1492,7 @@ describe('Resource', () => {
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.FUNCTION);
-        expect(r.acl).to.equal(ACL.EXECUTABLE);
+        expect(r.acl).to.equal(ACL.WRITABLE | ACL.EXECUTABLE);
         expect(r.value).to.be.undefined;
 
         return Resource.from({
@@ -1158,7 +1504,7 @@ describe('Resource', () => {
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.FUNCTION);
-        expect(r.acl).to.equal(ACL.EXECUTABLE);
+        expect(r.acl).to.equal(ACL.READABLE | ACL.EXECUTABLE);
         expect(r.value).to.be.undefined;
 
       }).then(() => {
@@ -1167,7 +1513,109 @@ describe('Resource', () => {
         done(err);
       });
     });
+    it('should retain a function value in Resource object', (done) => {
+      const obj = {
+        state: 'ABC'
+      };
+      Resource.from({
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.READABLE,
+        value: {
+          get() {
+            return obj.state;
+          }
+        }
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.toValue()).to.equal('ABC');
+        return r;
+
+      }).then((r) => {
+        obj.state = 'XYZ';
+        expect(r.type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.toValue()).to.equal('XYZ');
+        expect(r.toString()).to.equal('XYZ');
+        expect(r.toBuffer()).to.deep.equal(Buffer.from('XYZ'));
+
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
     // end of '#from()'
+  });
+  describe('#destroy()', () => {
+    it('should perform fini() function', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.INTEGER,
+        acl: ACL.READABLE,
+        value: {
+          init() {
+            this.myVal = 1;
+          },
+          get() {
+            return this.myVal;
+          },
+          fini() {
+            this.myVal = -1;
+            return Promise.resolve();
+          }
+        }
+      }).then((r) => {
+        expect(r.initialized).to.equal(true);
+        expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.toValue()).to.equal(1);
+        return r.destroy();
+
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.toValue()).to.equal(-1);
+
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    // end of '#destroy()'
+  });
+  describe('#toJSON()', () => {
+    it('should return an object for generating JSON string', (done) => {
+      Resource.from([{
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.WRITABLE,
+        value: 'abcdefgh'
+      }]).then((r) => {
+        const j = r.toJSON();
+        expect(j.type).to.equal('MULTIPLE_RESOURCE');
+        expect(j.acl).to.equal('R');
+        expect(j.value).to.be.an('object');
+        expect(Object.keys(j.value).length).to.equal(1);
+        expect(r.value[0]).to.be.an('object');
+        expect(j.value[0].type).to.equal('STRING');
+        expect(j.value[0].acl).to.equal('W');
+        expect(j.value[0].value).to.equal('abcdefgh');
+        return Resource.from(j);
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
+        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.value).to.be.an('object');
+        expect(Object.keys(r.value).length).to.equal(1);
+        expect(r.value[0]).to.be.an.instanceof(Resource);
+        expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.value[0].acl).to.equal(ACL.WRITABLE);
+        expect(r.value[0].value).to.equal('abcdefgh');
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    // end of #toJSON()
   });
   // end of 'Resource'
 });
