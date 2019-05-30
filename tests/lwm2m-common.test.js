@@ -738,7 +738,6 @@ describe('Resource', () => {
       while (resoucePayload.length > 0) {
         resoucePayload = Resource.parse(resources, resoucePayload);
       }
-      console.log(JSON.stringify(resources, null, 4));
       expect(Object.keys(resources).length).to.equal(5);
       expect(resources[0].toInteger()).to.equal(100);
       expect(resources[1].toBuffer()).to.deep.equal(Buffer.from([1, 44]));
@@ -1080,6 +1079,26 @@ describe('Resource', () => {
         }).then(() => {
           expect(r.value[0].type).to.equal(LWM2M_TYPE.FLOAT);
           expect(r.value[0].value).to.equal(99.99);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should update a Multiple Resource with simpler value expression', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.MULTIPLE_RESOURCE,
+        acl: ACL.WRITABLE,
+        value: {}
+      }).then((r) => {
+        return Resource.from([11.11, 22.22]).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(Object.keys(r.value).length).to.equal(2);
+          expect(r.value[0].type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value[0].value).to.equal(11.11);
+          expect(r.value[1].type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value[1].value).to.equal(22.22);
           done();
         });
       }).catch((err) => {
