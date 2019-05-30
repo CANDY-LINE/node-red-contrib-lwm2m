@@ -321,9 +321,19 @@ let settings = {
 RED.init(server, settings);
 ...
 
-bus.emit('object-read', { id: 123, topic: '/3/0/0' }); // 'Read' operation for retrieving Manufacturer
-bus.once('object-result', (msg) => {
-    if (msg.id === 123) {
+bus.emit('object-read', { id: '022eb56240784b43', topic: '/3/0/0' }); // 'Read' operation for retrieving Manufacturer
+// Use a one-time listener (once)
+bus.once('object-read-022eb56240784b43', (msg) => {
+    if (/* boolean */ msg.error) {
+        console.error(msg.payload); // error info
+    } else {
+        let man = msg.payload['/3/0/0'];
+        ...
+    }
+});
+// Same as above with a permanent listener
+bus.on('object-result', (msg) => {
+    if (msg.id === '022eb56240784b43') {
         if (/* boolean */ msg.error) {
             console.error(msg.payload); // error info
         } else {
