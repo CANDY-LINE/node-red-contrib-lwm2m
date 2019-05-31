@@ -349,17 +349,6 @@ bus.once('object-read-022eb56240784b43', (msg) => {
         ...
     }
 });
-// Same as above with a permanent listener
-bus.on('object-result', (msg) => {
-    if (msg.id === '022eb56240784b43') {
-        if (/* boolean */ msg.error) {
-            console.error(msg.payload); // error info
-        } else {
-            let man = msg.payload['/3/0/0'];
-            ...
-        }
-    }
-});
 ```
 
 # Supported OS
