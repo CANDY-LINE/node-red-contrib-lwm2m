@@ -495,6 +495,11 @@ limitations under the License.
 
 # Revision History
 
+* 2.0.1
+  - Bump wakatiwai version to 2.0.1 (memory leak issue fix)
+  - Fix an issue where sourcemaps failed to generate source map files
+  - Add support to start a new wakatiwai process under valgrind (debug use only)
+
 * 2.0.0
   - Bump wakatiwai version to 2.0.0
   - LwM2M Bootstrap is supported (DTLS encryption with PSK or plain UDP)
