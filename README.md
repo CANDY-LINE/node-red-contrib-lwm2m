@@ -495,6 +495,9 @@ limitations under the License.
 
 # Revision History
 
+* 2.0.2
+  - Bump wakatiwai version to 2.0.2 (bugfix)
+
 * 2.0.1
   - Bump wakatiwai version to 2.0.1 (memory leak issue fix)
   - Fix an issue where sourcemaps failed to generate source map files
