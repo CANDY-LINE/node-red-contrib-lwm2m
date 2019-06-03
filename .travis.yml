@@ -39,16 +39,16 @@ matrix:
       - ARCH="x64"
       - DOCKCROSS="linux-x64"
     # x64 macOS (LTS)
-    - os: osx
-      env:
-      - NODE_VERSION="10"
-      - ARCH="x64"
-      - DOCKCROSS=""
-    - os: osx
-      env:
-      - NODE_VERSION="8"
-      - ARCH="x64"
-      - DOCKCROSS=""
+    # - os: osx
+    #   env:
+    #   - NODE_VERSION="10"
+    #   - ARCH="x64"
+    #   - DOCKCROSS=""
+    # - os: osx
+    #   env:
+    #   - NODE_VERSION="8"
+    #   - ARCH="x64"
+    #   - DOCKCROSS=""
 
 before_install:
   - git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n' > ./.commit_message

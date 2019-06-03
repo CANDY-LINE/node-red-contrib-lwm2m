@@ -100,7 +100,7 @@ gulp.task('js', ['assets'], () => {
         unsafe: true
       },
     }), noop()))
-    .pipe(gulpif(sourcemapEnabled, sourcemaps.write(), noop()))
+    .pipe(gulpif(sourcemapEnabled, sourcemaps.write('.'), noop()))
     .pipe(gulp.dest('./dist'));
 });
 
@@ -109,7 +109,7 @@ gulp.task('less', () => {
     .pipe(gulpif(sourcemapEnabled, sourcemaps.init(), noop()))
     .pipe(less())
     .pipe(cleancss({compatibility: 'ie8'}))
-    .pipe(gulpif(sourcemapEnabled, sourcemaps.write(), noop()))
+    .pipe(gulpif(sourcemapEnabled, sourcemaps.write('.'), noop()))
     .pipe(gulp.dest('./dist'));
 });
 
