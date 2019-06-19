@@ -613,6 +613,36 @@ describe('RequestHandler', () => {
     });
     // end of Read
   });
+
+  describe('ReadInstances', () => {
+    describe('#resolveInstanceIdList', () => {
+      it('should create a list of instance IDs', () => {
+        const cmd = RequestHandler.build(client, 'readInstances', Buffer.from([]));
+        const resources = [
+          {
+            uri: '/3303/0/5700',
+            value: {
+              type: 'FLOAT',
+              acl: 'R',
+              value: 0
+            }
+          },
+          {
+            uri: '/3303/1/5700',
+            value: {
+              type: 'FLOAT',
+              acl: 'R',
+              value: 0
+            }
+          }
+        ];
+        expect(cmd.resolveInstanceIdList(resources)).to.deep.equal([
+          0, 1
+        ]);
+      });
+    });
+    // end of Read
+  });
   // end of 'RequestHandler'
 });
 
