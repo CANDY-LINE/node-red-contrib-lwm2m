@@ -697,7 +697,22 @@ describe('Resource', () => {
         return Resource.from({type:LWM2M_TYPE.FLOAT});
       }).then((r) => {
         let buf = r.serialize();
-        expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('0');
+        expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('');
+
+        return Resource.from({type:LWM2M_TYPE.INTEGER});
+      }).then((r) => {
+        let buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('');
+
+        return Resource.from({type:LWM2M_TYPE.BOOLEAN});
+      }).then((r) => {
+        let buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('');
+
+        return Resource.from({type:LWM2M_TYPE.BOOLEAN, value: true});
+      }).then((r) => {
+        let buf = r.serialize();
+        expect(buf.slice(HEADER_LEN, buf.length)[0]).to.equal(1);
 
         return Resource.from({type:LWM2M_TYPE.OPAQUE, value:Buffer.from([1,2,3])});
       }).then((r) => {
@@ -1210,7 +1225,7 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
         expect(r.acl).to.equal(ACL.READABLE);
-        expect(r.value).to.equal(0);
+        expect(r.value).to.equal('');
       }).then(() => {
         done();
       }).catch((err) => {
@@ -1237,7 +1252,7 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
         expect(r.acl).to.equal(ACL.READABLE);
-        expect(r.value).to.equal(0);
+        expect(r.value).to.equal('');
       }).then(() => {
         done();
       }).catch((err) => {
@@ -1264,7 +1279,7 @@ describe('Resource', () => {
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.BOOLEAN);
         expect(r.acl).to.equal(ACL.READABLE);
-        expect(r.value).to.equal(false);
+        expect(r.value).to.equal('');
       }).then(() => {
         done();
       }).catch((err) => {
