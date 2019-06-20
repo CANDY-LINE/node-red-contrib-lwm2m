@@ -182,6 +182,8 @@ or
 1234567890
 ```
 
+ * The `"value"` property value is assumed as an empty packet by default when the property is missing.
+
 ##### `FLOAT`
 
 ```
@@ -197,6 +199,8 @@ or
 987654.321
 ```
 
+* The `"value"` property value is assumed as an empty packet by default when the property is missing.
+
 ##### `BOOLEAN`
 
 ```
@@ -211,6 +215,8 @@ or
 ```
 true
 ```
+
+* The `"value"` property value is assumed as an empty packet by default when the property is missing.
 
 ##### `OBJECT_LINK`
 
@@ -261,6 +267,24 @@ Here's an example for providing the predefined manufacturer name.
                 }
             }
         }
+    }
+}
+```
+
+## Empty string/null resource value handling for numeric and boolean types
+
+You can choose the way to handle an empty string/null resource value by describing them in your `settings.js` or `RED.settings` objects.
+
+- Empty string/null is translated into am empty string (`''`) and transmitted it to LwM2M server as an empty byte array (0-size packet). **This is default.** Set `''` to `emptyValue` property or omit the property.
+- Empty string/null is translated into `0` for `INTEGER` and `FLOAT` types and `false` for `BOOLEAN` type. Set `auto` to `emptyValue` property.
+
+Here's an example for providing the predefined manufacturer name.
+
+`settings.js`
+```
+{
+    lwm2m: {
+        emptyValue: 'auto'
     }
 }
 ```
@@ -483,6 +507,11 @@ limitations under the License.
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
 
 # Revision History
+
+* 2.1.0
+  - Bump wakatiwai version to 2.0.3 (Fix #8)
+  - Revert the default empty string/null resource value behavior for numeric/boolean types (Fix #9)
+  - Introduce a new option to enable users to choose the default empty string/null resource value behavior for numeric/boolean types
 
 * 2.0.2
   - Bump wakatiwai version to 2.0.2 (bugfix)
