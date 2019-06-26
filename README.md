@@ -508,6 +508,10 @@ limitations under the License.
 
 # Revision History
 
+* 2.1.1
+  - Fix an issue where Bootstrap failed (Fix #10)
+    - The root cause is Create command issue where that command with multiple targets wasn't performed correctly
+
 * 2.1.0
   - Bump wakatiwai version to 2.0.3 (Fix #8)
   - Revert the default empty string/null resource value behavior for numeric/boolean types (Fix #9)
