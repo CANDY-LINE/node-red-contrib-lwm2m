@@ -517,6 +517,14 @@ limitations under the License.
 
 # Revision History
 
+* 2.1.2
+  - Fix an issue where Bootstrap failed (Fix #10)
+    - Fix an issue where Wakaama client rejected OPAQUE resource for server URI
+  - Emits an error when PSK configuration is missing at deployment time (can be caught by Catch node)
+  - Delete the provisioned configuration file immediately when `Save provisioned configuration` is disabled
+  - Fix an issue where OPAQUE values for Integer/Float weren't translated into correct values
+  - Fix an issue where the example flow failed to output `lwm2m` configuration node error
+
 * 2.1.1
   - Fix an issue where Bootstrap failed (Fix #10)
     - The root cause is Create command issue where that command with multiple targets wasn't performed correctly
