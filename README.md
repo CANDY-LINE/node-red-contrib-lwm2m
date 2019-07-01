@@ -472,12 +472,21 @@ Enter `help` on the lwm2mserver console for supported commands.
 
 Provide the following host and port for your lwm2m client config node to connect to Public [Leshan](https://github.com/eclipse/leshan) Server.
 
-- Server Host: `leshan.eclipse.org`
+- Server Host: `leshan.eclipseprojects.io`
 - Server Port: `5683` for plain UDP or `5684` for DTLS with checking `Enable DTLS`
 
-You can also review your client status from the following URL.
+You can manage your client info from the followiing URL.
 
-http://leshan.eclipse.org/#/clients
+https://leshan.eclipseprojects.io/#/clients
+
+For Bootstrapping:
+- Server Host: `leshan.eclipseprojects.io`
+- Server Port: `5783` for plain UDP or `5784` for DTLS with checking `Enable DTLS`
+
+You can create your bootstrapping info from the following URL.
+
+https://leshan.eclipseprojects.io/bs/
+
 
 # License
 
