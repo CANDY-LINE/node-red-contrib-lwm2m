@@ -524,6 +524,7 @@ limitations under the License.
   - Delete the provisioned configuration file immediately when `Save provisioned configuration` is disabled
   - Fix an issue where OPAQUE values for Integer/Float weren't translated into correct values
   - Fix an issue where the example flow failed to output `lwm2m` configuration node error
+  - Show validation error when `enable DTLS` is checked and PSK identity/shared key are blank
 
 * 2.1.1
   - Fix an issue where Bootstrap failed (Fix #10)
