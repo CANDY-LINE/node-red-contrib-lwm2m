@@ -832,6 +832,85 @@ describe('Resource', () => {
         done(err);
       });
     });
+    it('should turn a Buffer object into an integer value when an Integer Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.INTEGER,
+        acl: ACL.WRITABLE,
+        value: 1000
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.OPAQUE,
+          value: Buffer.from([1, 44])
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
+          expect(r.value).to.equal(300);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn a Buffer object into a double/float value when an Float Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.FLOAT,
+        acl: ACL.WRITABLE,
+        value: 1
+      }).then((r) => {
+        const doubleBuf = Buffer.alloc(8);
+        doubleBuf.writeDoubleBE(1234.56);
+        return Resource.from({
+          type: LWM2M_TYPE.OPAQUE,
+          value: doubleBuf
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value).to.be.closeTo(1234.56, 0.001);
+        }).then(() => {
+          const longDoubleBuf = Buffer.alloc(10);
+          longDoubleBuf.writeDoubleBE(1234.56, 2);
+          return Resource.from({
+            type: LWM2M_TYPE.OPAQUE,
+            value: longDoubleBuf
+          });
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value).to.equal(0);
+        }).then(() => {
+          const floatBuf = Buffer.alloc(4);
+          floatBuf.writeFloatBE(1234.56);
+          return Resource.from({
+            type: LWM2M_TYPE.OPAQUE,
+            value: floatBuf
+          });
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value).to.be.closeTo(1234.56, 0.001);
+        }).then(() => {
+          const longFloatBuf = Buffer.alloc(6);
+          longFloatBuf.writeFloatBE(1234.56, 2);
+          return Resource.from({
+            type: LWM2M_TYPE.OPAQUE,
+            value: longFloatBuf
+          });
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value).to.equal(0);
+        }).then(() => {
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
     it('should udpate an opaque Resource', (done) => {
       Resource.from({
         type: LWM2M_TYPE.OPAQUE,
