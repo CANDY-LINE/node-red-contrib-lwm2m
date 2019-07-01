@@ -238,8 +238,8 @@
       objects: { value:'{}', required: false },
     },
     credentials: {
-      pskIdentity: { type: 'text', validate: RED.validators.regex(/^[\u0020-\u007e\u00a0-\u00ff]*$/) },
-      presharedKey: { type: 'text', validate: RED.validators.regex(/^[a-fA-F0-9]*$/) },
+      pskIdentity: { type: 'text', validate: function(v) { return this.enableDTLS ? v && /^[\u0020-\u007e\u00a0-\u00ff]*$/.test(v) : true } },
+      presharedKey: { type: 'text', validate: function(v) { return this.enableDTLS ? v && /^[a-fA-F0-9]*$/.test(v) : true } },
     },
     label: function() {
       return this.clientName;

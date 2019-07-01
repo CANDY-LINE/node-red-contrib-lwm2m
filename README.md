@@ -472,12 +472,21 @@ Enter `help` on the lwm2mserver console for supported commands.
 
 Provide the following host and port for your lwm2m client config node to connect to Public [Leshan](https://github.com/eclipse/leshan) Server.
 
-- Server Host: `leshan.eclipse.org`
+- Server Host: `leshan.eclipseprojects.io`
 - Server Port: `5683` for plain UDP or `5684` for DTLS with checking `Enable DTLS`
 
-You can also review your client status from the following URL.
+You can manage your client info from the followiing URL.
 
-http://leshan.eclipse.org/#/clients
+https://leshan.eclipseprojects.io/#/clients
+
+For Bootstrapping:
+- Server Host: `leshan.eclipseprojects.io`
+- Server Port: `5783` for plain UDP or `5784` for DTLS with checking `Enable DTLS`
+
+You can create your bootstrapping info from the following URL.
+
+https://leshan.eclipseprojects.io/bs/
+
 
 # License
 
@@ -504,9 +513,18 @@ limitations under the License.
 1. Tag Release and Push
 1. Checkout master: `git checkout master`
 1. Publish binaries: `git commit --allow-empty -m "[publish binary]"`
-1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
+1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make clean && make configure && make && make package && make publish`
 
 # Revision History
+
+* 2.1.2
+  - Fix an issue where Bootstrap failed (Fix #10)
+    - Fix an issue where Wakaama client rejected OPAQUE resource for server URI
+  - Emits an error when PSK configuration is missing at deployment time (can be caught by Catch node)
+  - Delete the provisioned configuration file immediately when `Save provisioned configuration` is disabled
+  - Fix an issue where OPAQUE values for Integer/Float weren't translated into correct values
+  - Fix an issue where the example flow failed to output `lwm2m` configuration node error
+  - Show validation error when `enable DTLS` is checked and PSK identity/shared key are blank
 
 * 2.1.1
   - Fix an issue where Bootstrap failed (Fix #10)
