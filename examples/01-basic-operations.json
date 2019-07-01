@@ -55,11 +55,8 @@
         "type": "catch",
         "z": "635b54db.ae6ca4",
         "name": "Catch lwm2m client node errors",
-        "scope": [
-            "339b79c.9739306",
-            "14a5dd88.e5e902",
-            "798be09e.25f2b"
-        ],
+        "scope": null,
+        "uncaught": true,
         "x": 530,
         "y": 560,
         "wires": [

@@ -179,12 +179,12 @@ describe('LwM2MObjectStore', () => {
           expect(result[3].value.value).to.deep.equal({
             '90': {
               type: 'STRING',
-              acl: 'R',
+              acl: 'RWD',
               value: 'ABC'
             },
             '99': {
               type: 'STRING',
-              acl: 'R',
+              acl: 'RWD',
               value: 'XYZ'
             },
           });
@@ -832,6 +832,85 @@ describe('Resource', () => {
         done(err);
       });
     });
+    it('should turn a Buffer object into an integer value when an Integer Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.INTEGER,
+        acl: ACL.WRITABLE,
+        value: 1000
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.OPAQUE,
+          value: Buffer.from([1, 44])
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
+          expect(r.value).to.equal(300);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should turn a Buffer object into a double/float value when an Float Resource is updated', (done) => {
+      Resource.from({
+        type: LWM2M_TYPE.FLOAT,
+        acl: ACL.WRITABLE,
+        value: 1
+      }).then((r) => {
+        const doubleBuf = Buffer.alloc(8);
+        doubleBuf.writeDoubleBE(1234.56);
+        return Resource.from({
+          type: LWM2M_TYPE.OPAQUE,
+          value: doubleBuf
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value).to.be.closeTo(1234.56, 0.001);
+        }).then(() => {
+          const longDoubleBuf = Buffer.alloc(10);
+          longDoubleBuf.writeDoubleBE(1234.56, 2);
+          return Resource.from({
+            type: LWM2M_TYPE.OPAQUE,
+            value: longDoubleBuf
+          });
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value).to.equal(0);
+        }).then(() => {
+          const floatBuf = Buffer.alloc(4);
+          floatBuf.writeFloatBE(1234.56);
+          return Resource.from({
+            type: LWM2M_TYPE.OPAQUE,
+            value: floatBuf
+          });
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value).to.be.closeTo(1234.56, 0.001);
+        }).then(() => {
+          const longFloatBuf = Buffer.alloc(6);
+          longFloatBuf.writeFloatBE(1234.56, 2);
+          return Resource.from({
+            type: LWM2M_TYPE.OPAQUE,
+            value: longFloatBuf
+          });
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
+          expect(r.value).to.equal(0);
+        }).then(() => {
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
     it('should udpate an opaque Resource', (done) => {
       Resource.from({
         type: LWM2M_TYPE.OPAQUE,
@@ -1187,7 +1266,7 @@ describe('Resource', () => {
         return Resource.from('abcdef');
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.sensitive).to.be.undefined;
         expect(r.value).to.equal('abcdef');
 
@@ -1196,7 +1275,7 @@ describe('Resource', () => {
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.equal('');
 
       }).then(() => {
@@ -1217,14 +1296,14 @@ describe('Resource', () => {
         return Resource.from(123456789);
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.equal(123456789);
         return Resource.from({
           type: LWM2M_TYPE.INTEGER
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.INTEGER);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.equal('');
       }).then(() => {
         done();
@@ -1244,14 +1323,14 @@ describe('Resource', () => {
         return Resource.from(12345.6789);
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.equal(12345.6789);
         return Resource.from({
           type: LWM2M_TYPE.FLOAT
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.FLOAT);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.equal('');
       }).then(() => {
         done();
@@ -1271,14 +1350,14 @@ describe('Resource', () => {
         return Resource.from(false);
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.BOOLEAN);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.equal(false);
         return Resource.from({
           type: LWM2M_TYPE.BOOLEAN
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.BOOLEAN);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.equal('');
       }).then(() => {
         done();
@@ -1304,7 +1383,7 @@ describe('Resource', () => {
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.OBJECT_LINK);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value.objectId).to.equal(0);
         expect(r.value.objectInstanceId).to.equal(0);
       }).then(() => {
@@ -1325,7 +1404,7 @@ describe('Resource', () => {
         return Resource.from(Buffer.from([3,2,1]));
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.OPAQUE);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.deep.equal(Buffer.from([3,2,1]));
         return Resource.from({
           type: LWM2M_TYPE.OPAQUE,
@@ -1333,14 +1412,14 @@ describe('Resource', () => {
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.OPAQUE);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.deep.equal(Buffer.from('abcdef'));
         return Resource.from({
           type: LWM2M_TYPE.OPAQUE
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.OPAQUE);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.deep.equal(Buffer.from([]));
       }).then(() => {
         done();
@@ -1355,7 +1434,7 @@ describe('Resource', () => {
         value: 'abcdefgh'
       }]).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.be.an('object');
         expect(Object.keys(r.value).length).to.equal(1);
         expect(r.value[0]).to.be.an.instanceof(Resource);
@@ -1366,7 +1445,7 @@ describe('Resource', () => {
         return Resource.from(r);
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.be.an('object');
         expect(Object.keys(r.value).length).to.equal(1);
         expect(r.value[0]).to.be.an.instanceof(Resource);
@@ -1405,26 +1484,26 @@ describe('Resource', () => {
         expect(Object.keys(r.value).length).to.equal(2);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.value[0].acl).to.equal(ACL.READABLE);
+        expect(r.value[0].acl).to.equal(ACL.DEFAULT);
         expect(r.value[0].value).to.equal('123');
         expect(r.value[1]).to.be.an.instanceof(Resource);
         expect(r.value[1].type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.value[1].acl).to.equal(ACL.READABLE);
+        expect(r.value[1].acl).to.equal(ACL.DEFAULT);
         expect(r.value[1].value).to.equal('456');
 
         return Resource.from(['123', '456']);
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.be.an('object');
         expect(Object.keys(r.value).length).to.equal(2);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.value[0].acl).to.equal(ACL.READABLE);
+        expect(r.value[0].acl).to.equal(ACL.DEFAULT);
         expect(r.value[0].value).to.equal('123');
         expect(r.value[1]).to.be.an.instanceof(Resource);
         expect(r.value[1].type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.value[1].acl).to.equal(ACL.READABLE);
+        expect(r.value[1].acl).to.equal(ACL.DEFAULT);
         expect(r.value[1].value).to.equal('456');
 
         return Resource.from({
@@ -1442,11 +1521,11 @@ describe('Resource', () => {
         expect(Object.keys(r.value).length).to.equal(2);
         expect(r.value[1]).to.be.an.instanceof(Resource);
         expect(r.value[1].type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.value[1].acl).to.equal(ACL.READABLE);
+        expect(r.value[1].acl).to.equal(ACL.DEFAULT);
         expect(r.value[1].value).to.equal('123');
         expect(r.value[99]).to.be.an.instanceof(Resource);
         expect(r.value[99].type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.value[99].acl).to.equal(ACL.READABLE);
+        expect(r.value[99].acl).to.equal(ACL.DEFAULT);
         expect(r.value[99].value).to.equal('456');
 
         return Resource.from({
@@ -1463,11 +1542,11 @@ describe('Resource', () => {
         expect(Object.keys(r.value).length).to.equal(2);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.value[0].acl).to.equal(ACL.READABLE);
+        expect(r.value[0].acl).to.equal(ACL.DEFAULT);
         expect(r.value[0].value).to.equal('123');
         expect(r.value[1]).to.be.an.instanceof(Resource);
         expect(r.value[1].type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.value[1].acl).to.equal(ACL.READABLE);
+        expect(r.value[1].acl).to.equal(ACL.DEFAULT);
         expect(r.value[1].value).to.equal('456');
 
         return Resource.from({
@@ -1484,11 +1563,11 @@ describe('Resource', () => {
         expect(Object.keys(r.value).length).to.equal(2);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.value[0].acl).to.equal(ACL.READABLE);
+        expect(r.value[0].acl).to.equal(ACL.DEFAULT);
         expect(r.value[0].value).to.equal('123');
         expect(r.value[1]).to.be.an.instanceof(Resource);
         expect(r.value[1].type).to.equal(LWM2M_TYPE.STRING);
-        expect(r.value[1].acl).to.equal(ACL.READABLE);
+        expect(r.value[1].acl).to.equal(ACL.DEFAULT);
         expect(r.value[1].value).to.equal('456');
 
         return Resource.from({
@@ -1505,12 +1584,12 @@ describe('Resource', () => {
         });
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.be.an('object');
         expect(Object.keys(r.value).length).to.equal(1);
         expect(r.value[0]).to.be.an.instanceof(Resource);
         expect(r.value[0].type).to.equal(LWM2M_TYPE.OBJECT_LINK);
-        expect(r.value[0].acl).to.equal(ACL.READABLE);
+        expect(r.value[0].acl).to.equal(ACL.DEFAULT);
         expect(r.value[0].value.objectId).to.equal(999);
         expect(r.value[0].value.objectInstanceId).to.equal(111);
 
@@ -1638,7 +1717,7 @@ describe('Resource', () => {
       }]).then((r) => {
         const j = r.toJSON();
         expect(j.type).to.equal('MULTIPLE_RESOURCE');
-        expect(j.acl).to.equal('R');
+        expect(j.acl).to.equal('RWD');
         expect(j.value).to.be.an('object');
         expect(Object.keys(j.value).length).to.equal(1);
         expect(r.value[0]).to.be.an('object');
@@ -1648,7 +1727,7 @@ describe('Resource', () => {
         return Resource.from(j);
       }).then((r) => {
         expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
-        expect(r.acl).to.equal(ACL.READABLE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.be.an('object');
         expect(Object.keys(r.value).length).to.equal(1);
         expect(r.value[0]).to.be.an.instanceof(Resource);
