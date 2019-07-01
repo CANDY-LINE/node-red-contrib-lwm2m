@@ -513,7 +513,7 @@ limitations under the License.
 1. Tag Release and Push
 1. Checkout master: `git checkout master`
 1. Publish binaries: `git commit --allow-empty -m "[publish binary]"`
-1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make package && make publish`
+1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make clean && make configure && make && make package && make publish`
 
 # Revision History
 
