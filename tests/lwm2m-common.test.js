@@ -469,6 +469,9 @@ describe('ResourceRepositoryBuilder', () => {
         expect(repo['/2/0/2'].value[123].toInteger()).to.equal(ACL.ALL);
         expect(repo['/2/0/3'].value).to.equal(123);
 
+        expect(repo.definitions['0']['0'].type).to.equal(LWM2M_TYPE.STRING);
+        expect(repo.definitions['3']['0'].acl).to.equal(ACL.READABLE);
+
       }).then(() => {
         ResourceRepositoryBuilder.destroy(repo);
         done();
