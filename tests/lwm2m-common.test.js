@@ -329,6 +329,87 @@ describe('LwM2MObjectStore', () => {
     });
     // #restore
   });
+
+  describe('#create', () => {
+    it('should create a new instance having defined types and ACLs', (done) => {
+      store = new LwM2MObjectStore(opts);
+      new ResourceRepositoryBuilder().build({
+        requestBootstrap: true,
+        serverHost: 'localhost',
+        serverPort: 5783,
+        enableDTLS: false, // security none
+        serverId: 123,
+        lifetimeSec: 500,
+      }).then((repo) => {
+        store.repo = repo;
+        return store.delete('/0/.*').then(() => store.get('/0/.*')).then(() => {
+          throw 'SECURITY object was NOT removed';
+        }).catch(err => {
+          expect(err.status).to.equal(COAP_ERROR.COAP_404_NOT_FOUND);
+        });
+      }).then(() => {
+        return store.create('/0/0/0', {
+          type: LWM2M_TYPE.OPAQUE,
+          value: Buffer.from('my-data')
+        }).then(() => store.get('/0/.*'));
+      }).then((result) => {
+        expect(result.length).to.equal(1);
+        expect(result[0].uri).to.equal('/0/0/0');
+        expect(result[0].value.type).to.equal('STRING');
+        expect(result[0].value.acl).to.equal('RW');
+        expect(result[0].value.value).to.equal('my-data');
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        if (store.backupObjects[LWM2M_OBJECT_ID.SECURITY]) {
+          clearTimeout(store.backupObjects[LWM2M_OBJECT_ID.SECURITY].cleaner);
+        }
+        done(err);
+      });
+    });
+    // #create
+  });
+
+  describe('#write', () => {
+    it('should create a new instance when the destination entry is missing', (done) => {
+      store = new LwM2MObjectStore(opts);
+      new ResourceRepositoryBuilder().build({
+        requestBootstrap: true,
+        serverHost: 'localhost',
+        serverPort: 5783,
+        enableDTLS: false, // security none
+        serverId: 123,
+        lifetimeSec: 500,
+      }).then((repo) => {
+        store.repo = repo;
+        return store.delete('/0/.*').then(() => store.get('/0/.*')).then(() => {
+          throw 'SECURITY object was NOT removed';
+        }).catch(err => {
+          expect(err.status).to.equal(COAP_ERROR.COAP_404_NOT_FOUND);
+        });
+      }).then(() => {
+        return store.write('/0/0/0', {
+          type: LWM2M_TYPE.OPAQUE,
+          value: Buffer.from('my-data')
+        }).then(() => store.get('/0/.*'));
+      }).then((result) => {
+        console.error(result);
+        expect(result.length).to.equal(1);
+        expect(result[0].uri).to.equal('/0/0/0');
+        expect(result[0].value.type).to.equal('STRING');
+        expect(result[0].value.acl).to.equal('RW');
+        expect(result[0].value.value).to.equal('my-data');
+      }).then(() => {
+        done();
+      }).catch((err) => {
+        if (store.backupObjects[LWM2M_OBJECT_ID.SECURITY]) {
+          clearTimeout(store.backupObjects[LWM2M_OBJECT_ID.SECURITY].cleaner);
+        }
+        done(err);
+      });
+    });
+    // #write
+  });
   // end of 'LwM2MObjectStore'
 });
 
