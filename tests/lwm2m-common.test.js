@@ -863,9 +863,9 @@ describe('Resource', () => {
     it('should parse a multiple Resource', () => {
       const payload = '0000050100640100050200012c020005010001060005010001070005010055';
       const resources = {};
-      let resoucePayload = Buffer.from(payload, 'hex');
-      while (resoucePayload.length > 0) {
-        resoucePayload = Resource.parse(resources, resoucePayload);
+      let resourcePayload = Buffer.from(payload, 'hex');
+      while (resourcePayload.length > 0) {
+        resourcePayload = Resource.parse(resources, resourcePayload);
       }
       expect(Object.keys(resources).length).to.equal(5);
       expect(resources[0].toInteger()).to.equal(100);
