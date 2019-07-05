@@ -391,14 +391,14 @@ describe('LwM2MObjectStore', () => {
         return store.write('/0/0/0', {
           type: LWM2M_TYPE.OPAQUE,
           value: Buffer.from('my-data')
-        }).then(() => store.get('/0/.*'));
+        }).then(() => store.get('/0/.*', [], true));
       }).then((result) => {
-        console.error(result);
         expect(result.length).to.equal(1);
         expect(result[0].uri).to.equal('/0/0/0');
-        expect(result[0].value.type).to.equal('STRING');
-        expect(result[0].value.acl).to.equal('RW');
+        expect(result[0].value.type).to.equal(LWM2M_TYPE.STRING);
+        expect(result[0].value.acl).to.equal(ACL.READWRITE);
         expect(result[0].value.value).to.equal('my-data');
+        expect(result[0].value.isDeletable()).to.equal(false);
       }).then(() => {
         done();
       }).catch((err) => {
