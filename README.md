@@ -250,6 +250,8 @@ ACL characters and allowed operations are shown below.
 - `D` ... Delete
 - `C` ... Create
 
+Note that LwM2M Bootstrap server will try to remove all predefined objects during bootstrapping process. Set ACL properly if you'd like to preserve your objects.
+
 ## Global predefined objects
 
 You can add your own systemwide custom objects by describing them in your `settings.js` or `RED.settings` objects.
@@ -475,7 +477,7 @@ Provide the following host and port for your lwm2m client config node to connect
 - Server Host: `leshan.eclipseprojects.io`
 - Server Port: `5683` for plain UDP or `5684` for DTLS with checking `Enable DTLS`
 
-You can manage your client info from the followiing URL.
+You can manage your client info from the following URL.
 
 https://leshan.eclipseprojects.io/#/clients
 
@@ -516,6 +518,14 @@ limitations under the License.
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make clean && make configure && make && make package && make publish`
 
 # Revision History
+
+* 2.1.3
+  - Fix Device object ACL
+  - Fix an issue where toString() failed to be invoked when val was null/undefined
+  - Fix an issue where resource create/write commands didn't care of predefined object structure
+  - Update wakatiwai client
+      - Fix an issue where Create command added a new instance on error
+      - Fix an issue where Delete command deleted an instance on error
 
 * 2.1.2
   - Fix an issue where Bootstrap failed (Fix #10)
