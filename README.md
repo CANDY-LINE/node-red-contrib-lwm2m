@@ -250,6 +250,8 @@ ACL characters and allowed operations are shown below.
 - `D` ... Delete
 - `C` ... Create
 
+Note that LwM2M Bootstrap server will try to remove all predefined objects during bootstrapping process. Set ACL properly if you'd like to preserve your objects.
+
 ## Global predefined objects
 
 You can add your own systemwide custom objects by describing them in your `settings.js` or `RED.settings` objects.
