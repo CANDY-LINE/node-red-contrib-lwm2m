@@ -475,7 +475,7 @@ Provide the following host and port for your lwm2m client config node to connect
 - Server Host: `leshan.eclipseprojects.io`
 - Server Port: `5683` for plain UDP or `5684` for DTLS with checking `Enable DTLS`
 
-You can manage your client info from the followiing URL.
+You can manage your client info from the following URL.
 
 https://leshan.eclipseprojects.io/#/clients
 
