@@ -519,6 +519,14 @@ limitations under the License.
 
 # Revision History
 
+* 2.1.3
+  - Fix Device object ACL
+  - Fix an issue where toString() failed to be invoked when val was null/undefined
+  - Fix an issue where resource create/write commands didn't care of predefined object structure
+  - Update wakatiwai client
+      - Fix an issue where Create command added a new instance on error
+      - Fix an issue where Delete command deleted an instance on error
+
 * 2.1.2
   - Fix an issue where Bootstrap failed (Fix #10)
     - Fix an issue where Wakaama client rejected OPAQUE resource for server URI
