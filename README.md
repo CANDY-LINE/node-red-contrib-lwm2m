@@ -321,6 +321,11 @@ D9 F4 3F                                             ..?
 76 E5 AA 9E  85                                      v....
 ```
 
+## Registration lifetime behavior
+
+The lwm2m server is able to modify this client's lifetime with `Write` command to `Lifetime` resource in `Server Object`.
+When the client detects the lifetime change, the interval between the registration update requests is updated as well at the coming registration update request. The client appends the lifetime query (`lt=<new lifetime>`) in the registration update request in order to notify the latest lifetime to the server.
+
 ## Embedded Mode Extensions
 
 This node offers extra features for [embedded](https://nodered.org/docs/embedding) mode, which allows the host application to interact with this node via `EventEmitter` object named `internalEventBus` defined in `RED.settings` object.
@@ -518,6 +523,11 @@ limitations under the License.
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make clean && make configure && make && make package && make publish`
 
 # Revision History
+
+* 2.2.0
+  - Fix an issue where wakatiwai client got halted because of the memory error (Fix #13)
+  - Add the watchdog feature to monitor the wakatiwai client process
+  - Add support for the lifetime change on registration update
 
 * 2.1.3
   - Fix Device object ACL
