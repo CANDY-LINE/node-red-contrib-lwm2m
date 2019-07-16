@@ -524,6 +524,11 @@ limitations under the License.
 
 # Revision History
 
+* 2.2.0
+  - Fix an issue where wakatiwai client got halted because of the memory error (Fix #13)
+  - Add the watchdog feature to monitor the wakatiwai client process
+  - Add support for the lifetime change on registration update
+
 * 2.1.3
   - Fix Device object ACL
   - Fix an issue where toString() failed to be invoked when val was null/undefined
