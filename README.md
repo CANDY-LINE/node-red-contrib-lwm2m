@@ -230,6 +230,57 @@ true
 }
 ```
 
+#### `MULTIPLE_RESOURCE`
+
+The type is a collection having Resource Instance ID and Resource value pairs.
+
+```
+{
+    "type": "MULTIPLE_RESOURCE",
+    "value": {
+        "100": 999,
+        "101": true,
+        "999": {
+            "type": "FLOAT",
+            "value": 987654.321
+        }
+    }
+}
+```
+
+If the Resource Instance ID starts with "0" and its following IDs are 1,2,3... (increases by 1), you can provide a JSON Array like this.
+
+```
+{
+    "type": "MULTIPLE_RESOURCE",
+    "value": [
+        123,
+        false,
+        {
+            "type": "FLOAT",
+            "value": 1234.567
+        }
+    ]
+}
+```
+
+This is equivalent to:
+
+```
+{
+    "type": "MULTIPLE_RESOURCE",
+    "value": {
+        "0": 123,
+        "1": false,
+        "2": {
+            "type": "FLOAT",
+            "value": 1234.567
+        }
+    }
+}
+```
+
+
 ##### `FUNCTION`
 
 This type is out of OMA LwM2M specification scope. Used for defining an executable resource data. `value` property is always ignored and `acl` is always assumed as `E`(other values are silently ignored).
