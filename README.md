@@ -575,6 +575,9 @@ limitations under the License.
 
 # Revision History
 
+* 2.2.1
+  - Fix an issue where Resource#from failed to translate an object value into MULTIPLE_RESOURCE (Fix #14)
+
 * 2.2.0
   - Fix an issue where wakatiwai client got halted because of the memory error (Fix #13)
   - Add the watchdog feature to monitor the wakatiwai client process
