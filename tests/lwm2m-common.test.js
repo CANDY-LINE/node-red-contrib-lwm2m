@@ -399,6 +399,32 @@ describe('LwM2MObjectStore', () => {
         expect(result[0].value.acl).to.equal(ACL.READWRITE);
         expect(result[0].value.value).to.equal('my-data');
         expect(result[0].value.isDeletable()).to.equal(false);
+        return store.write('/900/0/0', {
+          type: LWM2M_TYPE.MULTIPLE_RESOURCE,
+          acl: ACL.READWRITE,
+          value: ['abcdef']
+        }).then(() => store.get('/900/.*', [], true));
+      }).then((result) => {
+        expect(result.length).to.equal(1);
+        expect(result[0].uri).to.equal('/900/0/0');
+        expect(result[0].value.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
+        expect(result[0].value.acl).to.equal(ACL.READWRITE);
+        expect(result[0].value.value[0].value).to.equal('abcdef');
+        expect(result[0].value.isDeletable()).to.equal(false);
+        return store.write('/901/0/0', {
+          type: LWM2M_TYPE.MULTIPLE_RESOURCE,
+          acl: ACL.READWRITE,
+          value: {
+            '0': 'abcdef'
+          }
+        }).then(() => store.get('/901/.*', [], true));
+      }).then((result) => {
+        expect(result.length).to.equal(1);
+        expect(result[0].uri).to.equal('/901/0/0');
+        expect(result[0].value.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
+        expect(result[0].value.acl).to.equal(ACL.READWRITE);
+        expect(result[0].value.value[0].value).to.equal('abcdef');
+        expect(result[0].value.isDeletable()).to.equal(false);
       }).then(() => {
         done();
       }).catch((err) => {
@@ -1361,6 +1387,24 @@ describe('Resource', () => {
         expect(r.type).to.equal(LWM2M_TYPE.STRING);
         expect(r.acl).to.equal(ACL.DEFAULT);
         expect(r.value).to.equal('');
+
+        return Resource.from({
+          '1': 'abcdef'
+        });
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
+        expect(r.sensitive).to.be.undefined;
+        expect(r.value[1].type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.value[1].value).to.equal('abcdef');
+
+        return Resource.from(['abcdef']);
+      }).then((r) => {
+        expect(r.type).to.equal(LWM2M_TYPE.MULTIPLE_RESOURCE);
+        expect(r.acl).to.equal(ACL.DEFAULT);
+        expect(r.sensitive).to.be.undefined;
+        expect(r.value[0].type).to.equal(LWM2M_TYPE.STRING);
+        expect(r.value[0].value).to.equal('abcdef');
 
       }).then(() => {
         done();
