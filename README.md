@@ -19,7 +19,7 @@ The supported message format is `TLV` rather than ~~`JSON`~~.
 
 **Security Notice:**
 
-Keep in mind that the inter-process communication over stdin/stdio is **NOT** encrypted and does **NOT** have any authentication mechanism. `ps` command allows users to show entire command line to start [`wakatiwaiclient`](https://github.com/CANDY-LINE/wakatiwai) including PSK Identity and PSK information.
+Keep in mind that the inter-process communication over stdin/stdio is **NOT** encrypted and does **NOT** have any authentication mechanism.
 
 # Features
 
