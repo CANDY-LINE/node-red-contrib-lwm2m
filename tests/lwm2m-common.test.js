@@ -266,8 +266,6 @@ describe('LwM2MObjectStore', () => {
         return store.backup(LWM2M_OBJECT_ID.SECURITY);
       }).then(() => {
         const result = store.backupObjects[LWM2M_OBJECT_ID.SECURITY];
-        expect(result.cleaner).to.be.an('object');
-        clearTimeout(result.cleaner);
         expect(result).to.be.an('object');
         expect(result.repo).to.be.an('array');
         expect(result.repo.length).to.equal(13);
@@ -279,9 +277,6 @@ describe('LwM2MObjectStore', () => {
         expect(result.repo.filter(x => x.uri === '/0/0/10')[0].value.value).to.equal(123);
         done();
       }).catch((err) => {
-        if (store.backupObjects[LWM2M_OBJECT_ID.SECURITY]) {
-          clearTimeout(store.backupObjects[LWM2M_OBJECT_ID.SECURITY].cleaner);
-        }
         done(err);
       });
     });
@@ -303,8 +298,6 @@ describe('LwM2MObjectStore', () => {
         return store.backup(LWM2M_OBJECT_ID.SECURITY);
       }).then(() => {
         const result = store.backupObjects[LWM2M_OBJECT_ID.SECURITY];
-        expect(result.cleaner).to.be.an('object');
-        clearTimeout(result.cleaner);
         expect(result.repo.filter(x => x.uri === '/0/0/10')[0].value.value).to.equal(123);
         return store.write('/0/0/10', 999);
       }).then(() => {
@@ -321,9 +314,6 @@ describe('LwM2MObjectStore', () => {
         expect(result[0].value.value).to.equal(123);
         done();
       }).catch((err) => {
-        if (store.backupObjects[LWM2M_OBJECT_ID.SECURITY]) {
-          clearTimeout(store.backupObjects[LWM2M_OBJECT_ID.SECURITY].cleaner);
-        }
         done(err);
       });
     });
@@ -361,9 +351,6 @@ describe('LwM2MObjectStore', () => {
       }).then(() => {
         done();
       }).catch((err) => {
-        if (store.backupObjects[LWM2M_OBJECT_ID.SECURITY]) {
-          clearTimeout(store.backupObjects[LWM2M_OBJECT_ID.SECURITY].cleaner);
-        }
         done(err);
       });
     });
@@ -428,9 +415,6 @@ describe('LwM2MObjectStore', () => {
       }).then(() => {
         done();
       }).catch((err) => {
-        if (store.backupObjects[LWM2M_OBJECT_ID.SECURITY]) {
-          clearTimeout(store.backupObjects[LWM2M_OBJECT_ID.SECURITY].cleaner);
-        }
         done(err);
       });
     });
