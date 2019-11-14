@@ -575,6 +575,16 @@ limitations under the License.
 
 # Revision History
 
+* 2.3.0
+
+  - Add new parameters for `backedUp` and `restored` events
+  - Strip the cleaner property as backup objects should be retained while the current flow is alive
+  - Skip event propagation setup when the node config is disabled
+  - Add clientName variable to duplicate client port error message
+  - Fix an issue where clientPort was assigned to the default port if n.clientPort was 0 rather than undefined/null
+  - Update wakatiwai client
+    - Fix an issue where connecting to the same server always failed after re-bootstrapping
+
 * 2.2.1
   - Fix an issue where Resource#from failed to translate an object value into MULTIPLE_RESOURCE (Fix #14)
 
