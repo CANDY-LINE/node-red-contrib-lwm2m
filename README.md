@@ -575,8 +575,10 @@ limitations under the License.
 
 # Revision History
 
-* 2.3.0
+* 2.4.0
+  - Add a new option to configure the maximum receivable packet size on a lwm2m client(wakatiwai). Use this option to extend the packet size. The lwm2m client always discards the packet sent from a LwM2M server when its size is larger than the default packet size (1024).
 
+* 2.3.0
   - Add new parameters for `backedUp` and `restored` events
   - Strip the cleaner property as backup objects should be retained while the current flow is alive
   - Skip event propagation setup when the node config is disabled

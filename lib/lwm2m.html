@@ -114,6 +114,13 @@
     </label>
     <input type='text' id='node-config-input-reconnectSec' data-i18n='[placeholder]lwm2m.placeholder.reconnectSec'>
   </div>
+  <div class='form-row'>
+    <label for='node-config-input-maxRecvPacketSize'>
+      <i class='fa fa-clock-o'></i>
+      <span data-i18n='lwm2m.label.maxRecvPacketSize'></span>
+    </label>
+    <input type='text' id='node-config-input-maxRecvPacketSize' data-i18n='[placeholder]lwm2m.placeholder.maxRecvPacketSize'>
+  </div>
   <div class="form-row">
     <label>&nbsp;</label>
     <input type="checkbox" id="node-config-input-disabled" style="display: inline-block; width: auto; vertical-align: top;">
@@ -226,6 +233,14 @@
       clientPort: { value: '56830', required: true, validate: RED.validators.number() },
       lifetimeSec: { value: '300', required: false, validate: RED.validators.number() },
       reconnectSec: { value: '300', required: false, validate: RED.validators.number() },
+      maxRecvPacketSize : { value: '1152', required: false, validate: function(v) {
+        try {
+          var val = parseInt(v);
+          return val >= 1024 && val <= 65535;
+        } catch (e) {
+          return false;
+        }
+      } },
       requestBootstrap: { value: false, required: false },
       saveProvisionedConfig: { value: false, required: false },
       useIPv4: { value: true, required: false },
