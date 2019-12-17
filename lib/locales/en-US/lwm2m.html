@@ -207,6 +207,8 @@ LwM2M client configuration node. The followiing parameters are used for starting
   After the time elapsed, the client tries to send the server an "I'm alive" message (9 bytes).</dd>
 <dt>Reconnect</dt>
 <dd>the auto-reconnect interval in seconds. 0 or negative value disables auto-reconnect.</dd>
+<dt>Max Packets</dt>
+<dd>Maximum receivable packet size in bytes. The size must be between 1024 and 65535, 1152 bytes by default.</dd>
 <dt>Disable this client</dt>
 <dd>whether or not to disable this client.</dd>
 <dt>Request bootstrap</dt>
