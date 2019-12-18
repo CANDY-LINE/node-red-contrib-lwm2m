@@ -233,12 +233,12 @@
       clientPort: { value: '56830', required: true, validate: RED.validators.number() },
       lifetimeSec: { value: '300', required: false, validate: RED.validators.number() },
       reconnectSec: { value: '300', required: false, validate: RED.validators.number() },
-      maxRecvPacketSize : { value: '1152', required: false, validate: function(v) {
+      maxRecvPacketSize : { value: '1152', required: false, validate: function(v) {        
         try {
           var val = parseInt(v);
           return val >= 1024 && val <= 65535;
         } catch (e) {
-          return false;
+          return v === '';
         }
       } },
       requestBootstrap: { value: false, required: false },
