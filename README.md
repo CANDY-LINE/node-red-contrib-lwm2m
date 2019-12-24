@@ -441,6 +441,8 @@ This node should work on Unix and Linux OS. Windows is not supported.
 
 Node.js v8/10
 
+**WARNING) Node.js v8 support will be dropped in the coming release**
+
 # How to install
 
 ## Prebuilt Binaries
@@ -574,6 +576,9 @@ limitations under the License.
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make clean && make configure && make && make package && make publish`
 
 # Revision History
+* 2.5.0
+  - Increase the max size of Block1 packet size (from 4KiB to 1MiB)
+  - Improve node configuration dialog behavior
 
 * 2.4.0
   - Add a new option to configure the maximum receivable packet size on a lwm2m client(wakatiwai). Use this option to extend the packet size. The lwm2m client always discards the packet sent from a LwM2M server when its size is larger than the default packet size (1024).
