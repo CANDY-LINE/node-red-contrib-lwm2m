@@ -234,11 +234,14 @@
       lifetimeSec: { value: '300', required: false, validate: RED.validators.number() },
       reconnectSec: { value: '300', required: false, validate: RED.validators.number() },
       maxRecvPacketSize : { value: '1152', required: false, validate: function(v) {        
+        if (v === '' || v === null) {
+          return true;
+        }
         try {
           var val = parseInt(v);
           return val >= 1024 && val <= 65535;
         } catch (e) {
-          return v === '';
+          return false;
         }
       } },
       requestBootstrap: { value: false, required: false },
