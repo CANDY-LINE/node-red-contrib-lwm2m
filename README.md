@@ -342,6 +342,22 @@ Here's an example for providing the predefined manufacturer name.
 }
 ```
 
+## Block1 Transfer (CoAP Block-Wise trasnfer) support
+
+The Block1 Transfer works only for downlink communication, e.g. `Write` operation from a LwM2M server.
+The Block1 Transfer parameters used in the underlying lwm2m client are as follows. 
+
+ - The maximum Block1 Transfer receivable resource size: 1MiB
+ - The maximum Block1 Transfer acceptable chunk size: 16KiB
+
+The both values are larger than Wakaama's default ones but they offer more efficient data transfer on non-narrow network with a linux single board computer.
+
+Relating this function, the entire receivable packet size at once is increased as well.
+
+ - The maximum receivable UDP packet size (including CoAP headers): 16.1KiB
+
+The value is user-configurable but it's usually not necessary to do so unless a LwM2M server sends larger size of CoAP headers than expected.
+
 ## Debug output
 
 You can enable `Observe`, `Read` and `Write` command debug log (stdout or `/var/log/syslog`) by setting logging level to `debug` at `logging.console.logging` in `settings.js`. For CANDY RED users, modify `CANDY_RED_LOG_LEVEL` in `$(npm -g root)/services/systemd/environment` file.
@@ -580,9 +596,10 @@ limitations under the License.
   - Add a notice for Node.js v8 support termination on README
   - Improve node configuration dialog behavior
   - Fix a possible error on translating into Buffer
+  - Increase the minimum value of the maximum receivable packet size to 16.1KiB
   - Update wakatiwai client
-    - Increase the max size of Block1 receivable packet size (from 4KiB to 1MiB)
-    - Increase the Block1-transfer chunk size (from 128 bytes to 16KiB)
+    - Increase the max size of Block1 Transfer receivable resource size (from 4KiB to 1MiB)
+    - Increase the Block1 Transfer acceptable chunk size (from 128 bytes to 16KiB)
     - New message format support for transferring the large data to this node
 
 * 2.4.0
