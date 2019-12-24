@@ -577,11 +577,17 @@ limitations under the License.
 
 # Revision History
 * 2.5.0
-  - Increase the max size of Block1 packet size (from 4KiB to 1MiB)
+  - Add a notice for Node.js v8 support termination on README
   - Improve node configuration dialog behavior
+  - Fix a possible error on translating into Buffer
+  - Update wakatiwai client
+    - Increase the max size of Block1 receivable packet size (from 4KiB to 1MiB)
+    - Increase the Block1-transfer chunk size (from 128 bytes to 16KiB)
+    - New message format support for transferring the large data to this node
 
 * 2.4.0
   - Add a new option to configure the maximum receivable packet size on a lwm2m client(wakatiwai). Use this option to extend the packet size. The lwm2m client always discards the packet sent from a LwM2M server when its size is larger than the default packet size (1024).
+  - Update wakatiwai client (see above for detail)
 
 * 2.3.0
   - Add new parameters for `backedUp` and `restored` events
