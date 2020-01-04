@@ -455,7 +455,7 @@ This node should work on Unix and Linux OS. Windows is not supported.
 
 # Supported Node.js version
 
-Node.js v8/10
+Node.js v10/12
 
 **WARNING) Node.js v8 support will be dropped in the coming release**
 
@@ -465,9 +465,9 @@ Node.js v8/10
 
 The prebuilt binaries are available for the following OS and architectures:
 
-1. ARM(armv6+) Linux with Node.js 8/10 (For Raspberry Pi, ASUS tinker board and other ARMv6+ CPU computers)
-1. x64 Linux with Node.js 8/10
-1. macOS with Node.js 8/10
+1. ARM(armv6+) Linux with Node.js v10/12 (For Raspberry Pi, ASUS tinker board and other ARMv6+ CPU computers)
+1. x64 Linux with Node.js v10/12
+1. macOS with Node.js v10/12
 
 Other users need to install the following software manually:
 
