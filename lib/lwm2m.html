@@ -115,8 +115,15 @@
     <input type='text' id='node-config-input-reconnectSec' data-i18n='[placeholder]lwm2m.placeholder.reconnectSec'>
   </div>
   <div class='form-row'>
-    <label for='node-config-input-maxRecvPacketSize'>
+    <label for='node-config-input-bootstrapIntervalSec'>
       <i class='fa fa-clock-o'></i>
+      <span data-i18n='lwm2m.label.bootstrapIntervalSec'></span>
+    </label>
+    <input type='text' id='node-config-input-bootstrapIntervalSec' data-i18n='[placeholder]lwm2m.placeholder.bootstrapIntervalSec'>
+  </div>
+  <div class='form-row'>
+    <label for='node-config-input-maxRecvPacketSize'>
+      <i class='fa fa-th'></i>
       <span data-i18n='lwm2m.label.maxRecvPacketSize'></span>
     </label>
     <input type='text' id='node-config-input-maxRecvPacketSize' data-i18n='[placeholder]lwm2m.placeholder.maxRecvPacketSize'>
@@ -232,7 +239,8 @@
       enableDTLS: { value: false, required: false },
       clientPort: { value: '56830', required: true, validate: RED.validators.number() },
       lifetimeSec: { value: '300', required: false, validate: RED.validators.number() },
-      reconnectSec: { value: '300', required: false, validate: RED.validators.number() },
+      reconnectSec: { value: '60', required: false, validate: RED.validators.number() },
+      bootstrapIntervalSec: { value: '3600', required: false, validate: RED.validators.number() },
       maxRecvPacketSize : { value: '16486', required: false, validate: function(v) {        
         if (v === '' || v === null) {
           return true;
