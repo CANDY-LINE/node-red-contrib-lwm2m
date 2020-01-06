@@ -457,8 +457,6 @@ This node should work on Unix and Linux OS. Windows is not supported.
 
 Node.js v10/12
 
-**WARNING) Node.js v8 support will be dropped in the coming release**
-
 # How to install
 
 ## Prebuilt Binaries
@@ -592,6 +590,12 @@ limitations under the License.
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make clean && make configure && make && make package && make publish`
 
 # Revision History
+
+* 2.6.0
+  - Add support for Node.js v12
+  - Drop support for Node.js v8
+  - Add a new parameter to provide bootstrap interval in seconds
+
 * 2.5.0
   - Add a notice for Node.js v8 support termination on README
   - Improve node configuration dialog behavior
