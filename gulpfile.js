@@ -65,15 +65,15 @@ gulp.task('i18n', () => {
     .pipe(gulp.dest('./dist/locales'));
 });
 
-gulp.task('assets', ['i18n'], () => {
+gulp.task('assets', gulp.series('i18n', () => {
   return gulp.src([
       './lib/**/*.{less,ico,png,json,yaml,yml}',
       '!./lib/locales/**/*.{yaml,yml}'
     ])
     .pipe(gulp.dest('./dist'));
-});
+}));
 
-gulp.task('js', ['assets'], () => {
+gulp.task('js', gulp.series('assets', () => {
   return gulp.src('./lib/**/*.js')
     .pipe(gulpif(sourcemapEnabled, sourcemaps.init(), noop()))
     .pipe(babel({
@@ -102,7 +102,7 @@ gulp.task('js', ['assets'], () => {
     }), noop()))
     .pipe(gulpif(sourcemapEnabled, sourcemaps.write('.'), noop()))
     .pipe(gulp.dest('./dist'));
-});
+}));
 
 gulp.task('less', () => {
   return gulp.src('./lib/**/*.less')
@@ -127,14 +127,14 @@ gulp.task('html', () => {
     .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('build', ['lint', 'js', 'less', 'html', 'assets']);
+gulp.task('build', gulp.series('lint', 'js', 'less', 'html', 'assets'));
 
 gulp.task('testAssets', () => {
   return gulp.src('./tests/**/*.{css,less,ico,png,html,json,yaml,yml}')
   .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('testJs', ['cleanTestJs', 'build'], () => {
+gulp.task('testJs', gulp.series('cleanTestJs', 'build', () => {
   return gulp.src('./tests/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(babel({
@@ -143,9 +143,9 @@ gulp.task('testJs', ['cleanTestJs', 'build'], () => {
     }))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist'));
-});
+}));
 
-gulp.task('test', ['testJs', 'testAssets'], () => {
+gulp.task('test', gulp.series('testJs', 'testAssets', done => {
   return gulp.src([
     './dist/**/*.test.js',
   ], {read: false})
@@ -153,8 +153,8 @@ gulp.task('test', ['testJs', 'testAssets'], () => {
     require: ['source-map-support/register'],
     reporter: 'spec'
   }))
-  .once('error', () => process.exit(1))
-  .once('end', () => process.exit())
-});
+  .once('error', () => { done();process.exit(1); })
+  .once('end', () => { done();process.exit(); })
+}));
 
-gulp.task('default', ['build']);
+gulp.task('default',gulp.series('build'));

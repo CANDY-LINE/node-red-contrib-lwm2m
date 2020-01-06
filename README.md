@@ -455,9 +455,7 @@ This node should work on Unix and Linux OS. Windows is not supported.
 
 # Supported Node.js version
 
-Node.js v8/10
-
-**WARNING) Node.js v8 support will be dropped in the coming release**
+Node.js v10/12
 
 # How to install
 
@@ -465,9 +463,9 @@ Node.js v8/10
 
 The prebuilt binaries are available for the following OS and architectures:
 
-1. ARM(armv6+) Linux with Node.js 8/10 (For Raspberry Pi, ASUS tinker board and other ARMv6+ CPU computers)
-1. x64 Linux with Node.js 8/10
-1. macOS with Node.js 8/10
+1. ARM(armv6+) Linux with Node.js v10/12 (For Raspberry Pi, ASUS tinker board and other ARMv6+ CPU computers)
+1. x64 Linux with Node.js v10/12
+1. macOS with Node.js v10/12
 
 Other users need to install the following software manually:
 
@@ -592,6 +590,12 @@ limitations under the License.
 1. Publish local binary (optional): `export NODE_PRE_GYP_GITHUB_TOKEN=... && make clean && make configure && make && make package && make publish`
 
 # Revision History
+
+* 2.6.0
+  - Add support for Node.js v12
+  - Drop support for Node.js v8
+  - Add a new parameter to provide bootstrap interval in seconds
+
 * 2.5.0
   - Add a notice for Node.js v8 support termination on README
   - Improve node configuration dialog behavior
