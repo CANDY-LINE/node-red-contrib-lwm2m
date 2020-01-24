@@ -474,7 +474,9 @@ Other users need to install the following software manually:
 
 ## Node-RED users
 
-Run the following commands:
+Use `Manage palette` menu to install this node.
+
+Or run the following commands in a terminal:
 ```
 cd ~/.node-red
 npm install --production node-red-contrib-lwm2m
@@ -484,7 +486,9 @@ Then restart Node-RED process.
 
 ## CANDY RED users
 
-Run the following commands:
+Use `Manage palette` menu to install this node.
+
+Or run the following commands in a terminal:
 ```
 cd /opt/candy-red/.node-red
 sudo npm install --unsafe-perm --production node-red-contrib-lwm2m
