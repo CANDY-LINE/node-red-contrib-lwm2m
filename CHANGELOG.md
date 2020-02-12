@@ -1,5 +1,11 @@
 # Revision History
 
+* 2.8.0
+  - Add a new option to set `outputAsObject` property in lwm2m in node
+  - Add object format output support
+  - Include the topic to the output message
+  - Avoid possible undefined error
+
 * 2.7.0
   - Add a missing parameter to be configured in embedded mode
   - Update wakatiwai client (bug fix)
