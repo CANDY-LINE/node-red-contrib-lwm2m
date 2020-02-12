@@ -32,6 +32,8 @@ It also emits LwM2M object events when you subscribe them.
 <dd>
   whether or not to subscribe LwM2M object events, <b>false(unchecked)</b> by default.
 </dd>
+<dt>Output as Object</dt>
+<dd>whether or not to return a Read response as <code>Object</code> via the output port. <code>Array</code> is returned when unchecked (default).</dd>
 </dl>
 
 <h3>Inputs</h3>
@@ -39,6 +41,7 @@ It also emits LwM2M object events when you subscribe them.
 Provide the URI to the object resource, e.g. <code>/3/0/0</code> in <code>msg.topic</code> property, to query the matching data.
 The query results are emitted via the output port (see below).
 The topic can be a regular expression text like <code>^/3/.*</code>, which allows you to get all Device Object resources.
+The output form is determined by <code>Output as Object</code> checkbox. However, you can overwrite the value by setting <code>outputAsObject</code> property to a <code>boolean</code> value (true or false) in the incoming message object.
 </p>
 
 <h3>Outputs 1/2 (Query Results)</h3>
@@ -92,6 +95,16 @@ Here is an example <code>msg.payload</code> output for Manufacturer resource in 
     }
   }
 ]
+</pre>
+When <code>Output as Object</code> is checked in the <code>lwm2m client</code> config node, the message from the ouput port is not <code>Array</code> but <code>Object</code> as follows.
+<pre>
+  {
+    "/3/0/0": {
+      "type": "STRING",
+      "acl": "R",
+      "value": "Manufacturer"
+    }
+  }
 </pre>
 </p>
 

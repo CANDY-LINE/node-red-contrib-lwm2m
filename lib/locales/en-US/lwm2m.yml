@@ -17,6 +17,7 @@ lwm2m:
     requestBootstrap: Request bootstrap
     saveProvisionedConfig: Save provisioned configuration
     subscribeObjectEvents: Subscribe LwM2M object events
+    outputAsObject: Output as Object
     enableDTLS: Enable DTLS
     pskIdentity: PSK identitiy
     presharedKey: PSK

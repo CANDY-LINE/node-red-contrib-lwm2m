@@ -33,6 +33,11 @@
     <i class='fa fa-feed'></i>
     <label for="node-input-subscribeObjectEvents" style="width: 70%;" data-i18n="lwm2m.label.subscribeObjectEvents"></label>
   </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
+    <input type="checkbox" id="node-input-outputAsObject" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-input-outputAsObject" style="width: 70%;" data-i18n="lwm2m.label.outputAsObject"></label>
+  </div>
 </script>
 
 <script type="text/x-red" data-template-name="lwm2m client out">
@@ -200,6 +205,7 @@
       name: { value: '' },
       lwm2mClient: { type: 'lwm2m client', required: true },
       subscribeObjectEvents: { value: false, required: false },
+      outputAsObject: { value: false, required: false },
     },
     inputs: 1,
     outputs: 1,

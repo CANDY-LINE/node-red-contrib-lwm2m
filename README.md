@@ -443,7 +443,7 @@ bus.once('object-read-022eb56240784b43', (msg) => {
     if (/* boolean */ msg.error) {
         console.error(msg.payload); // error info
     } else {
-        let man = msg.payload['/3/0/0'];
+        let man = msg.payload[0].value; // '/3/0/0' resource object
         ...
     }
 });
