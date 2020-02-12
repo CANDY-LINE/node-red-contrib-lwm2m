@@ -41,6 +41,7 @@ It also emits LwM2M object events when you subscribe them.
 Provide the URI to the object resource, e.g. <code>/3/0/0</code> in <code>msg.topic</code> property, to query the matching data.
 The query results are emitted via the output port (see below).
 The topic can be a regular expression text like <code>^/3/.*</code>, which allows you to get all Device Object resources.
+The output form is determined by <code>Output as Object</code> checkbox. However, you can overwrite the value by setting <code>outputAsObject</code> property to a <code>boolean</code> value (true or false) in the incoming message object.
 </p>
 
 <h3>Outputs 1/2 (Query Results)</h3>
