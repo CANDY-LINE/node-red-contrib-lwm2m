@@ -2,6 +2,7 @@
 
 * ?.?.?
   - Add a new option for `lazyStart` in lwm2m config node
+  - Add a new event `clientStateChanged` to propagate the state change of the lwm2m client
 
 * 2.8.0
   - Add a new option to set `outputAsObject` property in lwm2m in node
