@@ -140,6 +140,11 @@
   </div>
   <div class="form-row">
     <label>&nbsp;</label>
+    <input type="checkbox" id="node-config-input-lazyStart" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-config-input-lazyStart" style="width: 70%;" data-i18n="lwm2m.label.lazyStart"></label>
+  </div>
+  <div class="form-row">
+    <label>&nbsp;</label>
     <input type="checkbox" id="node-config-input-requestBootstrap" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-config-input-requestBootstrap" style="width: 70%;" data-i18n="lwm2m.label.requestBootstrap"></label>
   </div>
@@ -241,6 +246,7 @@
     category: 'config',
     defaults: {
       disabled: { value: false },
+      lazyStart: { value: false },
       clientName: { value: '', required: true, validate: RED.validators.regex(/^[a-zA-Z0-9:\-]+$/) },
       enableDTLS: { value: false, required: false },
       clientPort: { value: '56830', required: true, validate: RED.validators.number() },
