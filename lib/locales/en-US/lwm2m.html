@@ -226,6 +226,9 @@ LwM2M client configuration node. The followiing parameters are used for starting
 <dd>Maximum receivable packet size in bytes. The size must be between 1024 and 65535, 1152 bytes by default.</dd>
 <dt>Disable this client</dt>
 <dd>whether or not to disable this client.</dd>
+<dt>Enable Lazy Start</dt>
+<dd>whether or not to enable Lazy Start for this client.
+  The client won't start unless a <code>lwm2m in</code> node associated with this client receives a message with the topic <code>start</code>.</dd>
 <dt>Request bootstrap</dt>
 <dd>whether or not to require bootstrapping on starting this node.</dd>
 <dt>Save provisioned configuration</dt>
