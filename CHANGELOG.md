@@ -1,5 +1,8 @@
 # Revision History
 
+* 2.9.1
+  - Fix #23 (Failed to start the node with LazyStart=true)
+
 * 2.9.0
   - Add a new option for `lazyStart` in lwm2m config node
   - Add a new event `clientStateChanged` to propagate the state change of the lwm2m client
