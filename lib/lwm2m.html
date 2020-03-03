@@ -252,7 +252,17 @@
       clientPort: { value: '56830', required: true, validate: RED.validators.number() },
       lifetimeSec: { value: '300', required: false, validate: RED.validators.number() },
       reconnectSec: { value: '60', required: false, validate: RED.validators.number() },
-      bootstrapIntervalSec: { value: '3600', required: false, validate: RED.validators.number() },
+      bootstrapIntervalSec: { value: '3600', required: false, validate: function(v) {
+        if (v === '' || v === null) {
+          return true;
+        }
+        try {
+          var val = parseInt(v);
+          return val >= 60;
+        } catch (e) {
+          return false;
+        }
+      } },
       maxRecvPacketSize : { value: '16486', required: false, validate: function(v) {        
         if (v === '' || v === null) {
           return true;

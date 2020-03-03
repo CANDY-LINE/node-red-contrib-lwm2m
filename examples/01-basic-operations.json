@@ -1,40 +1,41 @@
 [
     {
-        "id": "635b54db.ae6ca4",
+        "id": "22b66213.8b6af6",
         "type": "tab",
         "label": "LwM2M Operation Example",
         "disabled": false,
         "info": "In order to deploy this flow, you need to provide the following information to `lwm2m` config node.\n\n- Endpoint ... Client Endpoint Name\n- Server Host ... LwM2M Server Host Name or IP Address\n\nTap each inject node to test *lwm2m client in* and *lwm2m client out* nodes.\nSee `debug` tab for the node output logs and you can find the messages these nodes emit.\n\nThe exec node labeled `fake reboot` will perform `echo` command when `/3/0/4` resource is executed.\nYou can find the output in Node-RED stdout.\n\nThe `catch` node will catch errors thrown by *lwm2m client in* and *lwm2m client out* nodes.\n"
     },
     {
-        "id": "14a5dd88.e5e902",
+        "id": "545cfccb.b146ec",
         "type": "lwm2m client in",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Read LwM2M Object Resources",
-        "lwm2mClient": "86761388.aec3f",
+        "lwm2mClient": "7ef58ae1.09487c",
         "subscribeObjectEvents": false,
-        "x": 530,
-        "y": 100,
+        "outputAsObject": false,
+        "x": 525,
+        "y": 184,
         "wires": [
             [
-                "9e21110e.a7f3b"
+                "85151c41.5f7298"
             ]
         ]
     },
     {
-        "id": "798be09e.25f2b",
+        "id": "677d1fcd.c59d8",
         "type": "lwm2m client out",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Write or Execute LwM2M Resources",
-        "lwm2mClient": "86761388.aec3f",
-        "x": 550,
-        "y": 460,
+        "lwm2mClient": "7ef58ae1.09487c",
+        "x": 545,
+        "y": 544,
         "wires": []
     },
     {
-        "id": "86ac64f2.ef66e",
+        "id": "726173e9.ba4574",
         "type": "inject",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "",
         "topic": "^/3/.*",
         "payload": "",
@@ -42,45 +43,45 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 150,
-        "y": 80,
+        "x": 145,
+        "y": 164,
         "wires": [
             [
-                "14a5dd88.e5e902"
+                "545cfccb.b146ec"
             ]
         ]
     },
     {
-        "id": "99ae2c51.8099",
+        "id": "e3a86082.89adb8",
         "type": "catch",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Catch lwm2m client node errors",
         "scope": null,
         "uncaught": true,
-        "x": 530,
-        "y": 560,
+        "x": 525,
+        "y": 644,
         "wires": [
             [
-                "a30a791c.94c0a8"
+                "fea1ba9e.e7661"
             ]
         ]
     },
     {
-        "id": "9e21110e.a7f3b",
+        "id": "85151c41.5f7298",
         "type": "debug",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Read Results",
         "active": true,
         "console": "false",
         "complete": "payload",
-        "x": 790,
-        "y": 160,
+        "x": 785,
+        "y": 244,
         "wires": []
     },
     {
-        "id": "1b30cae1.067f5d",
+        "id": "630ff515.cca4c4",
         "type": "inject",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "",
         "topic": "/3/0/4/execute",
         "payload": "",
@@ -88,18 +89,18 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 180,
-        "y": 420,
+        "x": 175,
+        "y": 504,
         "wires": [
             [
-                "798be09e.25f2b"
+                "677d1fcd.c59d8"
             ]
         ]
     },
     {
-        "id": "3a58e4.368bd71c",
+        "id": "fe45894b.a0d82",
         "type": "switch",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Route executed resource",
         "property": "payload.uri",
         "propertyType": "msg",
@@ -112,11 +113,11 @@
         ],
         "checkall": "true",
         "outputs": 1,
-        "x": 550,
-        "y": 340,
+        "x": 545,
+        "y": 424,
         "wires": [
             [
-                "760650d8.75daf"
+                "273c1a26.e4532e"
             ]
         ],
         "outputLabels": [
@@ -124,9 +125,9 @@
         ]
     },
     {
-        "id": "760650d8.75daf",
+        "id": "273c1a26.e4532e",
         "type": "exec",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "command": "echo",
         "addpay": false,
         "append": "##::##::##::##::##::##::##::##::##::##::##::##::",
@@ -134,8 +135,8 @@
         "timer": "",
         "oldrc": false,
         "name": "fake reboot",
-        "x": 810,
-        "y": 380,
+        "x": 805,
+        "y": 464,
         "wires": [
             [],
             [],
@@ -143,9 +144,9 @@
         ]
     },
     {
-        "id": "e8445d0f.54ef68",
+        "id": "42add23b.64f9d4",
         "type": "inject",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "",
         "topic": "/3/0/0",
         "payload": "MyManufacturer",
@@ -153,18 +154,18 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 200,
-        "y": 500,
+        "x": 195,
+        "y": 584,
         "wires": [
             [
-                "798be09e.25f2b"
+                "677d1fcd.c59d8"
             ]
         ]
     },
     {
-        "id": "d52c0df6.b3226",
+        "id": "8a3268b5.55573",
         "type": "inject",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "",
         "topic": "/3/0/0",
         "payload": "",
@@ -172,18 +173,18 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 150,
-        "y": 160,
+        "x": 145,
+        "y": 244,
         "wires": [
             [
-                "14a5dd88.e5e902"
+                "545cfccb.b146ec"
             ]
         ]
     },
     {
-        "id": "7511bb1c.5953ac",
+        "id": "2b2927b6.915a18",
         "type": "inject",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "",
         "topic": "/3/0/4",
         "payload": "not allowed",
@@ -191,30 +192,30 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 190,
-        "y": 580,
+        "x": 185,
+        "y": 664,
         "wires": [
             [
-                "798be09e.25f2b"
+                "677d1fcd.c59d8"
             ]
         ]
     },
     {
-        "id": "a30a791c.94c0a8",
+        "id": "fea1ba9e.e7661",
         "type": "debug",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Error Info.",
         "active": true,
         "console": "false",
         "complete": "payload",
-        "x": 800,
-        "y": 620,
+        "x": 795,
+        "y": 704,
         "wires": []
     },
     {
-        "id": "98778c88.cf1988",
+        "id": "f8408b83.b48408",
         "type": "inject",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "",
         "topic": "no-such-uri",
         "payload": "",
@@ -222,88 +223,88 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 170,
-        "y": 320,
+        "x": 165,
+        "y": 404,
         "wires": [
             [
-                "14a5dd88.e5e902"
+                "545cfccb.b146ec"
             ]
         ]
     },
     {
-        "id": "697ffb6d.85dca4",
+        "id": "c6fab90a.f5393",
         "type": "comment",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Read Operation",
         "info": "",
-        "x": 160,
-        "y": 40,
+        "x": 155,
+        "y": 124,
         "wires": []
     },
     {
-        "id": "9ecaaeb4.df823",
+        "id": "8c0a4d53.6da948",
         "type": "comment",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Read Manufacturer",
         "info": "",
-        "x": 170,
-        "y": 120,
+        "x": 165,
+        "y": 204,
         "wires": []
     },
     {
-        "id": "eb8e4adc.4d7e2",
+        "id": "1ed9b967.308c7f",
         "type": "comment",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Trigger Not Found Error",
         "info": "",
-        "x": 180,
-        "y": 280,
+        "x": 175,
+        "y": 364,
         "wires": []
     },
     {
-        "id": "aaa6ad5c.0ee1f",
+        "id": "dbfd6ea5.84f9a",
         "type": "comment",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Execute Operation",
         "info": "",
-        "x": 170,
-        "y": 380,
+        "x": 165,
+        "y": 464,
         "wires": []
     },
     {
-        "id": "2fbc1fff.ee413",
+        "id": "823a8361.8d7d1",
         "type": "comment",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Write Operation",
         "info": "",
-        "x": 160,
-        "y": 460,
+        "x": 155,
+        "y": 544,
         "wires": []
     },
     {
-        "id": "318d673e.414be8",
+        "id": "3dcacd75.9533aa",
         "type": "comment",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Trigger Method Not Allowed Error",
         "info": "",
-        "x": 210,
-        "y": 540,
+        "x": 205,
+        "y": 624,
         "wires": []
     },
     {
-        "id": "aa9924.7a3206e",
+        "id": "89db1bac.d38368",
         "type": "comment",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Execute /3/0/4",
         "info": "",
-        "x": 820,
-        "y": 340,
+        "x": 815,
+        "y": 424,
         "wires": []
     },
     {
-        "id": "2981ed72.de51f2",
+        "id": "85520105.663e1",
         "type": "inject",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "",
         "topic": "/3/0/7",
         "payload": "",
@@ -311,66 +312,102 @@
         "repeat": "",
         "crontab": "",
         "once": false,
-        "x": 150,
-        "y": 240,
+        "x": 145,
+        "y": 324,
         "wires": [
             [
-                "14a5dd88.e5e902"
+                "545cfccb.b146ec"
             ]
         ]
     },
     {
-        "id": "b62d9801.7a2b2",
+        "id": "227b7675.81ad6a",
         "type": "comment",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Read Multiple Resource",
         "info": "",
-        "x": 180,
-        "y": 200,
+        "x": 175,
+        "y": 284,
         "wires": []
     },
     {
-        "id": "64432ff3.a7ad8",
+        "id": "1c5e8915.31dce7",
         "type": "lwm2m client in",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Subscribe LwM2M Object Events",
-        "lwm2mClient": "86761388.aec3f",
+        "lwm2mClient": "7ef58ae1.09487c",
         "subscribeObjectEvents": true,
-        "x": 540,
-        "y": 260,
+        "x": 535,
+        "y": 344,
         "wires": [
             [
-                "3a58e4.368bd71c",
-                "ac9e5f3b.d86d4"
+                "fe45894b.a0d82",
+                "3a48e78.1f32798"
             ]
         ]
     },
     {
-        "id": "ac9e5f3b.d86d4",
+        "id": "3a48e78.1f32798",
         "type": "debug",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
         "name": "Events",
         "active": true,
         "console": "false",
         "complete": "payload",
-        "x": 770,
-        "y": 220,
+        "x": 765,
+        "y": 304,
         "wires": []
     },
     {
-        "id": "86761388.aec3f",
+        "id": "2790a1f7.015076",
+        "type": "comment",
+        "z": "22b66213.8b6af6",
+        "name": "Start Operation for Lazy Start",
+        "info": "",
+        "x": 193,
+        "y": 49,
+        "wires": []
+    },
+    {
+        "id": "cc674bfc.faaf9",
+        "type": "inject",
+        "z": "22b66213.8b6af6",
+        "name": "",
+        "topic": "start",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 142,
+        "y": 85,
+        "wires": [
+            [
+                "545cfccb.b146ec"
+            ]
+        ]
+    },
+    {
+        "id": "7ef58ae1.09487c",
         "type": "lwm2m client",
-        "z": "635b54db.ae6ca4",
+        "z": "22b66213.8b6af6",
+        "disabled": false,
+        "lazyStart": false,
         "clientName": "",
         "enableDTLS": false,
         "clientPort": "56830",
         "lifetimeSec": "300",
         "reconnectSec": "300",
+        "bootstrapIntervalSec": "3600",
+        "maxRecvPacketSize": "",
         "requestBootstrap": false,
+        "saveProvisionedConfig": false,
         "useIPv4": true,
         "serverHost": "",
         "serverPort": "5683",
         "redirectLwm2mClientLog": false,
+        "dumpLwm2mMessages": false,
         "hideSensitiveInfo": true,
         "propagateInternalEvents": false,
         "objects": "{\"32769\":{\"0\":{\"0\":{\"type\":\"STRING\",\"acl\":\"RW\",\"value\":\"abcd\"},\"1\":{\"type\":\"INTEGER\",\"acl\":\"RW\",\"value\":123456},\"2\":true}}}"
