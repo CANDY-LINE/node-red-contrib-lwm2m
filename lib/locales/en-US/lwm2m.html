@@ -36,12 +36,22 @@ It also emits LwM2M object events when you subscribe them.
 <dd>whether or not to return a Read response as <code>Object</code> via the output port. <code>Array</code> is returned when unchecked (default).</dd>
 </dl>
 
-<h3>Inputs</h3>
+<h3>Inputs 1/2 (Query)</h3>
 <p>
 Provide the URI to the object resource, e.g. <code>/3/0/0</code> in <code>msg.topic</code> property, to query the matching data.
 The query results are emitted via the output port (see below).
 The topic can be a regular expression text like <code>^/3/.*</code>, which allows you to get all Device Object resources.
 The output form is determined by <code>Output as Object</code> checkbox. However, you can overwrite the value by setting <code>outputAsObject</code> property to a <code>boolean</code> value (true or false) in the incoming message object.
+</p>
+
+<h3>Inputs 2/2 (LwM2M process control)</h3>
+<p>
+  You can terminate the running LwM2M client process by setting a control message in <code>topic</code>.
+  <ul>
+    <li><code>stop</code> ... to stop the LwM2M client process <b>WITHOUT</b> deregistration message.</li>
+    <li><code>deregister</code> ... to stop the LwM2M client process <b>WITH</b> deregistration message.</li>
+  </ul>
+  You can also provide <code>start</code> to start the LwM2M client process, which works only when <code>Enable Lazy Start</code> is <b>checked</b>.
 </p>
 
 <h3>Outputs 1/2 (Query Results)</h3>
