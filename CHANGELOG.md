@@ -1,5 +1,8 @@
 # Revision History
 
+* 2.10.0
+  - Add a new feature for terminating the running LwM2M client with messages
+
 * 2.9.1
   - Fix #23 (Failed to start the node with LazyStart=true)
 
