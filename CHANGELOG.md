@@ -1,5 +1,8 @@
 # Revision History
 
+* 2.10.1
+  - Fix an issue where a TypeError could be thrown occasionally on the flow re-deployment
+
 * 2.10.0
   - Add a new feature for terminating the running LwM2M client with messages
 
