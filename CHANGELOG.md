@@ -5,6 +5,8 @@
 
 * 2.10.0
   - Add a new feature for terminating the running LwM2M client with messages
+    - `deregiter` for stopping the lwm2m client with DEREGISTRATION message
+    - `stop` for stopping the lwm2m client **without** DEREGISTRATION message
 
 * 2.9.1
   - Fix #23 (Failed to start the node with LazyStart=true)
