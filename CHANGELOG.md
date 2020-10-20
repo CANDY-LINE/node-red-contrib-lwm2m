@@ -1,4 +1,7 @@
 # Revision History
+* 2.11.0
+  - Fix an issue where Reource.value.set function evaluation would throw a runtime error
+  - Update runtime/development dependencies
 
 * 2.10.1
   - Fix an issue where a TypeError could be thrown occasionally on the flow re-deployment
