@@ -888,6 +888,53 @@ describe('Resource', () => {
   });
 
   describe('#update()', () => {
+    it('should call async set() function when a String is passed', (done) => {
+      let myValue = 0;
+      Resource.from({
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.WRITABLE,
+        value: {
+          set(newValue) {
+            return new Promise(resolve => {
+              myValue = newValue;
+              resolve();
+            });
+          }
+        }
+      }).then((r) => {
+        return r.update('abcdef');
+      }).then(() => {
+        // await myValue udpate inside the above promise callback
+        expect(myValue).to.equal('abcdef');
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should call set() function when a Resource is passed', (done) => {
+      let myValue = 0;
+      Resource.from({
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.WRITABLE,
+        value: {
+          set(newValue) {
+            myValue = newValue;
+          }
+        }
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.STRING,
+          value: 'abcdef'
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(myValue).to.equal('abcdef');
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
     it('should update a String value', (done) => {
       Resource.from({
         type: LWM2M_TYPE.STRING,
