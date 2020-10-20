@@ -888,6 +888,55 @@ describe('Resource', () => {
   });
 
   describe('#update()', () => {
+    it('should call set() function with null whenver a given argument is undefined', (done) => {
+      let myValue = 0;
+      Resource.from({
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.WRITABLE,
+        value: {
+          set(newValue) {
+            return new Promise(resolve => {
+              myValue = newValue;
+              resolve();
+            });
+          }
+        }
+      }).then((r) => {
+        return r.update(undefined);
+      }).then(() => {
+        // await myValue udpate inside the above promise callback
+        expect(myValue).to.equal(null);
+        done();
+      }).catch((err) => {
+        done(err);
+      });
+    });
+    it('should call set() function when a Resource having undefined value is passed', (done) => {
+      let myValue = 0;
+      Resource.from({
+        type: LWM2M_TYPE.STRING,
+        acl: ACL.WRITABLE,
+        value: {
+          set(newValue) {
+            myValue = newValue;
+          }
+        }
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.STRING,
+          value: ''
+        }).then((newValue) => {
+          // force set undefined for edge case testing
+          newValue.value = undefined;
+          return r.update(newValue);
+        }).then(() => {
+          expect(myValue).to.equal(null);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
     it('should call async set() function when a String is passed', (done) => {
       let myValue = 0;
       Resource.from({
