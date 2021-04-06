@@ -303,9 +303,11 @@ ACL characters and allowed operations are shown below.
 
 Note that LwM2M Bootstrap server will try to remove all predefined objects during bootstrapping process. Set ACL properly if you'd like to preserve your objects.
 
-## Global predefined objects
+## Global predefined objects and object definitions
 
 You can add your own systemwide custom objects by describing them in your `settings.js` or `RED.settings` objects.
+You can also add your own object definition to `objectDefinitions` property.
+With `objectDefinitions` property, you can provide a collection of a template resource object, which will be copied to a new resource object when creating it.
 
 Here's an example for providing the predefined manufacturer name.
 
@@ -318,6 +320,12 @@ Here's an example for providing the predefined manufacturer name.
                 '0': {
                     '0': 'ACME Corporation'
                 }
+            }
+        },
+        objectDefinitions: {
+            '123456': {
+                '0': 'My String',
+                '1': 9876
             }
         }
     }

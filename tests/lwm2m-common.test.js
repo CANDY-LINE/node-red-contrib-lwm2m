@@ -1438,6 +1438,33 @@ describe('Resource', () => {
         done();
       });
     });
+    it('should call set function in a Resource', (done) => {
+      let setValue = null;
+      Resource.from({
+        type: LWM2M_TYPE.BOOLEAN,
+        value: {
+          set: (v) => {
+            setValue = !!v[0]; // => Buffer.from([1])
+          },
+          get: () => {
+            return setValue;
+          }
+        }
+      }).then((r) => {
+        return Resource.from({
+          type: LWM2M_TYPE.OPAQUE,
+          acl: ACL.WRITABLE,
+          value: Buffer.from([1])
+        }).then((newValue) => {
+          return r.update(newValue);
+        }).then(() => {
+          expect(r.toValue()).to.equal(true);
+          done();
+        });
+      }).catch((err) => {
+        done(err);
+      });
+    });
   });
 
   describe('#from()', () => {
