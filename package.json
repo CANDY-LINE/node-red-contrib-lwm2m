@@ -85,7 +85,7 @@
     "nan": "^2.14.2",
     "node-pre-gyp": "^0.14.0",
     "source-map-support": "^0.4.2",
-    "systeminformation": "^3.30.6"
+    "systeminformation": "^5.3.1"
   },
   "node-red": {
     "nodes": {
