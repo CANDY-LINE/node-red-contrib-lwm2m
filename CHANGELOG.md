@@ -1,4 +1,7 @@
 # Revision History
+* 2.12.1
+  - Fix an issue where objectIDs defined solely in definitions property were never passed to a wakatiwaiclient process
+
 * 2.12.0
   - Add a new feature for allowing users to pass custom object definitons rather than objects themselves.
   - Update runtime/development dependencies
