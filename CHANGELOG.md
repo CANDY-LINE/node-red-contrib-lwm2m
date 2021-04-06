@@ -1,4 +1,8 @@
 # Revision History
+* 2.12.0
+  - Add a new feature for allowing users to pass custom object definitons rather than objects themselves.
+  - Update runtime/development dependencies
+
 * 2.11.0
   - Fix an issue where Reource.value.set function evaluation would throw a runtime error
   - Update runtime/development dependencies
