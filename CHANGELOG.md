@@ -1,4 +1,9 @@
 # Revision History
+* 2.12.2
+  - Fix an issue where resource ids were sometimes not sent because of undefined ids
+  - Update wakatiwai client
+    - Fix an issue where duplicate object IDs were never eliminated
+
 * 2.12.1
   - Fix an issue where objectIDs defined solely in definitions property were never passed to a wakatiwaiclient process
 

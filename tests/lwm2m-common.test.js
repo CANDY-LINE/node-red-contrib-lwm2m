@@ -770,51 +770,67 @@ describe('Resource', () => {
   describe('#serialize()', () => {
     it('should serialize a Resource', (done) => {
       Resource.from('string').then((r) => {
+        try {
+          r.serialize();
+          throw new Error('should throw an error');
+        } catch (_) {
+          // OK
+        }
+        r.id = 0;
         let buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('string');
 
         return Resource.from('');
       }).then((r) => {
+        r.id = 0;
         let buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('');
 
         return Resource.from(0);
       }).then((r) => {
+        r.id = 0;
         let buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('0');
 
         return Resource.from(0.1);
       }).then((r) => {
+        r.id = 0;
         let buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('0.1');
 
         return Resource.from({type:LWM2M_TYPE.FLOAT});
       }).then((r) => {
+        r.id = 0;
         let buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('');
 
         return Resource.from({type:LWM2M_TYPE.INTEGER});
       }).then((r) => {
+        r.id = 0;
         let buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('');
 
         return Resource.from({type:LWM2M_TYPE.BOOLEAN});
       }).then((r) => {
+        r.id = 0;
         let buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length).toString()).to.equal('');
 
         return Resource.from({type:LWM2M_TYPE.BOOLEAN, value: true});
       }).then((r) => {
+        r.id = 0;
         let buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length)[0]).to.equal(1);
 
         return Resource.from({type:LWM2M_TYPE.OPAQUE, value:Buffer.from([1,2,3])});
       }).then((r) => {
+        r.id = 0;
         let buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length)).to.deep.equal(Buffer.from([1,2,3]));
 
         return Resource.from({type:LWM2M_TYPE.OPAQUE, value:[1,2,3]});
       }).then((r) => {
+        r.id = 0;
         let buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length)).to.deep.equal(Buffer.from([1,2,3]));
 
@@ -822,6 +838,7 @@ describe('Resource', () => {
       }).then((r) => {
         let buf;
 
+        r.id = 0;
         r.value = 'base64:AQID';
         buf = r.serialize();
         expect(buf.slice(HEADER_LEN, buf.length)).to.deep.equal(Buffer.from([1,2,3]));
