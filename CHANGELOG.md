@@ -1,4 +1,8 @@
 # Revision History
+* 2.12.3
+  - Update wakatiwai client
+    - Fix an issue where unexpected 'Too Long Object ID' error can be thrown
+
 * 2.12.2
   - Fix an issue where resource ids were sometimes not sent because of undefined ids
   - Update wakatiwai client
